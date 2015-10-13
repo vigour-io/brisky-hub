@@ -1,0 +1,40 @@
+{
+  "name": "vhub",
+  "version": "0.0.1",
+  "description": "Vigour.io Hub",
+  "engines": {
+    "node": "^4.1.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vigour-io/hub.git"
+  },
+  "keywords": [
+    "javascript",
+    "hub",
+    "communication",
+    "webrtc",
+    "websocket",
+    "xhr"
+  ],
+  "author": "Vigour.io <dev@vigour.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vigour-io/hub/issues"
+  },
+  "homepage": "https://github.com/vigour-io/hub#readme",
+  "standard": {
+    "globals": {
+      "describe",
+      "it",
+      "beforeEach",
+      "sinon",
+      "expect",
+      "xit"
+    }
+  }
+}
