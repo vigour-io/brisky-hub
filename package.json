@@ -27,14 +27,22 @@
     "url": "https://github.com/vigour-io/hub/issues"
   },
   "homepage": "https://github.com/vigour-io/hub#readme",
+  "vigour": {
+    "services": {
+      "sentinel": {
+        "branches": [],
+        "unignoreFolders": []
+      }
+    }
+  },
   "standard": {
-    "globals": {
+    "globals": [
       "describe",
       "it",
       "beforeEach",
       "sinon",
       "expect",
       "xit"
-    }
+    ]
   }
 }
