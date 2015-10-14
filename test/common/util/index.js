@@ -1,3 +1,3 @@
 describe('Utils', function () {
-  require('./httprequest')
+  require('./httpclient')
 })

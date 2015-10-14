@@ -21,6 +21,9 @@
     "websocket",
     "xhr"
   ],
+  "gaston": {
+    "source-maps": false
+  },
   "author": "Vigour.io <dev@vigour.io>",
   "license": "MIT",
   "bugs": {
