@@ -35,9 +35,13 @@ b.subscribe({
 })
 
 console.error('hey im setting b on a!')
-a.set({
-  b: true
-})
+
+setTimeout(function() {
+  a.set({
+    b: true
+  })
+},1000)
+
 
 //create new subs emitter if its not attached to _on
 //do a set on _on _on.set({ [subshash]: subsemitter })
