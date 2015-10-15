@@ -9,14 +9,19 @@ var a = new Hub({
   }
 })
 
+// a.adapter.val = false
+
 
 var b = new Hub({
   key: 'myHubB',
   adapter: {
-    val: a,
     inject: require('../../lib/adapter/protocol/mock')
   }
 })
+
+b.adapter.val = a
+
+console.log(b)
 
 console.log('fucking a', a)
 
