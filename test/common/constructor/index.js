@@ -1,16 +1,8 @@
-describe('create hubs', function () {
+describe('constructor', function () {
   var Hub = require('../../../lib')
 
   it('can create a hub', function () {
     var a = new Hub()
-    expect(a).to.be.ok
+
   })
-
-
-  // instanceID
-
-
-  // it('')
-
-
 })
