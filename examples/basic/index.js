@@ -4,6 +4,8 @@ var Hub = require('../../lib/')
 var a = new Hub({
   key: 'myHubA',
   adapter: {
-    inject: require('../../lib/adapter/protocol/mock')
+    inject: require('../../lib/adapter/websocket')
   }
 })
+
+a.adapter.listens.val = 3031
