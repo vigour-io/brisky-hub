@@ -1,7 +1,7 @@
 var Hub = require('../../lib/')
 
-var a = new Hub({
-  key: 'myOrigin',
+var origin = new Hub({
+  key: 'origin',
   adapter: {
     inject: require('../../lib/adapter/websocket'),
     on: {
@@ -22,10 +22,10 @@ var a = new Hub({
   }
 })
 // need to override blocks of listeners when in event in which listeners are added)
-a.adapter.val = 'ws://localhost:3031'
+origin.adapter.val = 'ws://localhost:3031'
 
-var b = new Hub({
-  key: 'myHubBoth',
+var duplex = new Hub({
+  key: 'duplex',
   adapter: {
     inject: require('../../lib/adapter/websocket'),
     on: {
@@ -45,4 +45,4 @@ var b = new Hub({
     }
   }
 })
-b.adapter.val = 'ws://localhost:3032'
+duplex.adapter.val = 'ws://localhost:3032'
