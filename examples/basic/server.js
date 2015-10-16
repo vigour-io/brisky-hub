@@ -1,6 +1,11 @@
 var Hub = require('../../lib/')
 var colors = require('colors')
 
+var lines = process.stdout.getWindowSize()[1]
+for(var i = 0; i < lines; i++) {
+    console.log('\r\n')
+}
+
 module.exports = new Hub({
   key: 'myHubA',
   adapter: {
