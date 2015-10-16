@@ -45,4 +45,4 @@ var b = new Hub({
     }
   }
 })
-// b.adapter.val = 'ws://localhost:3031'
+b.adapter.val = 'ws://localhost:3032'

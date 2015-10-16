@@ -14,14 +14,17 @@ module.exports = new Hub({
   clients: {
     on: {
       property (data) {
-        console.log( '\nclients property listener' )
+        console.log('\nclients property listener')
         if (data) {
           if (data.added) {
-            console.log('  added:'.green, data.added )
+            console.log('  added:'.green, data.added)
           }
           if (data.removed) {
-            console.log('  removed:'.red, data.removed )
+            console.log('  removed:'.red, data.removed)
           }
+        }
+        if (this.parent.adapter.client) {
+          console.log('  adapter-client:', this.parent.adapter.client.val)
         }
         console.log('  clients:', this.map((property, key) => key))
       }
