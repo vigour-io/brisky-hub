@@ -8,12 +8,15 @@ var a = new Hub({
     on: {
       connection (data) {
         console.log('connected to:', this.val, data)
+      },
+      error (err) {
+        console.error(this.path.join('.') + ' error ', err)
       }
     }
   }
 })
 
-a.adapter.val = 'ws://localhost:3030'
+a.adapter.val = 'ws://localhost:3031'
 
 // function sendNumber () {
 //   if (client.readyState === client.OPEN) {
