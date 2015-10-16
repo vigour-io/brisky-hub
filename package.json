@@ -34,6 +34,9 @@
     "request": "^2.65.0",
     "vjs": "git+ssh://git@github.com:vigour-io/vjs.git#0.2.1"
   },
+  "devDependencies": {
+    "colors": "*"
+  },
   "homepage": "https://github.com/vigour-io/hub#readme",
   "vigour": {
     "services": {

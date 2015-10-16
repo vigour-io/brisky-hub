@@ -1,4 +1,6 @@
 var Hub = require('../../lib/')
+
+var colors = require('colors')
 // var b = new Hub({})
 
 var a = new Hub({
@@ -9,7 +11,16 @@ var a = new Hub({
   clients: {
     on: {
       property (data) {
-        console.log('clients happenign!', data, Object.keys(this))
+        console.log( '\nclients property listener' )
+        if (data) {
+          if (data.added) {
+            console.log('  added:'.green, data.added )
+          }
+          if (data.removed) {
+            console.log('  removed:'.red, data.removed )
+          }
+        }
+        console.log('  clients:', this.map((property, key) => key))
       }
     }
   }
