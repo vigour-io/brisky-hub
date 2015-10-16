@@ -30,6 +30,7 @@
     "url": "https://github.com/vigour-io/hub/issues"
   },
   "dependencies": {
+    "websocket": "1.0.x",
     "request": "^2.65.0",
     "vjs": "git+ssh://git@github.com:vigour-io/vjs.git#0.2.1"
   },
