@@ -48,7 +48,6 @@ var b = new Hub({
     }
   }
 })
-
 // b.adapter.val = 'ws://localhost:3031'
 
 // function sendNumber () {
