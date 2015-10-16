@@ -4,7 +4,12 @@ var Hub = require('../../lib/')
 var a = new Hub({
   key: 'myHubA',
   adapter: {
-    inject: require('../../lib/adapter/websocket')
+    inject: require('../../lib/adapter/websocket'),
+    on: {
+      connection (data) {
+        console.log('connected to:', this.val, data)
+      }
+    }
   }
 })
 
