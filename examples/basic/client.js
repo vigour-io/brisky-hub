@@ -1,7 +1,7 @@
 'use strict'
 var isNode = require('vjs/lib/util/is/node')
 var uuid = require('vjs/lib/util/uuid')
-uuid = uuid.val = (isNode ? 'node-client-' : 'browser-client-') + uuid.val
+uuid = uuid.val = uuid.val + (isNode ? '_nodeclient' : '_browserclient')
 
 var Hub = require('../../lib/')
 var log = require('./log')
@@ -55,4 +55,5 @@ var duplex = new Hub({
     }
   }
 })
-// duplex.adapter.val = 'ws://localhost:3032'
+
+setTimeout(() => duplex.adapter.val = 'ws://localhost:3032', 100)

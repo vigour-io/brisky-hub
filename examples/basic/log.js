@@ -2,6 +2,10 @@
 var isNode = require('vjs/lib/util/is/node')
 if (isNode) {
   require('colors')
+  var lines = process.stdout.getWindowSize()[1]
+  for (var i = 0; i < lines; i++) {
+    console.log('\r\n')
+  }
 }
 var uuid = require('vjs/lib/util/uuid').val
 

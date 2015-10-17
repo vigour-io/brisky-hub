@@ -1,10 +1,6 @@
 'use strict'
 var Hub = require('../../lib/')
 var colors = require('colors')
-var lines = process.stdout.getWindowSize()[1]
-for (var i = 0; i < lines; i++) {
-  console.log('\r\n')
-}
 var uuid = require('vjs/lib/util/uuid').val
 
 module.exports = new Hub({
@@ -35,6 +31,12 @@ module.exports = new Hub({
   clients: {
     on: {
       property: require('./log').clients
+    }
+  },
+  on: {
+    data: function (data, event) {
+      console.log('      update on datax!', event.stamp, data)
+      // console.log(JSON.stringify(this.serialize(),false,2))
     }
   }
 })
