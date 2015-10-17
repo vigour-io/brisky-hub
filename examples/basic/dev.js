@@ -9,13 +9,30 @@ if (isNode) {
 }
 var uuid = require('vjs/lib/util/uuid').val
 
-const ADDED = '    added:'
-const REMOVED = '    removed:'
-const UPDATE = '    hub-update:'
+var ADDED = '    added:'
+var REMOVED = '    removed:'
+var UPDATE = 'incoming '
+var UPDATESELF = 'self     '
+var UPSTREAM = 'upstream  '
+var DOWNSTREAM = 'downstream'
+if (isNode) {
+  UPDATE = UPDATE.green
+  UPDATESELF = UPDATESELF.grey
+  UPSTREAM = UPSTREAM.magenta
+  DOWNSTREAM = DOWNSTREAM.magenta
+}
 
-exports.data = function () {
+exports.data = function (data, event) {
   // if(!isNode) console.clear()
-  console.log( (isNode ? UPDATE.magenta.bold : UPDATE), this.val)
+  var isSelf = event.stamp.indexOf(uuid) === 0
+  var isUpstream = event.upstream
+  console.log('   ',
+    this.path.join(' -> '),
+    isNode ? uuid.green.bold : uuid,
+    isSelf ? UPDATESELF : UPDATE,
+    isUpstream ? UPSTREAM : isSelf ? '          ' : DOWNSTREAM,
+    event.stamp
+  )
 }
 
 exports.clients = function logClients (data, event) {
@@ -47,6 +64,9 @@ exports.clients = function logClients (data, event) {
 }
 
 exports.randomUpdate = function randUpdate (hub) {
-  hub.val = uuid + ' ' + ~~(Math.random() * 99999)
-  setTimeout(randUpdate, ~~(Math.random()*5000)+500, hub)
+  hub.set({
+    val: uuid + ' ' + ~~(Math.random() * 99999)
+    // field: uuid + ' ' + ~~(Math.random() * 99999) this will break it allready!
+  })
+  setTimeout(randUpdate, Math.random() * 0, hub)
 }

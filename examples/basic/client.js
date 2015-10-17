@@ -7,7 +7,7 @@ var Hub = require('../../lib/')
 var dev = require('./dev')
 
 var origin = new Hub({
-  key: 'singleserver',
+  key: 'server',
   adapter: {
     inject: require('../../lib/adapter/websocket'),
     on: {
@@ -25,12 +25,14 @@ var origin = new Hub({
     on: {
       property: dev.clients
     }
+  },
+  on: {
+    data: dev.data
   }
 })
 // need to override blocks of listeners when in event in which listeners are added)
-//
 // console.error('lets start!!!!!', origin.clients)
-// setTimeout(() => origin.adapter.val = 'ws://localhost:3031', 100)
+// setTimeout(() => origin.adapter.val = 'ws://localhost:3031', 300)
 
 if (!isNode) {
   window.hub = origin
@@ -63,6 +65,17 @@ if (!isNode) {
   window.duplex = duplex
 }
 
-setTimeout(() => duplex.adapter.val = 'ws://jim.local:3032', 100)
+if (isNode) {
+  // var fs = require('fs')
+  // var writeStream = fs.createWriteStream('./log/' + uuid + '.txt')
+  // duplex.pipe(process.stdout)
+  // duplex.pipe(writeStream)
+}
 
+setTimeout(() => duplex.adapter.val = 'ws://localhost:3032', 300)
 require('./dev').randomUpdate(duplex)
+// require('./dev').randomUpdate(origin)
+
+// var a = new Hub('mtv.vigour.io')
+// a = new Hub({ listen: 2020 })
+// a.listen.val = 2020
