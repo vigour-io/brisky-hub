@@ -18,7 +18,13 @@ var origin = new Hub({
     // we may need ip as well!
     on: {
       property (data) {
-        console.log('clients', this.map((property, key) => key ))
+        arr = this.map((property, key) => key)
+        for(let i in arr) {
+         if(arr[i]===this.parent.adapter.client.val) {
+           arr[i] = '--->'+arr[i]+'<----'
+         }
+        }
+        console.log('clients', arr )
       }
     }
   }
