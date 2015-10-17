@@ -1,3 +1,4 @@
+'use strict'
 var Hub = require('../../lib/')
 var colors = require('colors')
 var lines = process.stdout.getWindowSize()[1]
@@ -6,7 +7,7 @@ for (var i = 0; i < lines; i++) {
 }
 
 module.exports = new Hub({
-  key: 'origin',
+  key: 'singleserver',
   adapter: {
     inject: require('../../lib/adapter/websocket'),
     on: {
@@ -16,6 +17,9 @@ module.exports = new Hub({
         'connected',
         '\n    url:', this.val
         )
+      },
+      close () {
+        console.log('o noes!'.red)
       },
       listens (data) {
         console.log(
@@ -44,10 +48,17 @@ module.exports = new Hub({
             console.log('    removed:'.red, data.removed)
           }
         }
-        if (this.parent.adapter.client) {
-          console.log('    client:', this.parent.adapter.client.val)
+        var client = this.parent.adapter.client && this.parent.adapter.client.val
+        if (client) {
+          console.log('    client:', client)
         }
-        console.log('    clients:', this.map((property, key) => key))
+        var arr = this.map((property, key) => key)
+        var str = '[ '
+        for (let i in arr) {
+          str += ((i == 0 ? '' : ', ') + (arr[i] === client ? arr[i].green.bold : arr[i]))
+        }
+        str += ' ]'
+        console.log('    clients:', str )
       }
     }
   }

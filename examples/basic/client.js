@@ -1,7 +1,7 @@
 var Hub = require('../../lib/')
 
 var origin = new Hub({
-  key: 'origin',
+  key: 'singleserver',
   adapter: {
     inject: require('../../lib/adapter/websocket'),
     on: {
@@ -14,14 +14,18 @@ var origin = new Hub({
     }
   },
   clients: {
+    // clients will always be send for your own instances
+    // we may need ip as well!
     on: {
       property (data) {
-        console.log('clients happenign!', data, Object.keys(this))
+        console.log('clients', this.map((property, key) => [ property, key ]))
       }
     }
   }
 })
 // need to override blocks of listeners when in event in which listeners are added)
+//
+console.error('lets start!!!!!', origin.clients)
 origin.adapter.val = 'ws://localhost:3031'
 
 var duplex = new Hub({
