@@ -18,7 +18,7 @@ var origin = new Hub({
     // we may need ip as well!
     on: {
       property (data) {
-        console.log('clients', this.map((property, key) => [ property, key ]))
+        console.log('clients', this.map((property, key) => key ))
       }
     }
   }
@@ -49,4 +49,4 @@ var duplex = new Hub({
     }
   }
 })
-duplex.adapter.val = 'ws://localhost:3032'
+// duplex.adapter.val = 'ws://localhost:3032'
