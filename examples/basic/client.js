@@ -4,7 +4,7 @@ var uuid = require('vjs/lib/util/uuid')
 uuid = uuid.val = uuid.val + (isNode ? '_nodeclient' : '_browserclient')
 
 var Hub = require('../../lib/')
-var log = require('./log')
+var dev = require('./dev')
 
 var origin = new Hub({
   key: 'singleserver',
@@ -23,14 +23,14 @@ var origin = new Hub({
     // clients will always be send for your own instances
     // we may need ip as well!
     on: {
-      property: log.clients
+      property: dev.clients
     }
   }
 })
 // need to override blocks of listeners when in event in which listeners are added)
 //
 // console.error('lets start!!!!!', origin.clients)
-setTimeout(() => origin.adapter.val = 'ws://localhost:3031', 100)
+// setTimeout(() => origin.adapter.val = 'ws://localhost:3031', 100)
 
 if (!isNode) {
   window.hub = origin
@@ -51,9 +51,18 @@ var duplex = new Hub({
   },
   clients: {
     on: {
-      property: log.clients
+      property: dev.clients
     }
+  },
+  on: {
+    data: dev.data
   }
 })
 
-setTimeout(() => duplex.adapter.val = 'ws://localhost:3032', 100)
+if (!isNode) {
+  window.duplex = duplex
+}
+
+setTimeout(() => duplex.adapter.val = 'ws://jim.local:3032', 100)
+
+require('./dev').randomUpdate(duplex)

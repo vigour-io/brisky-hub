@@ -11,6 +11,12 @@ var uuid = require('vjs/lib/util/uuid').val
 
 const ADDED = '    added:'
 const REMOVED = '    removed:'
+const UPDATE = '    hub-update:'
+
+exports.data = function () {
+  // if(!isNode) console.clear()
+  console.log( (isNode ? UPDATE.magenta.bold : UPDATE), this.val)
+}
 
 exports.clients = function logClients (data, event) {
   console.log(
@@ -38,4 +44,9 @@ exports.clients = function logClients (data, event) {
   }
   str += ' ]'
   console.log('    clients:', str)
+}
+
+exports.randomUpdate = function randUpdate (hub) {
+  hub.val = uuid + ' ' + ~~(Math.random() * 99999)
+  setTimeout(randUpdate, ~~(Math.random()*5000)+500, hub)
 }

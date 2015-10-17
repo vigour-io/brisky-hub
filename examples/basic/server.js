@@ -30,13 +30,10 @@ module.exports = new Hub({
   },
   clients: {
     on: {
-      property: require('./log').clients
+      property: require('./dev').clients
     }
   },
   on: {
-    data: function (data, event) {
-      console.log('      update on datax!', event.stamp, data)
-      // console.log(JSON.stringify(this.serialize(),false,2))
-    }
+    data: require('./dev').data
   }
 })
