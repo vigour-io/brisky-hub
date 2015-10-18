@@ -84,7 +84,7 @@ if (isNode) {
   // duplex.pipe(writeStream)
 }
 
-setTimeout(() => duplex.adapter.val = 'ws://localhost:3032', 1000)
+// setTimeout(() => duplex.adapter.val = 'ws://localhost:3032', 1000)
 require('./dev').randomUpdate(duplex, 25000)
 // require('./dev').randomUpdate(origin)
 // var a = new Hub('mtv.vigour.io')
