@@ -35,8 +35,10 @@
     "vjs": "git+ssh://git@github.com:vigour-io/vjs.git#develop"
   },
   "devDependencies": {
+    "log-buffer": "*",
     "colors": "*",
-    "mononic-timestamp": "*"
+    "mononic-timestamp": "*",
+    "keypress": "0.2.1"
   },
   "homepage": "https://github.com/vigour-io/hub#readme",
   "vigour": {

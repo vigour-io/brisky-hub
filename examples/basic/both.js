@@ -5,5 +5,6 @@ var server = require('./server')
 // is a server and a client
 server.adapter.listens.val = 3032
 server.adapter.val = 'ws://localhost:3031'
+// require('./dev').randomUpdate(server)
 
-// require('./dev').randomUpdate(server, 3000)
+require('./dev').startRepl()

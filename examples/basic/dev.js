@@ -8,19 +8,45 @@ var UPDATESELF = 'self'
 var UPSTREAM = 'up  '
 var DOWNSTREAM = 'down'
 var merge = require('vjs/lib/util/merge')
-
 var currentStatus = {
   '': uuid
 }
+var renderStatusInterval = 3000
+var sinterval
 
-function status (payload, method, args) {
-  if (isNode) {
+// require('log-buffer')
+// overwrite log make a small thin (nice and compact)
+
+function toggleStatus (val) {
+  if (val === void 0) {
+    val = sinterval ? false : true
+    console.log('status updates:', val)
+  }
+  if (val) {
+    if (!sinterval) {
+      sinterval = setInterval(renderStatusProcess, renderStatusInterval)
+    }
+  } else if (val === false) {
+    clearInterval(sinterval)
+    sinterval = null
+  }
+}
+toggleStatus(true)
+
+function renderStatusProcess (args) {
+  if (sinterval) {
     process.stdout.clearLine()
     process.stdout.cursorTo(0)
-    if (method) {
-      method.apply(this, args)
+  }
+  if (args) {
+    // process.stdout.write('\n')
+    for (let i in args) {
+      process.stdout.write(args[i] + ' ')
     }
-    merge(currentStatus, payload)
+    process.stdout.write('\n')
+  }
+  if (sinterval) {
+    process.stdout.cursorTo(0)
     let str = ''
     for (let i in currentStatus) {
       str += ' ' + i + ' ' + String(currentStatus[i]).green.bold
@@ -29,9 +55,45 @@ function status (payload, method, args) {
   }
 }
 
+function status (payload) {
+  merge(currentStatus, payload)
+}
+
+exports.startRepl = function () {
+  if (isNode) {
+    var repl = require('repl')
+    var readable = new (require('stream')).Readable({
+      read: function () {}
+    })
+
+    process.stdin.on('data', function (data) {
+      var pusher = true
+      if (data.length) {
+        let shaved = data.slice(0, -1)
+        let str = ''
+        for (let i = 0 ; i < shaved.length; i++) {
+          str += String.fromCharCode(shaved[i])
+        }
+        if (str === 's') {
+          pusher = false
+          toggleStatus()
+        }
+      }
+      if (pusher) {
+        toggleStatus(false)
+        readable.push(data)
+      }
+    })
+
+    repl.start({
+      input: readable,
+      output: process.stdout
+    })
+  }
+}
+
 global.status = status
 
-var log
 if (isNode) {
   require('colors')
   let lines = process.stdout.getWindowSize()[1]
@@ -42,40 +104,33 @@ if (isNode) {
   UPDATESELF = UPDATESELF.grey
   UPSTREAM = UPSTREAM.magenta
   DOWNSTREAM = DOWNSTREAM.cyan
-  log = console.log
   console.log = function () {
-    status(false, log, arguments)
+    renderStatusProcess(arguments)
   }
 }
 
 exports.data = function (data, event) {
-  // if(!isNode) console.clear()
-  var isSelf = typeof event.stamp !== 'string' || event.stamp.indexOf(uuid) === 0
-  var isUpstream = event.upstream
-  console.log(
-    '   ',
-    this.path.join(' -> '),
-    // isNode ? uuid.green.bold : uuid,
-    isSelf ? UPDATESELF : UPDATE,
-    isUpstream ? UPSTREAM : isSelf ? '         ' : DOWNSTREAM,
-    event.stamp
-  )
+  if(sinterval) {
+    var isSelf = typeof event.stamp !== 'string' || event.stamp.indexOf(uuid) === 0
+    var isUpstream = event.upstream
+    console.log(
+      '   ',
+      this.path.join(' -> '),
+      isSelf ? UPDATESELF : UPDATE,
+      isUpstream ? UPSTREAM : isSelf ? '         ' : DOWNSTREAM,
+      event.stamp
+    )
+  }
 }
 
 var cnt = 0
 var time
-function startPerf () {
-  time = Date.now()
-  setInterval(function () {
-    var sec = (Date.now() - time) / 1000
-    status({ 'msg/s': ~~(cnt / sec), total: cnt })
-  }, 200)
-}
-
 exports.performance = function (data, event) {
   if (!time) {
-    startPerf()
+    time = Date.now()
   }
+  var sec = (Date.now() - time) / 1000
+  status({ 'msg/s': ~~(cnt / sec), total: cnt })
   cnt++
 }
 
@@ -112,9 +167,9 @@ exports.clients = function logClients (data, event) {
 var updatecnt = 0
 exports.randomUpdate = function randUpdate (hub, amount) {
   if (amount === void 0) {
-    amount = 3000
+    amount = 5000
   }
-  for (let i = 0 ; i < 100; i++) {
+  for (let i = 0 ; i < 1; i++) {
     hub.set({
       val: uuid + ' ' + (updatecnt++)
       // field: uuid + ' ' + ~~(Math.random() * 99999) this will break it allready!
