@@ -59,7 +59,7 @@ var duplex = new Hub({
   on: {
     data: {
       performance: dev.performance,
-      dev: dev.data
+      // dev: dev.data
     }
   }
 })
@@ -84,8 +84,8 @@ if (isNode) {
   // duplex.pipe(writeStream)
 }
 
-// setTimeout(() => duplex.adapter.val = 'ws://localhost:3032', 1000)
-require('./dev').randomUpdate(duplex, 25000)
+setTimeout(() => duplex.adapter.val = 'ws://localhost:3032', 1000)
+require('./dev').randomUpdate(duplex, 0 )
 // require('./dev').randomUpdate(origin)
 // var a = new Hub('mtv.vigour.io')
 // a = new Hub({ listen: 2020 })

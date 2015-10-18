@@ -4,20 +4,48 @@ var uuid = String(require('vjs/lib/util/uuid').val)
 var ADDED = '    added:'
 var REMOVED = '    removed:'
 var UPDATE = 'incoming '
-var UPDATESELF = 'self     '
-var UPSTREAM = 'upstream  '
-var DOWNSTREAM = 'downstream'
+var UPDATESELF = 'self'
+var UPSTREAM = 'up  '
+var DOWNSTREAM = 'down'
+var merge = require('vjs/lib/util/merge')
 
+var currentStatus = {
+  '': uuid
+}
+
+function status (payload, method, args) {
+  if (isNode) {
+    process.stdout.clearLine()
+    process.stdout.cursorTo(0)
+    if (method) {
+      method.apply(this, args)
+    }
+    merge(currentStatus, payload)
+    let str = ''
+    for (let i in currentStatus) {
+      str += ' ' + i + ' ' + String(currentStatus[i]).green.bold
+    }
+    process.stdout.write(str)
+  }
+}
+
+global.status = status
+
+var log
 if (isNode) {
   require('colors')
-  var lines = process.stdout.getWindowSize()[1]
-  for (var i = 0; i < lines; i++) {
+  let lines = process.stdout.getWindowSize()[1]
+  for (let i = 0; i < lines; i++) {
     console.log('\r\n')
   }
   UPDATE = UPDATE.green
   UPDATESELF = UPDATESELF.grey
   UPSTREAM = UPSTREAM.magenta
   DOWNSTREAM = DOWNSTREAM.cyan
+  log = console.log
+  console.log = function () {
+    status(false, log, arguments)
+  }
 }
 
 var datacnt = 0
@@ -26,13 +54,15 @@ exports.data = function (data, event) {
   datacnt++
   var isSelf = typeof event.stamp !== 'string' || event.stamp.indexOf(uuid) === 0
   var isUpstream = event.upstream
-  console.log('   ', cnt,
+  status({ data: datacnt }, log, [
+    '   ',
     this.path.join(' -> '),
-    isNode ? uuid.green.bold : uuid,
+    // isNode ? uuid.green.bold : uuid,
     isSelf ? UPDATESELF : UPDATE,
-    isUpstream ? UPSTREAM : isSelf ? '          ' : DOWNSTREAM,
+    isUpstream ? UPSTREAM : isSelf ? '         ' : DOWNSTREAM,
     event.stamp
-  )
+  ])
+  // console.log(
 }
 
 var cnt = 0
@@ -41,8 +71,8 @@ function startPerf () {
   time = Date.now()
   setInterval(function () {
     var sec = (Date.now() - time) / 1000
-    console.log('   ', ~~(cnt / sec), 'message/sec')
-  }, 25000)
+    status({'msg/s': ~~(cnt / sec)})
+  }, 500)
 }
 
 exports.performance = function (data, event) {
@@ -53,6 +83,7 @@ exports.performance = function (data, event) {
 }
 
 exports.clients = function logClients (data, event) {
+
   console.log(
     '\n',
     (isNode ? uuid.green.bold : uuid),
@@ -68,7 +99,7 @@ exports.clients = function logClients (data, event) {
   }
   var client = this.parent.adapter.client && this.parent.adapter.client.val
   if (client) {
-    console.log('    hasClient:', true)
+    status({ client: true })
   }
   var arr = this.map((property, key) => key)
   var str = '[ '
@@ -76,6 +107,7 @@ exports.clients = function logClients (data, event) {
     str += ((i == 0 ? '' : ', ') +
     (arr[i] === client ? (isNode ? arr[i].green.bold : '>>>' + arr[i] + '<<<') : arr[i]))
   }
+  status({ clients: arr.length })
   str += ' ]'
   console.log('    clients:', str)
 }
@@ -86,7 +118,7 @@ exports.randomUpdate = function randUpdate (hub, amount) {
   if (amount === void 0) {
     amount = 3000
   }
-  for (let i = 0 ; i < 1; i++) {
+  for (let i = 0 ; i < 100; i++) {
     hub.set({
       val: uuid + ' ' + (updatecnt++)
       // field: uuid + ' ' + ~~(Math.random() * 99999) this will break it allready!
