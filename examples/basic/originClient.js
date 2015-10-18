@@ -34,6 +34,7 @@ var origin = new Hub({
 // console.error('lets start!!!!!', origin.clients)
 setTimeout(() => origin.adapter.val = 'ws://localhost:3031', 300)
 require('./dev').randomUpdate(origin)
-require('./dev').startRepl()
 
 global.hub = origin
+
+require('./dev').startRepl()

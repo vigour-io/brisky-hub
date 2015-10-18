@@ -8,7 +8,7 @@ var UPDATESELF = 'self'
 var UPSTREAM = 'up  '
 var DOWNSTREAM = 'down'
 var merge = require('vjs/lib/util/merge')
-var currentStatus = {
+var currentStatus = global.currentStatus = {
   '': uuid
 }
 var renderStatusInterval = 3000
@@ -20,18 +20,22 @@ var sinterval
 function toggleStatus (val) {
   if (val === void 0) {
     val = sinterval ? false : true
-    console.log('status updates:', val)
+    // console.log('status updates:', val)
   }
   if (val) {
     if (!sinterval) {
       sinterval = setInterval(renderStatusProcess, renderStatusInterval)
     }
+    let lines = process.stdout.getWindowSize()[1]
+    for (let i = 0; i < lines; i++) {
+      console.log('\r\n')
+    }
+    renderStatusProcess()
   } else if (val === false) {
     clearInterval(sinterval)
     sinterval = null
   }
 }
-toggleStatus(true)
 
 function renderStatusProcess (args) {
   if (sinterval) {
@@ -39,8 +43,23 @@ function renderStatusProcess (args) {
     process.stdout.cursorTo(0)
   }
   if (args) {
-    // process.stdout.write('\n')
     for (let i in args) {
+      if (typeof args[i] === 'object') {
+        let whitespace
+        let check = typeof args[i - 1] === 'string' && args[i - 1]
+        if (/^ +$/.test(check)) {
+          whitespace = check
+        }
+        if (args[i].serialize) {
+          args[i] = JSON.stringify(args[i].serialize(), false, 2)
+        } else {
+          args[i] = JSON.stringify(args[i], false, 2)
+        }
+        if (whitespace) {
+          args[i] = args[i].split('\n').join('\n' + '  ' + whitespace)
+        }
+        args[i] = args[i].grey
+      }
       process.stdout.write(args[i] + ' ')
     }
     process.stdout.write('\n')
@@ -110,7 +129,7 @@ if (isNode) {
 }
 
 exports.data = function (data, event) {
-  if(sinterval) {
+  if (sinterval) {
     var isSelf = typeof event.stamp !== 'string' || event.stamp.indexOf(uuid) === 0
     var isUpstream = event.upstream
     console.log(
@@ -118,7 +137,8 @@ exports.data = function (data, event) {
       this.path.join(' -> '),
       isSelf ? UPDATESELF : UPDATE,
       isUpstream ? UPSTREAM : isSelf ? '         ' : DOWNSTREAM,
-      event.stamp
+      event.stamp,
+      '\n', '     ', data
     )
   }
 }
@@ -141,10 +161,10 @@ exports.clients = function logClients (data, event) {
   )
   if (data) {
     if (data.added) {
-      console.log((isNode ? ADDED.green : ADDED), data.added)
+      console.log((isNode ? ADDED.green : ADDED), data.added.join(', '))
     }
     if (data.removed) {
-      console.log((isNode ? REMOVED.red : REMOVED), data.removed)
+      console.log((isNode ? REMOVED.red : REMOVED), data.removed.join(', '))
     }
   }
   var client = this.parent.adapter.client && this.parent.adapter.client.val
@@ -175,5 +195,7 @@ exports.randomUpdate = function randUpdate (hub, amount) {
       // field: uuid + ' ' + ~~(Math.random() * 99999) this will break it allready!
     })
   }
-  setTimeout(randUpdate, ~~(Math.random() * amount), hub, amount)
+  // setTimeout(randUpdate, ~~(Math.random() * amount), hub, amount)
 }
+
+toggleStatus(true)
