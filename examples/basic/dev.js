@@ -195,7 +195,8 @@ exports.randomUpdate = function randUpdate (hub, amount) {
       // field: uuid + ' ' + ~~(Math.random() * 99999) this will break it allready!
     })
   }
-  setTimeout(randUpdate, ~~(Math.random() * amount), hub, amount)
+  currentStatus.timer = amount/1000
+  setTimeout(randUpdate, ~~(Math.random() * amount), hub, amount*3)
 }
 
 toggleStatus(true)
