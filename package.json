@@ -35,7 +35,8 @@
     "vjs": "git+ssh://git@github.com:vigour-io/vjs.git#develop"
   },
   "devDependencies": {
-    "colors": "*"
+    "colors": "*",
+    "mononic-timestamp": "*"
   },
   "homepage": "https://github.com/vigour-io/hub#readme",
   "vigour": {

@@ -34,6 +34,9 @@ module.exports = new Hub({
     }
   },
   on: {
-    data: require('./dev').data
+    data: {
+      performance: require('./dev').performance,
+      log: require('./dev').data
+    }
   }
 })

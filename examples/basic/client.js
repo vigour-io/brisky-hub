@@ -1,7 +1,7 @@
 'use strict'
 var isNode = require('vjs/lib/util/is/node')
 var uuid = require('vjs/lib/util/uuid')
-uuid = uuid.val = uuid.val + (isNode ? '_nodeclient' : '_browserclient')
+uuid = uuid.val = uuid.val + (isNode ? '_nc_' : '_bc_')
 
 var Hub = require('../../lib/')
 var dev = require('./dev')
@@ -57,13 +57,25 @@ var duplex = new Hub({
     }
   },
   on: {
-    data: dev.data
+    data: {
+      performance: dev.performance,
+      dev: dev.data
+    }
   }
 })
 
 if (!isNode) {
   window.duplex = duplex
 }
+
+// var Observable = require('vjs/lib/observable')
+// var a = new Observable({
+//   inject: require('vjs/lib/operator/transform'),
+//   val: duplex
+//   // $transform: function() {
+//   //
+//   // }
+// })
 
 if (isNode) {
   // var fs = require('fs')
@@ -72,10 +84,9 @@ if (isNode) {
   // duplex.pipe(writeStream)
 }
 
-setTimeout(() => duplex.adapter.val = 'ws://localhost:3032', 300)
-require('./dev').randomUpdate(duplex)
+setTimeout(() => duplex.adapter.val = 'ws://localhost:3032', 1000)
+require('./dev').randomUpdate(duplex, 25000)
 // require('./dev').randomUpdate(origin)
-
 // var a = new Hub('mtv.vigour.io')
 // a = new Hub({ listen: 2020 })
 // a.listen.val = 2020
