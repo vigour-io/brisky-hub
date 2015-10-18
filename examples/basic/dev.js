@@ -137,8 +137,8 @@ exports.data = function (data, event) {
       this.path.join(' -> '),
       isSelf ? UPDATESELF : UPDATE,
       isUpstream ? UPSTREAM : isSelf ? '         ' : DOWNSTREAM,
-      event.stamp,
-      '\n', '     ', data
+      event.stamp
+      // '\n', '     ', data
     )
   }
 }
@@ -195,7 +195,7 @@ exports.randomUpdate = function randUpdate (hub, amount) {
       // field: uuid + ' ' + ~~(Math.random() * 99999) this will break it allready!
     })
   }
-  // setTimeout(randUpdate, ~~(Math.random() * amount), hub, amount)
+  setTimeout(randUpdate, ~~(Math.random() * amount), hub, amount)
 }
 
 toggleStatus(true)

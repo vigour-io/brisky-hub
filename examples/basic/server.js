@@ -14,6 +14,9 @@ module.exports = new Hub({
         '\n    url:', this.val
         )
       },
+      error (err) {
+        console.log(err)
+      },
       close () {
         console.log('o noes!'.red)
       },

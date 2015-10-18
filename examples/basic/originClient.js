@@ -15,7 +15,7 @@ var origin = new Hub({
         console.log(uuid + ' connected to:', this.val)
       },
       error (err) {
-        console.error(this.path.join('.') + ' error ', err)
+        console.log(err.message.red)
       }
     }
   },
