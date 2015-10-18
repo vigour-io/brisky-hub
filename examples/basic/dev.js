@@ -48,21 +48,18 @@ if (isNode) {
   }
 }
 
-var datacnt = 0
 exports.data = function (data, event) {
   // if(!isNode) console.clear()
-  datacnt++
   var isSelf = typeof event.stamp !== 'string' || event.stamp.indexOf(uuid) === 0
   var isUpstream = event.upstream
-  status({ data: datacnt }, log, [
+  console.log(
     '   ',
     this.path.join(' -> '),
     // isNode ? uuid.green.bold : uuid,
     isSelf ? UPDATESELF : UPDATE,
     isUpstream ? UPSTREAM : isSelf ? '         ' : DOWNSTREAM,
     event.stamp
-  ])
-  // console.log(
+  )
 }
 
 var cnt = 0
@@ -71,8 +68,8 @@ function startPerf () {
   time = Date.now()
   setInterval(function () {
     var sec = (Date.now() - time) / 1000
-    status({'msg/s': ~~(cnt / sec)})
-  }, 500)
+    status({ 'msg/s': ~~(cnt / sec), total: cnt })
+  }, 200)
 }
 
 exports.performance = function (data, event) {
@@ -83,10 +80,8 @@ exports.performance = function (data, event) {
 }
 
 exports.clients = function logClients (data, event) {
-
   console.log(
     '\n',
-    (isNode ? uuid.green.bold : uuid),
     'clients'
   )
   if (data) {
@@ -102,14 +97,15 @@ exports.clients = function logClients (data, event) {
     status({ client: true })
   }
   var arr = this.map((property, key) => key)
-  var str = '[ '
+  console.log('    clients:')
+
+  // var str = '[ '
   for (let i in arr) {
-    str += ((i == 0 ? '' : ', ') +
+    console.log('      ' +
     (arr[i] === client ? (isNode ? arr[i].green.bold : '>>>' + arr[i] + '<<<') : arr[i]))
   }
   status({ clients: arr.length })
-  str += ' ]'
-  console.log('    clients:', str)
+  // str += ' ]'
 }
 
 // var timestamp = require('monotonic-timestamp')
