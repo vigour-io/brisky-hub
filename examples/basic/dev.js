@@ -139,18 +139,18 @@ if (isNode) {
 }
 
 exports.data = function (data, event) {
-  // if (sinterval) {
-  //   var isSelf = typeof event.stamp !== 'string' || event.stamp.indexOf(uuid) === 0
-  //   var isUpstream = event.upstream
-  //   console.log(
-  //     '   ',
-  //     this.path.join(' -> '),
-  //     isSelf ? UPDATESELF : UPDATE,
-  //     isUpstream ? UPSTREAM : isSelf ? '         ' : DOWNSTREAM,
-  //     event.stamp
-  //     // '\n', '     ', data
-  //   )
-  // }
+  if (sinterval) {
+    var isSelf = typeof event.stamp !== 'string' || event.stamp.indexOf(uuid) === 0
+    var isUpstream = event.upstream
+    console.log(
+      '   ',
+      this.path.join(' -> '),
+      isSelf ? UPDATESELF : UPDATE,
+      isUpstream ? UPSTREAM : isSelf ? '         ' : DOWNSTREAM,
+      event.stamp
+      // '\n', '     ', data
+    )
+  }
 }
 
 var cnt = 0

@@ -11,7 +11,7 @@ var duplex = new Hub({
     inject: dev.protocol,
     on: {
       connection (data) {
-        console.log(uuid, 'connected to:', this.val)
+        // console.log(uuid, 'connected to:', this.val)
       },
       error (err) {
         console.error(this.path.join('.') + ' error ', err)
@@ -26,7 +26,7 @@ var duplex = new Hub({
   on: {
     data: {
       performance: dev.performance,
-      // dev: dev.data
+      dev: dev.data
     }
   }
 })
