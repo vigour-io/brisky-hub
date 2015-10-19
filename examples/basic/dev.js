@@ -107,8 +107,8 @@ function status (payload) {
 }
 
 global.status = status
-global.datatrack = true
-global.amount = 5000
+global.datatrack = false
+global.amount = 100
 
 exports.startRepl = function () {
   if (isNode) {
@@ -181,7 +181,7 @@ exports.performance = function (data, event) {
     time = Date.now()
   }
   var sec = (Date.now() - time) / 1000
-  status({ 'msg/s': (currentStatus.in||0) + (currentStatus.out||0), 'on/s': ~~(cnt / sec), on: cnt })
+  status({ 'msg/s': ~~(((currentStatus.in||0) + (currentStatus.out||0))/sec), 'on/s': ~~(cnt / sec), on: cnt })
   cnt++
 }
 
