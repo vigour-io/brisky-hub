@@ -37,7 +37,7 @@ var request = require('request')
 
 setTimeout(() => {
   //'http://img0.mxstatic.com/wallpapers/58487114d3d7fedde7a01048546c06b1_large.jpeg
-  request('http://img0.mxstatic.com/wallpapers/58487114d3d7fedde7a01048546c06b1_large.jpeg')
+  request('http://vigour.io')
     .pipe(origin.stream)
   // origin.stream.on('data', function (chunk) {
   //   console.log(chunk)
