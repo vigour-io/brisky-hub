@@ -9,7 +9,7 @@ var dev = require('./dev')
 var origin = new Hub({
   key: 'server',
   adapter: {
-    inject: require('../../lib/adapter/websocket'),
+    inject: require('../../lib/adapter/tcp'),
     on: {
       connection (data) {
         console.log(uuid + ' connected to:', this.val)

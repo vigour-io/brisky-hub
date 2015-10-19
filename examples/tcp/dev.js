@@ -11,6 +11,7 @@ var merge = require('vjs/lib/util/merge')
 var currentStatus = global.currentStatus = {
   '': uuid
 }
+var log
 var renderStatusInterval = 3000
 var sinterval
 
@@ -43,25 +44,26 @@ function renderStatusProcess (args) {
     process.stdout.cursorTo(0)
   }
   if (args) {
-    for (let i in args) {
-      if (typeof args[i] === 'object') {
-        let whitespace
-        let check = typeof args[i - 1] === 'string' && args[i - 1]
-        if (/^ +$/.test(check)) {
-          whitespace = check
-        }
-        if (args[i].serialize) {
-          args[i] = JSON.stringify(args[i].serialize(), false, 2)
-        } else {
-          args[i] = JSON.stringify(args[i], false, 2)
-        }
-        if (whitespace) {
-          args[i] = args[i].split('\n').join('\n' + '  ' + whitespace)
-        }
-        args[i] = args[i].grey
-      }
-      process.stdout.write(args[i] + ' ')
-    }
+    // for (let i in args) {
+      // if (typeof args[i] === 'object') {
+      //   let whitespace
+      //   let check = typeof args[i - 1] === 'string' && args[i - 1]
+      //   if (/^ +$/.test(check)) {
+      //     whitespace = check
+      //   }
+      //   if (args[i].serialize) {
+      //     args[i] = JSON.stringify(args[i].serialize(), false, 2)
+      //   } else {
+      //     args[i] = JSON.stringify(args[i], false, 2)
+      //   }
+      //   if (whitespace) {
+      //     args[i] = args[i].split('\n').join('\n' + '  ' + whitespace)
+      //   }
+      //   args[i] = args[i].grey
+      // }
+      // process.stdout.write(args[i] + ' ')
+    // }
+    log.apply(this, args)
     process.stdout.write('\n')
   }
   if (sinterval) {
@@ -119,6 +121,7 @@ if (isNode) {
   for (let i = 0; i < lines; i++) {
     console.log('\r\n')
   }
+  log = console.log
   UPDATE = UPDATE.green
   UPDATESELF = UPDATESELF.grey
   UPSTREAM = UPSTREAM.magenta
