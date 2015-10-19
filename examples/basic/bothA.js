@@ -1,5 +1,5 @@
 var uuid = require('vjs/lib/util/uuid')
-uuid = uuid.val = uuid.val + '_d_'
+uuid = uuid.val = uuid.val + '_duplex_a_'
 
 var server = require('./server')
 // is a server and a client

@@ -16,8 +16,8 @@ var currentStatus = global.currentStatus = {
 var renderStatusInterval = 3000
 var sinterval
 
-if(isNode) {
-  console.clear = function() {
+if (isNode) {
+  console.clear = function () {
     let lines = process.stdout.getWindowSize()[1]
     for (let i = 0; i < lines; i++) {
       console.log('\r\n')
@@ -31,7 +31,7 @@ exports.protocol = require('../../lib/adapter/websocket')
 
 function toggleStatus (val) {
   if (val === void 0) {
-    val = !!sinterval
+    val = sinterval ? false : true
   }
   if (val) {
     if (!sinterval) {
@@ -44,6 +44,7 @@ function toggleStatus (val) {
     sinterval = null
   }
 }
+var statusbar
 
 function renderStatusProcess (args) {
   if (sinterval) {
@@ -83,9 +84,20 @@ function renderStatusProcess (args) {
       process.stdout.cursorTo(0)
       let str = ''
       for (let i in currentStatus) {
-        str += ' ' + i + ' ' + String(currentStatus[i]).green.bold
+        str += ` ${i} ` + String(currentStatus[i]).green.bold
       }
       process.stdout.write(str)
+    } else {
+      if (!statusbar) {
+        statusbar = document.createElement('div')
+        statusbar.className = 'status-bar'
+        document.body.appendChild(statusbar)
+      }
+      let str = ''
+      for (let i in currentStatus) {
+        str += `<div><span class="label">${i}</span> : <span>${String(currentStatus[i])}</span></div>`
+      }
+      statusbar.innerHTML = str
     }
   }
 }
@@ -128,6 +140,7 @@ exports.startRepl = function () {
 }
 
 global.status = status
+global.datatrack = false
 
 if (isNode) {
   require('colors')
@@ -146,7 +159,7 @@ if (isNode) {
 }
 
 exports.data = function (data, event) {
-  if (sinterval) {
+  if (sinterval && global.datatrack) {
     var isSelf = typeof event.stamp !== 'string' || event.stamp.indexOf(uuid) === 0
     var isUpstream = event.upstream
     console.log(
@@ -214,7 +227,7 @@ exports.randomUpdate = function randUpdate (hub, amount, start) {
     })
   }
   currentStatus.timer = ~~(amount / 100) / 10 + 's'
-  setTimeout(randUpdate, ~~(Math.random() * 50000), hub, amount + start, start)
+  setTimeout(randUpdate, ~~(Math.random() * 0), hub, amount + start, start)
 }
 
 toggleStatus(true)

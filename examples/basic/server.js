@@ -8,13 +8,14 @@ module.exports = new Hub({
   adapter: {
     inject: dev.protocol,
     on: {
-      // connection () {
-      //   console.log('\n',
-      //   uuid.green.bold,
-      //   'connected',
-      //   '\n    url:', this.val
-      //   )
-      // },
+      connection () {
+        currentStatus.port = this.val
+        console.log('\n',
+        uuid.green.bold,
+        'connected',
+        '\n    url:', this.val
+        )
+      },
       error (err) {
         console.log(err)
       },
