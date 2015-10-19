@@ -20,6 +20,7 @@ var renderStatusInterval = 3000
 var sinterval
 
 exports.protocol = require('../../lib/adapter/tcp')
+// exports.protocol = require('../../lib/adapter/websocket')
 
 // require('log-buffer')
 // overwrite log make a small thin (nice and compact)
@@ -197,7 +198,7 @@ exports.clients = function logClients (data, event) {
 var updatecnt = 0
 exports.randomUpdate = function randUpdate (hub, amount, start) {
   if (amount === void 0) {
-    amount = start = 0
+    amount = start = 500
   }
   for (let i = 0 ; i < 1; i++) {
     hub.set({
@@ -206,7 +207,7 @@ exports.randomUpdate = function randUpdate (hub, amount, start) {
       // field: uuid + ' ' + ~~(Math.random() * 99999) // this will break it allready!
     })
   }
-  currentStatus.timer = ~~(amount/100)/10 + 's'
+  currentStatus.timer = ~~(amount / 100) / 10 + 's'
   setTimeout(randUpdate, ~~(Math.random() * amount), hub, amount + start, start)
 }
 

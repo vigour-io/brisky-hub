@@ -30,7 +30,7 @@ var origin = new Hub({
   on: {
     data: {
       performance: dev.performance,
-      // dev: dev.data
+      dev: dev.data
     }
   }
 })
@@ -49,7 +49,7 @@ setTimeout(() => {
 // need to override blocks of listeners when in event in which listeners are added)
 // console.error('lets start!!!!!', origin.clients)
 setTimeout(() => origin.adapter.val = 3031, 300)
-require('./dev').randomUpdate(origin, 100)
+require('./dev').randomUpdate(origin, 0)
 
 global.hub = origin
 
