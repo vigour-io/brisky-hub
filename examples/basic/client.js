@@ -1,7 +1,7 @@
 'use strict'
 var isNode = require('vjs/lib/util/is/node')
-var uuid = require('vjs/lib/util/uuid').val
-// uuid = uuid.val = uuid.val + (isNode ? '_node_client' : '_browser_client')
+var uuid = require('vjs/lib/util/uuid')
+uuid = uuid.val = uuid.val + (isNode ? '_node_client' : '_browser_client')
 var Hub = require('../../lib/')
 var dev = require('./dev')
 
@@ -33,6 +33,8 @@ var duplex = new Hub({
 
 global.duplex = duplex
 
-setTimeout(() => duplex.adapter.val = 'ws://localhost:3032', 1000)
+setTimeout(() => duplex.adapter.val = 'ws://localhost:3032', 200)
 require('./dev').startRepl()
-require('./dev').randomUpdate(duplex)
+// require('./dev').randomUpdate(duplex)
+
+setTimeout(() => duplex.val = { x: Math.random()*100 }, 1500)

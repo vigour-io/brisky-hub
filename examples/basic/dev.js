@@ -185,9 +185,9 @@ exports.clients = function logClients (data, event) {
 
 // var timestamp = require('monotonic-timestamp')
 var updatecnt = 0
-exports.randomUpdate = function randUpdate (hub, amount) {
+exports.randomUpdate = function randUpdate (hub, amount, start) {
   if (amount === void 0) {
-    amount = 5000
+    amount = start = 5000
   }
   for (let i = 0 ; i < 1; i++) {
     hub.set({
@@ -195,8 +195,8 @@ exports.randomUpdate = function randUpdate (hub, amount) {
       // field: uuid + ' ' + ~~(Math.random() * 99999) this will break it allready!
     })
   }
-  currentStatus.timer = amount/1000
-  setTimeout(randUpdate, ~~(Math.random() * amount), hub, amount*3)
+  currentStatus.timer = ~~(amount/100)/10 + 's'
+  // setTimeout(randUpdate, ~~(Math.random() * amount), hub, amount + start, start)
 }
 
 toggleStatus(true)
