@@ -106,6 +106,10 @@ function status (payload) {
   merge(currentStatus, payload)
 }
 
+global.status = status
+global.datatrack = true
+global.amount = 5000
+
 exports.startRepl = function () {
   if (isNode) {
     var repl = require('repl')
@@ -138,9 +142,6 @@ exports.startRepl = function () {
     })
   }
 }
-
-global.status = status
-global.datatrack = false
 
 if (isNode) {
   require('colors')
@@ -180,7 +181,7 @@ exports.performance = function (data, event) {
     time = Date.now()
   }
   var sec = (Date.now() - time) / 1000
-  status({ 'msg/s': ~~(cnt / sec), total: cnt })
+  status({ 'msg/s': (currentStatus.in||0) + (currentStatus.out||0), 'on/s': ~~(cnt / sec), on: cnt })
   cnt++
 }
 
@@ -198,9 +199,6 @@ exports.clients = function logClients (data, event) {
     }
   }
   var client = this.parent.adapter.client && this.parent.adapter.client.val
-  if (client) {
-    status({ client: true })
-  }
   var arr = this.map((property, key) => key)
   console.log('    clients:')
 
@@ -209,7 +207,7 @@ exports.clients = function logClients (data, event) {
     console.log('      ' +
     (arr[i] === client ? (isNode ? arr[i].green.bold : '>>>' + arr[i] + '<<<') : arr[i]))
   }
-  status({ clients: arr.length })
+  status({ cl: arr.length })
   // str += ' ]'
 }
 
@@ -219,6 +217,9 @@ exports.randomUpdate = function randUpdate (hub, amount, start) {
   if (amount === void 0) {
     amount = start = 500
   }
+  if (global.amount) {
+    amount = global.amount
+  }
   for (let i = 0 ; i < 1; i++) {
     hub.set({
       // val get ignored????
@@ -226,8 +227,8 @@ exports.randomUpdate = function randUpdate (hub, amount, start) {
       // field: uuid + ' ' + ~~(Math.random() * 99999) // this will break it allready!
     })
   }
-  currentStatus.timer = ~~(amount / 100) / 10 + 's'
-  setTimeout(randUpdate, ~~(Math.random() * 0), hub, amount + start, start)
+  currentStatus.set = ~~(amount / 100) / 10 + 's'
+  setTimeout(randUpdate, ~~(Math.random() * amount), hub, amount + start, start)
 }
 
 toggleStatus(true)

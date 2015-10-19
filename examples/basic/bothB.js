@@ -4,9 +4,8 @@ uuid = uuid.val = uuid.val + '_duplex_b_'
 var server = require('./server')
 // is a server and a client
 server.adapter.listens.val = 3033
-server.adapter.val = 3032
+server.adapter.val = 3031
 // require('./dev').randomUpdate(server)
-
 require('./dev').startRepl()
 
 // client last stamp? it is a solution

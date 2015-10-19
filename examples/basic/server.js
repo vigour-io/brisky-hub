@@ -4,12 +4,12 @@ var colors = require('colors')
 var uuid = require('vjs/lib/util/uuid').val
 var dev = require('./dev')
 
-module.exports = new Hub({
+module.exports = global.hub = new Hub({
   adapter: {
     inject: dev.protocol,
     on: {
       connection () {
-        currentStatus.port = this.val
+        global.currentStatus.up = this.val
         console.log('\n',
         uuid.green.bold,
         'connected',
@@ -23,6 +23,7 @@ module.exports = new Hub({
         console.log('o noes!'.red)
       },
       listens (data) {
+        global.currentStatus.down = this.listens.val
         console.log(
           '\n',
           uuid.green.bold,
