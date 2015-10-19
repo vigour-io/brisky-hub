@@ -197,7 +197,7 @@ exports.clients = function logClients (data, event) {
 var updatecnt = 0
 exports.randomUpdate = function randUpdate (hub, amount, start) {
   if (amount === void 0) {
-    amount = start = 500
+    amount = start = 0
   }
   for (let i = 0 ; i < 1; i++) {
     hub.set({
