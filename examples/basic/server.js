@@ -2,10 +2,11 @@
 var Hub = require('../../lib/')
 var colors = require('colors')
 var uuid = require('vjs/lib/util/uuid').val
+var dev = require('./dev')
 
 module.exports = new Hub({
   adapter: {
-    inject: require('../../lib/adapter/websocket'),
+    inject: dev.protocol,
     on: {
       connection () {
         console.log('\n',
@@ -33,13 +34,13 @@ module.exports = new Hub({
   },
   clients: {
     on: {
-      property: require('./dev').clients
+      property: dev.clients
     }
   },
   on: {
     data: {
-      performance: require('./dev').performance,
-      log: require('./dev').data
+      performance: dev.performance,
+      log: dev.data
     }
   }
 })

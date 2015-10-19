@@ -8,7 +8,7 @@ var dev = require('./dev')
 var duplex = new Hub({
   key: 'duplex',
   adapter: {
-    inject: require('../../lib/adapter/websocket'),
+    inject: dev.protocol,
     on: {
       connection (data) {
         console.log(uuid, 'connected to:', this.val)
@@ -33,7 +33,7 @@ var duplex = new Hub({
 
 global.duplex = duplex
 
-setTimeout(() => duplex.adapter.val = 'ws://localhost:3032', 200)
+setTimeout(() => duplex.adapter.val = 3032, 200)
 require('./dev').startRepl()
 // require('./dev').randomUpdate(duplex, 0)
 

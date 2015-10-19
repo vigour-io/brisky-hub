@@ -9,7 +9,7 @@ var dev = require('./dev')
 var origin = new Hub({
   key: 'server',
   adapter: {
-    inject: require('../../lib/adapter/websocket'),
+    inject: dev.protocol,
     on: {
       connection (data) {
         console.log(uuid + ' connected to:', this.val)
@@ -47,7 +47,7 @@ setTimeout(() => {
 
 // need to override blocks of listeners when in event in which listeners are added)
 // console.error('lets start!!!!!', origin.clients)
-setTimeout(() => origin.adapter.val = 'ws://localhost:3031', 300)
+setTimeout(() => origin.adapter.val = 3031, 300)
 require('./dev').randomUpdate(origin)
 
 global.hub = origin

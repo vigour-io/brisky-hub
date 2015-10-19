@@ -1,4 +1,8 @@
 'use strict'
+
+
+
+
 var isNode = require('vjs/lib/util/is/node')
 var uuid = String(require('vjs/lib/util/uuid').val)
 var ADDED = '    added:'
@@ -6,6 +10,7 @@ var REMOVED = '    removed:'
 var UPDATE = 'incoming '
 var UPDATESELF = 'self'
 var UPSTREAM = 'up  '
+var log
 var DOWNSTREAM = 'down'
 var merge = require('vjs/lib/util/merge')
 var currentStatus = global.currentStatus = {
@@ -13,6 +18,8 @@ var currentStatus = global.currentStatus = {
 }
 var renderStatusInterval = 3000
 var sinterval
+
+exports.protocol = require('../../lib/adapter/tcp')
 
 // require('log-buffer')
 // overwrite log make a small thin (nice and compact)
@@ -43,26 +50,28 @@ function renderStatusProcess (args) {
     process.stdout.cursorTo(0)
   }
   if (args) {
-    for (let i in args) {
-      if (typeof args[i] === 'object') {
-        let whitespace
-        let check = typeof args[i - 1] === 'string' && args[i - 1]
-        if (/^ +$/.test(check)) {
-          whitespace = check
-        }
-        if (args[i].serialize) {
-          args[i] = JSON.stringify(args[i].serialize(), false, 2)
-        } else {
-          args[i] = JSON.stringify(args[i], false, 2)
-        }
-        if (whitespace) {
-          args[i] = args[i].split('\n').join('\n' + '  ' + whitespace)
-        }
-        args[i] = args[i].grey
-      }
-      process.stdout.write(args[i] + ' ')
-    }
-    process.stdout.write('\n')
+    log.apply(this, args)
+    // for (let i in args) {
+      // if (typeof args[i] === 'object') {
+      //   let whitespace
+      //   let check = typeof args[i - 1] === 'string' && args[i - 1]
+      //   if (/^ +$/.test(check)) {
+      //     whitespace = check
+      //   }
+      //   if (args[i].serialize) {
+      //     args[i] = JSON.stringify(args[i].serialize(), false, 2)
+      //   } else {
+      //     args[i] = JSON.stringify(args[i], false, 2)
+      //   }
+      //   if (whitespace) {
+      //     args[i] = args[i].split('\n').join('\n' + '  ' + whitespace)
+      //   }
+      //   args[i] = args[i].grey
+      // }
+
+      // process.stdout.write(args[i] + ' ')
+    // }
+    // process.stdout.write('\n')
   }
   if (sinterval) {
     process.stdout.cursorTo(0)
@@ -123,6 +132,7 @@ if (isNode) {
   UPDATESELF = UPDATESELF.grey
   UPSTREAM = UPSTREAM.magenta
   DOWNSTREAM = DOWNSTREAM.cyan
+  log = console.log
   console.log = function () {
     renderStatusProcess(arguments)
   }
@@ -192,8 +202,8 @@ exports.randomUpdate = function randUpdate (hub, amount, start) {
   for (let i = 0 ; i < 1; i++) {
     hub.set({
       // val get ignored????
-      val: uuid + ' ' + (updatecnt++),
-      field: uuid + ' ' + ~~(Math.random() * 99999) // this will break it allready!
+      val: uuid + ' ' + (updatecnt++)
+      // field: uuid + ' ' + ~~(Math.random() * 99999) // this will break it allready!
     })
   }
   currentStatus.timer = ~~(amount/100)/10 + 's'
