@@ -191,8 +191,9 @@ exports.randomUpdate = function randUpdate (hub, amount, start) {
   }
   for (let i = 0 ; i < 1; i++) {
     hub.set({
-      val: uuid + ' ' + (updatecnt++)
-      // field: uuid + ' ' + ~~(Math.random() * 99999) this will break it allready!
+      // val get ignored????
+      val: uuid + ' ' + (updatecnt++),
+      field: uuid + ' ' + ~~(Math.random() * 99999) // this will break it allready!
     })
   }
   currentStatus.timer = ~~(amount/100)/10 + 's'

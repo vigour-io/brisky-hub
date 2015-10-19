@@ -29,7 +29,7 @@ var origin = new Hub({
   on: {
     data: {
       performance: dev.performance,
-      data: dev.data
+      dev: dev.data
     }
   }
 })
@@ -41,14 +41,14 @@ var request = require('request')
 
 setTimeout(() => {
   // 'http://img0.mxstatic.com/wallpapers/58487114d3d7fedde7a01048546c06b1_large.jpeg
-  request('http://img0.mxstatic.com/wallpapers/58487114d3d7fedde7a01048546c06b1_large.jpeg')
-    .pipe(origin.stream)
+  // request('http://img0.mxstatic.com/wallpapers/58487114d3d7fedde7a01048546c06b1_large.jpeg')
+  //   .pipe(origin.stream)
 }, 1500)
 
 // need to override blocks of listeners when in event in which listeners are added)
 // console.error('lets start!!!!!', origin.clients)
 setTimeout(() => origin.adapter.val = 'ws://localhost:3031', 300)
-// require('./dev').randomUpdate(origin)
+require('./dev').randomUpdate(origin)
 
 global.hub = origin
 
