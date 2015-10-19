@@ -1,7 +1,7 @@
 'use strict'
 var isNode = require('vjs/lib/util/is/node')
 var uuid = require('vjs/lib/util/uuid')
-uuid = uuid.val = uuid.val + (isNode ? '_server-client' : '_origin-browser')
+uuid = uuid.val = uuid.val + (isNode ? '_server_client' : '_origin-browser')
 
 var Hub = require('../../lib/')
 var dev = require('./dev')
