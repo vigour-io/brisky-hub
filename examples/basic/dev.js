@@ -196,7 +196,7 @@ exports.randomUpdate = function randUpdate (hub, amount, start) {
     })
   }
   currentStatus.timer = ~~(amount/100)/10 + 's'
-  // setTimeout(randUpdate, ~~(Math.random() * amount), hub, amount + start, start)
+  setTimeout(randUpdate, ~~(Math.random() * amount), hub, amount + start, start)
 }
 
 toggleStatus(true)

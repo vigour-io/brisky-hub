@@ -27,23 +27,23 @@ var origin = new Hub({
     }
   },
   on: {
-    data: dev.data
+    data: {
+      performance: dev.performance,
+      data: dev.data
+    }
   }
 })
 
-var fs = require('fs')
+// var fs = require('fs')
+
 
 var request = require('request')
 
 setTimeout(() => {
-  //'http://img0.mxstatic.com/wallpapers/58487114d3d7fedde7a01048546c06b1_large.jpeg
-  request('http://vigour.io')
+  // 'http://img0.mxstatic.com/wallpapers/58487114d3d7fedde7a01048546c06b1_large.jpeg
+  request('http://img0.mxstatic.com/wallpapers/58487114d3d7fedde7a01048546c06b1_large.jpeg')
     .pipe(origin.stream)
-  // origin.stream.on('data', function (chunk) {
-  //   console.log(chunk)
-  // })
-}, 500)
-
+}, 1500)
 
 // need to override blocks of listeners when in event in which listeners are added)
 // console.error('lets start!!!!!', origin.clients)

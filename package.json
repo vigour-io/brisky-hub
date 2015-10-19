@@ -36,9 +36,7 @@
   },
   "devDependencies": {
     "log-buffer": "*",
-    "colors": "*",
-    "mononic-timestamp": "*",
-    "keypress": "0.2.1"
+    "colors": "*"
   },
   "homepage": "https://github.com/vigour-io/hub#readme",
   "vigour": {

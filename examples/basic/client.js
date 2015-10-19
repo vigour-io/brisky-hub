@@ -35,6 +35,6 @@ global.duplex = duplex
 
 setTimeout(() => duplex.adapter.val = 'ws://localhost:3032', 200)
 require('./dev').startRepl()
-// require('./dev').randomUpdate(duplex)
+// require('./dev').randomUpdate(duplex, 0)
 
-setTimeout(() => duplex.val = { x: Math.random()*100 }, 1500)
+setTimeout(() => duplex.val = { x: Math.random()*100 }, 500)
