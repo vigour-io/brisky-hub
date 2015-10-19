@@ -16,6 +16,7 @@ var origin = new Hub({
       },
       error (err) {
         console.log(err.message.red)
+        throw new Error('!')
       }
     }
   },
@@ -29,7 +30,7 @@ var origin = new Hub({
   on: {
     data: {
       performance: dev.performance,
-      dev: dev.data
+      // dev: dev.data
     }
   }
 })

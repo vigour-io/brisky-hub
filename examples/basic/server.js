@@ -40,7 +40,7 @@ module.exports = new Hub({
   on: {
     data: {
       performance: dev.performance,
-      log: dev.data
+      // log: dev.data
     }
   }
 })

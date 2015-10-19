@@ -26,14 +26,14 @@ var duplex = new Hub({
   on: {
     data: {
       performance: dev.performance,
-      dev: dev.data
+      // dev: dev.data
     }
   }
 })
 
 global.duplex = duplex
 
-setTimeout(() => duplex.adapter.val = 3032, 200)
+setTimeout(() => duplex.adapter.val = 3032, 1000)
 require('./dev').startRepl()
 // require('./dev').randomUpdate(duplex, 0)
-setTimeout(() => duplex.val = { x: Math.random() * 100 }, 500)
+// setTimeout(() => duplex.val = { x: Math.random() * 100 }, 1500)
