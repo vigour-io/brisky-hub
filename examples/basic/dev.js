@@ -1,8 +1,5 @@
 'use strict'
 
-
-
-
 var isNode = require('vjs/lib/util/is/node')
 var uuid = String(require('vjs/lib/util/uuid').val)
 var ADDED = '    added:'
@@ -10,7 +7,7 @@ var REMOVED = '    removed:'
 var UPDATE = 'incoming '
 var UPDATESELF = 'self'
 var UPSTREAM = 'up  '
-var log
+var log = console.log
 var DOWNSTREAM = 'down'
 var merge = require('vjs/lib/util/merge')
 var currentStatus = global.currentStatus = {
@@ -19,25 +16,28 @@ var currentStatus = global.currentStatus = {
 var renderStatusInterval = 3000
 var sinterval
 
-exports.protocol = require('../../lib/adapter/tcp')
-// exports.protocol = require('../../lib/adapter/websocket')
-
+if(isNode) {
+  console.clear = function() {
+    let lines = process.stdout.getWindowSize()[1]
+    for (let i = 0; i < lines; i++) {
+      console.log('\r\n')
+    }
+  }
+}
+// exports.protocol = require('../../lib/adapter/tcp')
+exports.protocol = require('../../lib/adapter/websocket')
 // require('log-buffer')
 // overwrite log make a small thin (nice and compact)
 
 function toggleStatus (val) {
   if (val === void 0) {
-    val = sinterval ? false : true
-    // console.log('status updates:', val)
+    val = !!sinterval
   }
   if (val) {
     if (!sinterval) {
       sinterval = setInterval(renderStatusProcess, renderStatusInterval)
     }
-    let lines = process.stdout.getWindowSize()[1]
-    for (let i = 0; i < lines; i++) {
-      console.log('\r\n')
-    }
+    console.clear()
     renderStatusProcess()
   } else if (val === false) {
     clearInterval(sinterval)
@@ -47,8 +47,12 @@ function toggleStatus (val) {
 
 function renderStatusProcess (args) {
   if (sinterval) {
-    process.stdout.clearLine()
-    process.stdout.cursorTo(0)
+    if (isNode) {
+      process.stdout.clearLine()
+      process.stdout.cursorTo(0)
+    } else {
+      // console.clear()
+    }
   }
   if (args) {
     log.apply(this, args)
@@ -75,12 +79,14 @@ function renderStatusProcess (args) {
     // process.stdout.write('\n')
   }
   if (sinterval) {
-    process.stdout.cursorTo(0)
-    let str = ''
-    for (let i in currentStatus) {
-      str += ' ' + i + ' ' + String(currentStatus[i]).green.bold
+    if (isNode) {
+      process.stdout.cursorTo(0)
+      let str = ''
+      for (let i in currentStatus) {
+        str += ' ' + i + ' ' + String(currentStatus[i]).green.bold
+      }
+      process.stdout.write(str)
     }
-    process.stdout.write(str)
   }
 }
 
@@ -208,7 +214,7 @@ exports.randomUpdate = function randUpdate (hub, amount, start) {
     })
   }
   currentStatus.timer = ~~(amount / 100) / 10 + 's'
-  setTimeout(randUpdate, ~~(Math.random() * amount), hub, amount + start, start)
+  setTimeout(randUpdate, ~~(Math.random() * 50000), hub, amount + start, start)
 }
 
 toggleStatus(true)
