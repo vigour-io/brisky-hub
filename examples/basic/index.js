@@ -6,5 +6,9 @@ server.adapter.listens.val = 3031
 // require('./dev').randomUpdate(server)
 require('./dev').startRepl()
 
-// var fs = require('fs')
-// server.pipe(fs.createWriteStream(uuid.val + 'log.txt'))
+var fs = require('fs')
+server.pipe(fs.createWriteStream('resultlog.txt'))
+// var http = require('http')
+// http.createServer(function(req, res) {
+//   server.pipe(res)
+// }).listen(6060)

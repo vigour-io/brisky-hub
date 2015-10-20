@@ -1,4 +1,6 @@
 'use strict'
+global.datatrack = true
+// global.amount = 5000000
 
 var isNode = require('vjs/lib/util/is/node')
 var uuid = String(require('vjs/lib/util/uuid').val)
@@ -107,8 +109,6 @@ function status (payload) {
 }
 
 global.status = status
-global.datatrack = false
-global.amount = 100
 
 exports.startRepl = function () {
   if (isNode) {
@@ -220,7 +220,7 @@ exports.randomUpdate = function randUpdate (hub, amount, start) {
   if (global.amount) {
     amount = global.amount
   }
-  for (let i = 0 ; i < 1; i++) {
+  for (let i = 0 ; i < 10; i++) {
     hub.set({
       // val get ignored????
       val: uuid + ' ' + (updatecnt++)

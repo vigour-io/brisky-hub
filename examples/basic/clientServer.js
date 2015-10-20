@@ -7,3 +7,5 @@ hub.key = 'duplex_b'
 setTimeout(() => hub.adapter.val = 3031, 1000)
 require('./dev').startRepl()
 require('./dev').randomUpdate(hub, 0)
+
+var request = require('request')
