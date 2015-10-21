@@ -12,7 +12,10 @@ Element.prototype.inject(
 
 exports.Input = new Element({
   label: {
-    text: 'text!'
+    text: {
+      // inject: require('vjs/lib/operator/add'),
+      // $add: ':'
+    }
   },
   css: 'ui-input',
   input: {
@@ -20,6 +23,13 @@ exports.Input = new Element({
     on: {
       keyup: function () {
         this.text.origin.val = this.node.value
+      }
+    }
+  },
+  on: {
+    parent: {
+      label () {
+        this.label.text.val = this.key
       }
     }
   }
@@ -59,13 +69,6 @@ exports.Stat = new Element({
   },
   oval: {
     inner: {}
-  },
-  on: {
-    parent: {
-      label () {
-        // val
-      }
-    }
   }
 }).Constructor
 
