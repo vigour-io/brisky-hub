@@ -9,7 +9,7 @@ Element.prototype.inject(
 var Observable = require('vjs/lib/observable')
 var msgCount = new Observable(0)
 var Hub = require('../../lib')
-var ui = require('../ui')
+var ui = require('uikit')
 var start = Date.now()
 var now = new Observable(0)
 var connected = new Observable(false)
@@ -58,13 +58,13 @@ var app = global.app = new Element({
       start: {
         text: {
           val: start,
-          inject: require('../ui/transform/time')
+          inject: require('uikit/lib/transform/time')
         }
       },
       now: {
         text: {
           val: now,
-          inject: require('../ui/transform/time')
+          inject: require('uikit/lib/transform/time')
         }
       },
       upstream: { text: hub.adapter }
@@ -74,7 +74,7 @@ var app = global.app = new Element({
       title: { text: 'Messages' },
       counter: {
         text: {
-          inject: require('../ui/transform/number'),
+          inject: require('uikit/lib/transform/number'),
           val: msgCount
         }
       }
