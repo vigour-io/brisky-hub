@@ -11,11 +11,16 @@ Element.prototype.inject(
 )
 
 exports.Input = new Element({
-  node: 'textarea',
+  label: {
+    text: 'text!'
+  },
   css: 'ui-input',
-  on: {
-    keyup: function () {
-      this.text.origin.val = this.node.value
+  input: {
+    node: 'textarea',
+    on: {
+      keyup: function () {
+        this.text.origin.val = this.node.value
+      }
     }
   }
 }).Constructor
@@ -54,5 +59,14 @@ exports.Stat = new Element({
   },
   oval: {
     inner: {}
+  },
+  on: {
+    parent: {
+      label () {
+        // val
+      }
+    }
   }
 }).Constructor
+
+// this.title.text.val = this.key

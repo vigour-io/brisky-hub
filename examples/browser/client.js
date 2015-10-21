@@ -11,21 +11,31 @@ var msgCount = new Observable(0)
 var Hub = require('../../lib')
 var ui = require('../ui')
 var start = Date.now()
+setInterval(function () {
+  start = Date.now()
+}, 1000)
 var now = new Observable(0)
-setInterval(() => now.val++, 1e3)
+var connected = new Observable(false)
+setInterval(() => now.val++, 5000)
 
 var hub = global.hub = new Hub({
   adapter: {
     inject: require('../../lib/adapter/websocket'),
     on: {
-      connection () {
-        console.log('context!')
+      connection (err) {
+        connected.val = err ? true : false
+        console.log('CONNECTION', err)
+      },
+      error (err) {
+        console.error('err!', err)
       }
     }
   },
-  on: {
-    data (data) {
-      msgCount.val++
+  text: {
+    on: {
+      data (data) {
+        msgCount.val++
+      }
     }
   }
 })
@@ -55,6 +65,15 @@ global.app = new Element({
       }
     },
     // dit wil je eigenlijk gewoon supporten!
+    msgcnt: new ui.Stat({
+      title: { text: 'Messages' },
+      counter: {
+        text: {
+          inject: require('vjs/lib/operator/transform'),
+          val: msgCount,
+        }
+      }
+    }),
     msg: new ui.Stat({
       title: { text: 'Msg/s' },
       counter: {
@@ -66,6 +85,13 @@ global.app = new Element({
       }
     }),
     clients: new ui.Stat({
+      status: {
+        inject: require('vjs/lib/operator/transform'),
+        $transform (val) {
+          return val ? 'ok' : 'error'
+        },
+        val: connected
+      },
       title: { text: 'Clients' },
       counter: {
         text: {
@@ -78,9 +104,12 @@ global.app = new Element({
           }
         }
       }
-    }),
-    button: new ui.Button({ text: 'Reconnect' })
+    })
   }
 })
 
-//  input: new ui.Input({ text: hub.get('text', {}) }),
+app.holder.set({
+  button: new ui.Button({ text: 'Reconnect' }),
+  input: new ui.Input({ input: { text: hub.get('text', {}) } }),
+  input2: new ui.Input({ input: { text: hub.get('text', {}) } })
+})

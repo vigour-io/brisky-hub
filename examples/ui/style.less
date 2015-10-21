@@ -1,4 +1,5 @@
 @margin: 7px;
+
 .app {
   font-family: Avenir-Book;
   margin: 0;
@@ -31,12 +32,43 @@
 
 .ui-input {
   /* bg: */
+  textarea {
+    border: none;
+    resize: none;
+    overflow: auto;
+    outline: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+  text-align: left;
+  .label {
+    width: 90px;
+    // border:1px solid red;
+    display: table-cell;
+    vertical-align: middle;
+    font-family: Avenir-Book;
+    font-size: 13px;
+    color: #1D1D26;
+    letter-spacing: 0.86px;
+  }
+  .input {
+    width: 100%;
+    height:20px;
+    // border:1px solid red;
+    display: table-cell;
+    vertical-align: middle;
+    font-family: Avenir-Book;
+    font-size: 13px;
+    color: #1D1D26;
+    letter-spacing: 0.86px;
+  }
+
   padding: @margin;
-  border: 1px solid #eee;
-  font-family: Avenir-Book;
-  font-size: 13px;
-  color: #1D1D26;
-  letter-spacing: 0.86px;
+  // border: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  width: 100%;
+  display: table;
   // line-height: 13px;
 }
 
@@ -58,14 +90,12 @@
       height:10px;
       background: #ccc;
       border-radius: 50%;
-    }
-
-    .inner .ok {
-      background: #50D2C2;
-    }
-
-    .inner .error {
-      background: #FF3366;
+      &.ok {
+        background: #50D2C2;
+      }
+      &.error {
+        background: #FF3366;
+      }
     }
   }
   /* Completed: */

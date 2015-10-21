@@ -22,7 +22,10 @@
     "xhr"
   ],
   "gaston": {
-    "source-maps": false
+    "source-maps": false,
+    "less-options": {
+      "strictMath": true
+    }
   },
   "author": "Vigour.io <dev@vigour.io>",
   "license": "MIT",
