@@ -35,6 +35,7 @@
     "vjs": "git+ssh://git@github.com:vigour-io/vjs.git#develop"
   },
   "devDependencies": {
+    "element": "git+ssh://git@github.com:vigour-io/element.git#develop",
     "log-buffer": "*",
     "colors": "*"
   },
