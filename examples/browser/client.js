@@ -131,12 +131,39 @@ updating.on(function (data) {
   }
 })
 
+var bla = new Observable({
+  on: {
+    data: {
+      condition () {
+        console.log('????')
+      }
+    }
+  }
+})
+
+var blax = new Observable({
+  ChildConstructor: new Observable({
+    on: {
+      data: {
+        condition () {
+
+        }
+      }
+    },
+    ChildConstructor: 'Constructor'
+  }).Constructor
+})
+
+var blaxx = new Observable({
+  xxxx: {}
+})
+
 app.holder.set({
   input: new uikit.Input({
     input: { text: hub.get('text', {}) }
   }),
   input2: new uikit.Input({
-    input: { text: hub.get('text', {}) }
+    input: { text: blaxx.xxxx }
   }),
   button: new uikit.Button({
     text: {
