@@ -9,7 +9,7 @@ Element.prototype.inject(
 var Observable = require('vjs/lib/observable')
 var msgCount = new Observable(0)
 var Hub = require('../../lib')
-var ui = require('uikit')
+var uikit = require('uikit')
 var start = Date.now()
 var now = new Observable(0)
 var connected = new Observable(false)
@@ -53,24 +53,33 @@ var app = global.app = new Element({
   css: 'app',
   holder: {
     labels: {
-      ChildConstructor: ui.Label,
-      uuid: { text: uuid },
-      start: {
-        text: {
-          val: start,
-          inject: require('uikit/lib/transform/time')
-        }
+      ChildConstructor: uikit.Badge,
+      uuid: {
+        label: { text: 'uuid' },
+        message: { text: uuid }
       },
+      // start: {
+      //   text: {
+      //     val: start,
+      //     inject: require('uikit/lib/transform/time')
+      //   }
+      // },
       now: {
-        text: {
-          val: now,
-          inject: require('uikit/lib/transform/time')
+        label: { text: 'time' },
+        message: {
+          text: {
+            val: now,
+            inject: require('uikit/lib/transform/time')
+          }
         }
       },
-      upstream: { text: hub.adapter }
+      upstream: {
+        label: { text: 'upstream' },
+        message: { text: hub.adapter }
+      }
     },
     // dit wil je eigenlijk gewoon supporten!
-    msgcnt: new ui.Stat({
+    msgcnt: new uikit.Stat({
       title: { text: 'Messages' },
       counter: {
         text: {
@@ -79,17 +88,17 @@ var app = global.app = new Element({
         }
       }
     }),
-    msg: new ui.Stat({
+    msg: new uikit.Stat({
       title: { text: 'Msg/s' },
       counter: {
         text: {
           inject: require('vjs/lib/operator/transform'),
           val: msgCount,
-          $transform: (val) => ~~((val / ((Date.now() - start)))*1000)
+          $transform: (val) => ~~((val / ((Date.now() - start))) * 1000)
         }
       }
     }),
-    clients: new ui.Stat({
+    clients: new uikit.Stat({
       status: {
         inject: require('vjs/lib/operator/transform'),
         $transform: (val) => val ? 'ok' : 'error',
@@ -123,9 +132,13 @@ updating.on(function (data) {
 })
 
 app.holder.set({
-  input: new ui.Input({ input: { text: hub.get('text', {}) } }),
-  // input2: new ui.Input({ input: { text: hub.get('text', {}) } }),
-  button: new ui.Button({
+  input: new uikit.Input({
+    input: { text: hub.get('text', {}) }
+  }),
+  input2: new uikit.Input({
+    input: { text: hub.get('text', {}) }
+  }),
+  button: new uikit.Button({
     text: {
       inject: require('vjs/lib/operator/transform'),
       val: updating,
