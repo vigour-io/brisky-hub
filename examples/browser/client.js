@@ -56,6 +56,7 @@ setInterval(() => {
 
 var app = global.app = new Element({
   node: document.body,
+  rendered: true, 
   css: 'app',
   holder: {
     labels: {
@@ -73,10 +74,10 @@ var app = global.app = new Element({
           }
         }
       },
-      upstream: {
+      upstream: new uikit.InputBadge({
         label: { text: 'upstream' },
         message: { text: hub.adapter }
-      },
+      }),
       clock: new uikit.Label({
         text: {
           val: start,
