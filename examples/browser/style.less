@@ -1,11 +1,14 @@
 .labels {
   padding-left: 10px;
-  * { margin-right:10px; }
+  & > * {
+    margin-right:10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+  }
 }
 
 .holder {
   padding: 10px;
-  padding-top:15px;
   text-align: center;
   .ui-stat {
     margin:30px;
@@ -22,7 +25,6 @@
   }
   .ui-input {
     margin: 0 auto;
-    // display: inline-block;
     max-width: 300px;
   }
 }

@@ -7,16 +7,9 @@ Element.prototype.inject(
   require('element/lib/events/drag')
 )
 var Observable = require('vjs/lib/observable')
-var msgCount = new Observable(0)
 var Hub = require('../../lib')
 var uikit = require('uikit')
-var start = Date.now()
-var now = new Observable(0)
-var connected = new Observable(false)
 var uuid = require('vjs/lib/util/uuid').val
-setInterval(() => {
-  now.val++
-}, 1000)
 
 var hub = global.hub = new Hub({
   adapter: {
@@ -44,9 +37,22 @@ var hub = global.hub = new Hub({
   }
 })
 
-// ofcourse we need reconnection strategies here!
+// ofcourse we need reconnection strategies here WIP!
 setTimeout(() => hub.adapter.val = 3031, 200)
 setTimeout(() => hub.set({bla: 'something!'}), 300)
+
+var start = Date.now()
+var now = new Observable(0)
+var connected = new Observable(false)
+var msgCount = new Observable({
+  val: 0,
+  lastSecond: 0
+})
+
+setInterval(() => {
+  now.val++
+  msgCount.lastSecond.val = msgCount.val
+}, 1000)
 
 var app = global.app = new Element({
   node: document.body,
@@ -78,7 +84,6 @@ var app = global.app = new Element({
         }
       })
     },
-    // dit wil je eigenlijk gewoon supporten!
     msgcnt: new uikit.Stat({
       title: { text: 'Messages' },
       counter: {
@@ -93,8 +98,8 @@ var app = global.app = new Element({
       counter: {
         text: {
           inject: require('vjs/lib/operator/transform'),
-          val: msgCount,
-          $transform: (val) => ~~((val / ((Date.now() - start))) * 1000)
+          val: now,
+          $transform: (val) => ~~(msgCount.val - msgCount.lastSecond.val)
         }
       }
     }),
@@ -126,36 +131,9 @@ updating.on(function (data) {
   this._interval = null
   if (this.val === true) {
     this._interval = setInterval(() => {
-      hub.set({ text: (~~(Math.random() * 100)) + uuid })
+      hub.set({ text: (~~(Math.random() * 1000)) + ' from:' + uuid })
     }, 0)
   }
-})
-
-var bla = new Observable({
-  on: {
-    data: {
-      condition () {
-        console.log('????')
-      }
-    }
-  }
-})
-
-var blax = new Observable({
-  ChildConstructor: new Observable({
-    on: {
-      data: {
-        condition () {
-
-        }
-      }
-    },
-    ChildConstructor: 'Constructor'
-  }).Constructor
-})
-
-var blaxx = new Observable({
-  xxxx: {}
 })
 
 app.holder.set({
@@ -163,7 +141,7 @@ app.holder.set({
     input: { text: hub.get('text', {}) }
   }),
   input2: new uikit.Input({
-    input: { text: blaxx.xxxx }
+    input: { text: hub.get('text2', {}) }
   }),
   button: new uikit.Button({
     text: {
