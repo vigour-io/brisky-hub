@@ -1,0 +1,90 @@
+@margin: 7px;
+.app {
+  font-family: Avenir-Book;
+  margin: 0;
+  padding: 0;
+}
+
+.ui-button {
+  /* bg: */
+  text-align: center;
+  background: #FF3366;
+  border-radius: 80px;
+  /* Create: */
+  font-family: Avenir-Book;
+  font-size: 15px;
+  color: #FFFFFF;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.ui-label {
+  /* bg: */
+  padding: @margin;
+  border: 1px solid #eee;
+  font-family: Avenir-Book;
+  font-size: 13px;
+  color: #1D1D26;
+  letter-spacing: 0.86px;
+  // line-height: 13px;
+}
+
+.ui-input {
+  /* bg: */
+  padding: @margin;
+  border: 1px solid #eee;
+  font-family: Avenir-Book;
+  font-size: 13px;
+  color: #1D1D26;
+  letter-spacing: 0.86px;
+  // line-height: 13px;
+}
+
+.ui-stat {
+  /* oval: */
+  text-align: center;
+  display: inline-block;
+  /* oval: */
+  .oval {
+    margin-top:15px;
+    display: inline-block;
+    width:10px;
+    height:10px;
+    padding:8px;
+    background: #eee;
+    border-radius: 50%;
+    .inner {
+      width:10px;
+      height:10px;
+      background: #ccc;
+      border-radius: 50%;
+    }
+
+    .inner .ok {
+      background: #50D2C2;
+    }
+
+    .inner .error {
+      background: #FF3366;
+    }
+  }
+  /* Completed: */
+  .title {
+    margin-top:5px;
+    text-align: center;
+    font-family: Avenir-Book;
+    font-size: 13px;
+    color: #333;
+    letter-spacing: 0.5px;
+    line-height: 13px;
+  }
+  /* 54: */
+  .counter {
+    text-align: center;
+    font-family: Avenir-Light;
+    font-size: 50px;
+    color: #333;
+    letter-spacing: 1px;
+    line-height: 50px;
+  }
+}
