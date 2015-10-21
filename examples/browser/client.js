@@ -58,12 +58,6 @@ var app = global.app = new Element({
         label: { text: 'uuid' },
         message: { text: uuid }
       },
-      // start: {
-      //   text: {
-      //     val: start,
-      //     inject: require('uikit/lib/transform/time')
-      //   }
-      // },
       now: {
         label: { text: 'time' },
         message: {
@@ -76,7 +70,13 @@ var app = global.app = new Element({
       upstream: {
         label: { text: 'upstream' },
         message: { text: hub.adapter }
-      }
+      },
+      clock: new uikit.Label({
+        text: {
+          val: start,
+          inject: require('uikit/lib/transform/time')
+        }
+      })
     },
     // dit wil je eigenlijk gewoon supporten!
     msgcnt: new uikit.Stat({
