@@ -6,6 +6,7 @@ docs/*
 .*.sw[op]
 
 *.mp4
+*.mov
 
 bundles/
 bundle.css
