@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "element": "git+ssh://git@github.com:vigour-io/element.git#develop",
+    "uikit": "git+ssh://git@github.com:vigour-io/uikit.git#develop",
     "log-buffer": "*",
     "colors": "*"
   },
