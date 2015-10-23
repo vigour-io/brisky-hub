@@ -56,7 +56,7 @@ setInterval(() => {
 
 var app = global.app = new Element({
   node: document.body,
-  rendered: true, 
+  rendered: true,
   css: 'app',
   holder: {
     labels: {
