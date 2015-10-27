@@ -18,6 +18,13 @@ var hub = global.hub = new Hub({
   }
 })
 
+require('../basic/dev').startRepl()
+
 hub.adapter.listens.val = 3031
 
 // setInterval(() => hub.set({bla: Math.random() * 9999}), 500)
+// setTimeout(() => {
+//   hub.set({
+//     randomfield: true
+//   })
+// }, 2500)
