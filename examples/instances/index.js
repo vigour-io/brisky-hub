@@ -24,16 +24,16 @@ hub.set({
   }
 })
 
-setTimeout(function() {
-  // console.log(hub.blax)
-  hub.blax.a.remove()
-  a.set({
-    text: 'instance a lezzgo' //need update blockers on set it finaly happened!
-  })
-  hub.set({
-    text2: 'non-instance'
-  })
-},800)
+// setTimeout(function() {
+//   // console.log(hub.blax)
+//   hub.blax.a.remove()
+//   a.set({
+//     text: 'instance a lezzgo' //need update blockers on set it finaly happened!
+//   })
+//   hub.set({
+//     text2: 'non-instance'
+//   })
+// },800)
 
 // a.on('property', function (data) {
 //   console.log('property', data, this.path)
