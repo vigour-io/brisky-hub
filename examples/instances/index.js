@@ -15,7 +15,7 @@ var hub = global.hub = new Hub({
 
 var a = global.a = new hub.Constructor({
   key: 'a',
-  instanceId: 'a'
+  instance: 'a'
 })
 
 hub.set({
@@ -27,7 +27,13 @@ hub.set({
 setTimeout(function() {
   // console.log(hub.blax)
   hub.blax.a.remove()
-},500)
+  a.set({
+    text: 'instance a lezzgo' //need update blockers on set it finaly happened!
+  })
+  hub.set({
+    text2: 'non-instance'
+  })
+},800)
 
 // a.on('property', function (data) {
 //   console.log('property', data, this.path)
