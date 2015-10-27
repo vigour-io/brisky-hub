@@ -14,7 +14,8 @@ var hub = global.hub = new Hub({
 })
 
 var a = global.a = new hub.Constructor({
-  key: 'a'
+  key: 'a',
+  instanceId: 'a'
 })
 
 a.on('property', function (data) {
@@ -26,10 +27,7 @@ a.on(function (data) {
   console.log('val', this.path)
 })
 
-hub.set({
-  xfield: true
-})
-
+hub.adapter.listens.val = 3031
 // setTimeout(() => {
 //   hub.adapter.val = 3031
 // }, 100)
