@@ -18,14 +18,25 @@ var a = global.a = new hub.Constructor({
   instanceId: 'a'
 })
 
-a.on('property', function (data) {
-  console.log('property', data, this.path)
+hub.set({
+  blax: {
+    a: true
+  }
 })
 
-a.on(function (data) {
-  // not having a data listener does not fire property!
-  console.log('val', this.path)
-})
+setTimeout(function() {
+  // console.log(hub.blax)
+  hub.blax.a.remove()
+},500)
+
+// a.on('property', function (data) {
+//   console.log('property', data, this.path)
+// })
+
+// a.on(function (data) {
+//   // not having a data listener does not fire property!
+//   console.log('val', data, this.path)
+// })
 
 hub.adapter.listens.val = 3031
 // setTimeout(() => {
