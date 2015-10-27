@@ -14,15 +14,18 @@ var cnt = 0
 var fs = require('fs')
 setTimeout(function () {
   global.streamin = Date.now()
-  var stream = fs.createReadStream(__dirname + '/a.mov')
+  // var stream = fs.createReadStream(__dirname + '/a.mov')
 
-  // var stream = fs.createReadStream('./11i31n4_SERVERlog.mov')
+  // hub.set(fs.createReadStream(__dirname + '/a.mov'))
+
+  var stream = fs.createReadStream('./a.mov')
 
   // hub.val =
   stream.on('data', function (data) {
     cnt++
     currentStatus.cnt = cnt
-    hub.setKey(cnt, data.toString())
+    hub.val = data.toString()
+    // hub.setKey(cnt, data.toString())
     global.mb += ((data && data.toString().length) / 1024 / 1024)
     currentStatus['mb/s'] = ~~(global.mb / ((Date.now() - global.streamin) / 10000)) / 10
   })
