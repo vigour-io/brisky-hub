@@ -59,11 +59,9 @@ var app = global.app = new Element({
     labels: {
       ChildConstructor: uikit.Badge,
       uuid: {
-        label: { text: 'uuid' },
         message: { text: uuid }
       },
-      now: {
-        label: { text: 'time' },
+      time: {
         message: {
           text: {
             val: now,
@@ -72,11 +70,9 @@ var app = global.app = new Element({
         }
       },
       upstream: new uikit.InputBadge({
-        label: { text: 'upstream' },
         message: { text: hub.adapter }
       }),
       instance: new uikit.InputBadge({
-        label: { text: 'instance' },
         message: { text: hub.adapter.instance }
       }),
       clock: new uikit.Label({
@@ -139,17 +135,17 @@ updating.on(function (data) {
 })
 
 app.holder.set({
-  input: new uikit.Input({
+  textField: new uikit.Input({
     input: { text: hub.get('text', {}) }
   }),
-  input2: new uikit.Input({
+  textField2: new uikit.Input({
     input: { text: hub.get('text2', {}) }
   }),
   button: new uikit.Button({
     text: {
       inject: require('vjs/lib/operator/transform'),
       val: updating,
-      $transform: (val) => val === true ? 'Stop updates' : 'Fire updates'
+      $transform: (val) => val === true ? 'Stop updates .text' : 'Fire updates .text'
     },
     css: {
       inject: require('vjs/lib/operator/transform'),
