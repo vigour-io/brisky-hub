@@ -25,7 +25,7 @@ var hub = global.hub = new Hub({
         console.log('close')
       },
       error (err) {
-        console.error('err!', err)
+        console.error('err!', err.stack)
       }
     }
   },
