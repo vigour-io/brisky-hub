@@ -1,5 +1,6 @@
 'use strict'
 var Hub = require('../../lib')
+
 var hub = global.hub = new Hub({
   key: 'orig',
   trackInstances: true,
