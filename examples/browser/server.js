@@ -18,7 +18,7 @@ var hub = global.hub = new Hub({
   }
 })
 
-require('../basic/dev').startRepl()
+//require('../basic/dev').startRepl()
 
 hub.adapter.listens.val = 3031
 
