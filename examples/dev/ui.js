@@ -51,6 +51,31 @@ setInterval(() => {
   msgCount.lastSecond.val = msgCount.val
 }, 1000)
 
+var FireButton = new uikit.Button({
+  properties: {
+    updating: function(val) {
+      this._updating = val
+      this.set({
+        text: val,
+        css: val
+      })
+    }
+  },
+  text: {
+    inject: require('vjs/lib/operator/transform'),
+    $transform: (val) => val === true ? 'Stop updates' : 'Fire updates'
+  },
+  css: {
+    inject: require('vjs/lib/operator/transform'),
+    $transform: (val) => val === true ? 'ui-button active' : 'ui-button inactive'
+  },
+  on: {
+    click () {
+      this._updating.val = !this._updating.val
+    }
+  }
+}).Constructor
+
 var app = global.app = new Element({
   node: document.body,
   rendered: true,
@@ -134,6 +159,20 @@ updating.on(function (data) {
   }
 })
 
+var fieldName = new Observable(1)
+
+var addfields = new Observable(false)
+addfields.on(function (data) {
+  clearInterval(this._interval)
+  this._interval = null
+  if (this.val === true) {
+    this._interval = setInterval(() => {
+      hub.set({ [fieldName.val]: ~~(Math.random() * 999999) })
+      fieldName.val++
+    }, 0)
+  }
+})
+
 app.holder.set({
   textfields: {
     ChildConstructor: uikit.Input,
@@ -144,23 +183,54 @@ app.holder.set({
       input: { text: hub.get('text2', {}) }
     }
   },
-  button: new uikit.Button({
-    text: {
-      inject: require('vjs/lib/operator/transform'),
-      val: updating,
-      $transform: (val) => val === true ? 'Stop updates .text' : 'Fire updates .text'
-    },
-    css: {
-      inject: require('vjs/lib/operator/transform'),
-      val: updating,
-      $transform: (val) => val === true ? 'ui-button active' : 'ui-button inactive'
-    },
-    on: {
-      click () {
-        updating.val = !updating.val
+  button: new FireButton({ updating: updating }),
+  addfield: {
+    button: new uikit.Button({
+      text: {
+        val: 'add field: ',
+        inject: require('vjs/lib/operator/add'),
+        $add: fieldName
+      },
+      on: {
+        click () {
+          hub.set({ [fieldName.val]: ~~(Math.random() * 999999) })
+          fieldName.val++
+        }
       }
+    })
+  },
+  addfields: new FireButton({ updating: addfields })
+})
+
+app.set({
+  keysOverview: {
+    css: 'labels',
+    ChildConstructor: uikit.Badge
+  }
+})
+
+for(var i = 0 ; i < 2000; i++) {
+  hub.get(i+1+'', {})
+}
+
+hub.on('property', function (data, event) {
+  if (data.added) {
+    for (let i in data.added) {
+      app.keysOverview.setKey(data.added[i], { message: { text: this[data.added[i]]} }, event)
     }
-  })
+  }
+  if (data.removed) {
+    for (let i in data.removed) {
+      app.keysOverview[data[i]] && app.keysOverview[data[i]].remove(event)
+    }
+  }
+})
+
+
+
+
+hub.each((property, key) => {
+  app.keysOverview.setKey(key + 'init', { message: { text: property } })
 })
 
 exports.app = app
