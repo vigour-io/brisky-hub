@@ -25,6 +25,8 @@ hub.set({
   }
 })
 
+console.log('bitches')
+
 // setTimeout(function() {
 //   // console.log(hub.blax)
 //   hub.blax.a.remove()
