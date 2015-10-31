@@ -137,7 +137,7 @@ updating.on(function (data) {
 app.holder.set({
   textField: new uikit.Input({
     input: { text: hub.get('text', {}) }
-  }),
+  }, void 0, app.holder, 'textField'),
   textField2: new uikit.Input({
     input: { text: hub.get('text2', {}) }
   }),
