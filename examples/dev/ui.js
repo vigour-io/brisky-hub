@@ -209,9 +209,9 @@ app.set({
   }
 })
 
-for(var i = 0 ; i < 2000; i++) {
-  hub.get(i+1+'', {})
-}
+// for(var i = 0 ; i < 2000; i++) {
+//   hub.get(i+1+'', {})
+// }
 
 hub.on('property', function (data, event) {
   if (data.added) {
