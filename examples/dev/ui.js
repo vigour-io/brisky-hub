@@ -135,12 +135,15 @@ updating.on(function (data) {
 })
 
 app.holder.set({
-  textField: new uikit.Input({
-    input: { text: hub.get('text', {}) }
-  }, void 0, app.holder, 'textField'),
-  textField2: new uikit.Input({
-    input: { text: hub.get('text2', {}) }
-  }),
+  textfields: {
+    ChildConstructor: uikit.Input,
+    textField: {
+      input: { text: hub.get('text', {}) }
+    },
+    textField2: {
+      input: { text: hub.get('text2', {}) }
+    }
+  },
   button: new uikit.Button({
     text: {
       inject: require('vjs/lib/operator/transform'),
