@@ -18,14 +18,14 @@ var hub = global.hub = new Hub({
     on: {
       connection () {
         connected.val = true
-        console.log('CONNECTION')
+        // console.log('CONNECTION')
       },
       close () {
         connected.val = false
-        console.log('close')
+        // console.log('close')
       },
       error (err) {
-        console.error('err!', err.stack)
+        // console.error('err!', err.stack)
       }
     }
   },
