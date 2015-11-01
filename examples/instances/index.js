@@ -1,5 +1,6 @@
 'use strict'
 var Hub = require('../../lib')
+
 var hub = global.hub = new Hub({
   key: 'orig',
   trackInstances: true,
@@ -23,6 +24,8 @@ hub.set({
     a: true
   }
 })
+
+console.log('bitches')
 
 // setTimeout(function() {
 //   // console.log(hub.blax)
