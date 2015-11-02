@@ -4,6 +4,7 @@ uuid.val = 'meta_' + uuid.val
 var Hub = require('../../lib')
 var hub = global.hub = new Hub({
   trackInstances: true,
+  text: 1,
   adapter: {
     inject: require('../../lib/adapter/websocket')
   }

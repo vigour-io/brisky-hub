@@ -9,7 +9,21 @@ var hub = global.hub = new Hub({
   }
 })
 require('../basic/dev').startRepl()
+// hub.set({clients:{}})
 hub.adapter.listens.val = 3031
+
+var scopes = Hub.prototype.scopes
+hub.define({
+  scopes (scope, event) {
+    var instance = scopes.call(this, scope, event)
+    if (scope === 'meta') {
+      instance.adapter.val = 3032
+      console.log('ok ok????????', instance.hasOwnProperty('adapter'))
+    }
+    return instance
+  }
+})
+
 setTimeout(() => {
   console.log('no!')
   hub.set({ text: 'from index' })
