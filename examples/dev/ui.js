@@ -97,8 +97,8 @@ var app = global.app = new Element({
       upstream: new uikit.InputBadge({
         message: { text: hub.adapter }
       }),
-      instance: new uikit.InputBadge({
-        message: { text: hub.adapter.instance }
+      scope: new uikit.InputBadge({
+        message: { text: hub.adapter.scope }
       }),
       clock: new uikit.Label({
         text: {
