@@ -17,9 +17,5 @@ var a = new Observable({
   inject: require('vjs/lib/observable/storage')
 })
 
-app.holder.labels.set({
-  a: { message: { text: a } }
-})
-
 setInterval(() => a.val++, 3000)
 setTimeout(() => hub.adapter.val = 3031, 100)
