@@ -209,13 +209,17 @@ app.set({
       removebtn: {
         text: 'x',
         on: {
-          click() {
-            this.parent.remove()
+          click (data, event) {
+            this.parent.message.text.origin.remove(event)
           }
         }
       }
     }).Constructor // allways get constructor when passing base
   }
+})
+
+hub.on(function (data) {
+  console.log('---', data)
 })
 
 hub.on('property', function (data, event) {
@@ -224,9 +228,11 @@ hub.on('property', function (data, event) {
       app.keysOverview.setKey(data.added[i], { message: { text: this[data.added[i]] } }, event)
     }
   }
+
+  console.log('propz', data, event)
   if (data.removed) {
     for (let i in data.removed) {
-      app.keysOverview[data[i]] && app.keysOverview[data[i]].remove(event)
+      app.keysOverview[data.removed[i]] && app.keysOverview[data.removed[i]].remove()
     }
   }
 })
