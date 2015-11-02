@@ -40,12 +40,6 @@ hub.set({
 })
 // setInterval(() => a.val++, 3000)
 setTimeout(() => hub.adapter.val = {
-  scope: 'meta',
   val: 3031,
-}, 300)
-
-// setInterval(() => a.val++, 3000)
-// setTimeout(() => hub.adapter.val = {
-  // val: 3031,
   // scope: 'meta'
-// }, 1300)
+}, 300)

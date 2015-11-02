@@ -10,3 +10,7 @@ var hub = global.hub = new Hub({
 })
 require('../basic/dev').startRepl()
 hub.adapter.listens.val = 3031
+setTimeout(() => {
+  console.log('no!')
+  hub.set({ text: 'from index' })
+}, 3500)
