@@ -51,6 +51,31 @@ setInterval(() => {
   msgCount.lastSecond.val = msgCount.val
 }, 1000)
 
+var updating = new Observable(false)
+updating.on(function (data) {
+  clearInterval(this._interval)
+  this._interval = null
+  if (this.val === true) {
+    this._interval = setInterval(() => {
+      hub.set({ text: (~~(Math.random() * 1000)) + ' from:' + uuid })
+    }, 0)
+  }
+})
+
+var fieldName = new Observable(1)
+
+var addfields = new Observable(false)
+addfields.on(function (data) {
+  clearInterval(this._interval)
+  this._interval = null
+  if (this.val === true) {
+    this._interval = setInterval(() => {
+      hub.set({ [fieldName.val]: ~~(Math.random() * 999999) })
+      fieldName.val++
+    }, 0)
+  }
+})
+
 var FireButton = new uikit.Button({
   properties: {
     updating (val) {
@@ -62,7 +87,10 @@ var FireButton = new uikit.Button({
     }
   },
   text: {
-    inject: require('vjs/lib/operator/transform'),
+    inject: [
+      require('vjs/lib/operator/transform'),
+      require('vjs/lib/operator/add')
+    ],
     $transform: (val) => val === true ? 'Stop updates' : 'Fire updates'
   },
   css: {
@@ -83,6 +111,9 @@ var app = global.app = new Element({
   holder: {
     labels: {
       ChildConstructor: uikit.Badge,
+      scope: new uikit.InputBadge({
+        message: { text: hub.adapter.scope }
+      }),
       uuid: {
         message: { text: uuid }
       },
@@ -96,9 +127,6 @@ var app = global.app = new Element({
       },
       upstream: new uikit.InputBadge({
         message: { text: hub.adapter }
-      }),
-      scope: new uikit.InputBadge({
-        message: { text: hub.adapter.scope }
       }),
       clock: new uikit.Label({
         text: {
@@ -148,44 +176,13 @@ var app = global.app = new Element({
   }
 })
 
-var updating = new Observable(false)
-updating.on(function (data) {
-  clearInterval(this._interval)
-  this._interval = null
-  if (this.val === true) {
-    this._interval = setInterval(() => {
-      hub.set({ text: (~~(Math.random() * 1000)) + ' from:' + uuid })
-    }, 0)
-  }
-})
-
-var fieldName = new Observable(1)
-
-var addfields = new Observable(false)
-addfields.on(function (data) {
-  clearInterval(this._interval)
-  this._interval = null
-  if (this.val === true) {
-    this._interval = setInterval(() => {
-      hub.set({ [fieldName.val]: ~~(Math.random() * 999999) })
-      fieldName.val++
-    }, 0)
-  }
-})
-
 app.holder.set({
-  textfields: {
-    ChildConstructor: uikit.Input,
-    textField: {
-      input: { text: hub.get('text', {}) }
-    },
-    textField2: {
-      input: { text: hub.get('text2', {}) }
-    }
-  },
-  button: new FireButton({ updating: updating }),
-  addfield: {
-    button: new uikit.Button({
+  buttons: {
+    button: new FireButton({
+      updating: updating,
+      text: { $add: ' "text"' }
+    }),
+    addfield: new uikit.Button({
       text: {
         val: 'add field: ',
         inject: require('vjs/lib/operator/add'),
@@ -197,21 +194,29 @@ app.holder.set({
           fieldName.val++
         }
       }
-    })
-  },
-  addfields: new FireButton({ updating: addfields })
+    }),
+    addfields: new FireButton({ updating: addfields })
+  }
 })
 
 app.set({
   keysOverview: {
     css: 'labels',
-    ChildConstructor: uikit.Badge
+    properties: {
+      text: null
+    },
+    ChildConstructor: new uikit.InputBadge({
+      removebtn: {
+        text: 'x',
+        on: {
+          click() {
+            this.parent.remove()
+          }
+        }
+      }
+    }).Constructor // allways get constructor when passing base
   }
 })
-
-// for(var i = 0 ; i < 2000; i++) {
-//   hub.get(i+1+'', {})
-// }
 
 hub.on('property', function (data, event) {
   if (data.added) {
@@ -227,7 +232,7 @@ hub.on('property', function (data, event) {
 })
 
 hub.each((property, key) => {
-  app.keysOverview.setKey(key + 'init', { message: { text: property } })
+  app.keysOverview.setKey(key, { message: { text: property } })
 })
 
 exports.app = app

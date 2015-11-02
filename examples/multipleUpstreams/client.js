@@ -15,16 +15,16 @@ var a = new Observable({
   inject: require('vjs/lib/observable/storage')
 })
 
-app.holder.labels.set({
-  a: {
-    message: { text: a },
-    on: {
-      click () {
-        a.val++
-      }
-    }
-  }
-})
+// app.holder.labels.set({
+//   a: {
+//     message: { text: a },
+//     on: {
+//       click () {
+//         a.val++
+//       }
+//     }
+//   }
+// })
 
 hub.set({
   // text: {
