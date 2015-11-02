@@ -5,7 +5,7 @@ var uuid = require('vjs/lib/util/uuid')
 uuid.val = 'NO_INSTANCE_' + uuid.val
 
 var Hub = require('../../lib')
-Hub.prototype.inject(require('vjs/lib/observable/storage'))
+// Hub.prototype.inject(require('vjs/lib/observable/storage'))
 
 var hub = require('../dev/ui').hub
 var app = require('../dev/ui').app

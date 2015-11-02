@@ -25,7 +25,7 @@ var hub = global.hub = new Hub({
         // console.log('close')
       },
       error (err) {
-        // console.error('err!', err.stack)
+        console.error('err!', err.stack)
       }
     }
   },
@@ -53,7 +53,7 @@ setInterval(() => {
 
 var FireButton = new uikit.Button({
   properties: {
-    updating: function(val) {
+    updating (val) {
       this._updating = val
       this.set({
         text: val,
@@ -216,7 +216,7 @@ app.set({
 hub.on('property', function (data, event) {
   if (data.added) {
     for (let i in data.added) {
-      app.keysOverview.setKey(data.added[i], { message: { text: this[data.added[i]]} }, event)
+      app.keysOverview.setKey(data.added[i], { message: { text: this[data.added[i]] } }, event)
     }
   }
   if (data.removed) {
@@ -225,9 +225,6 @@ hub.on('property', function (data, event) {
     }
   }
 })
-
-
-
 
 hub.each((property, key) => {
   app.keysOverview.setKey(key + 'init', { message: { text: property } })
