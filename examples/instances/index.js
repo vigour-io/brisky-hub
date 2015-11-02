@@ -3,7 +3,6 @@ var Hub = require('../../lib')
 
 var hub = global.hub = new Hub({
   key: 'orig',
-  trackInstances: true,
   adapter: {
     inject: require('../../lib/adapter/websocket'),
     on: {
@@ -16,7 +15,7 @@ var hub = global.hub = new Hub({
 
 var a = global.a = new hub.Constructor({
   key: 'a',
-  instance: 'a'
+  scope: 'a'
 })
 
 hub.set({
