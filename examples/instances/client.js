@@ -18,8 +18,11 @@ var a = new Observable({
 
 setInterval(() => a.val++, 3000)
 setTimeout(() => hub.adapter.val = 3031, 100)
-setTimeout(() => {
+setInterval(() => {
+  // hub.set({
+  //   text: 'no scope 3031'
+  // })
   hub.set({
-    text: 'lulllllz'
+    text: null
   })
 }, 2000)
