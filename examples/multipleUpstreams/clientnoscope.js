@@ -27,6 +27,7 @@ app.holder.labels.set({
 })
 
 hub.set({
+  key: 'bla'
   // text: {
   //   // is this for what gets send out?
   //   // maybe dont use .val but treat dom events as stremas? so eahc letter you type is send

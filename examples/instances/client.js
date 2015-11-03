@@ -10,7 +10,7 @@ var Hub = require('../../lib')
 var hub = require('../dev/ui').hub
 var app = require('../dev/ui').app
 var Observable = require('vjs/lib/observable')
-
+hub.key = 'hubs'
 var a = new Observable({
   key: 'a',
   val: 0,
