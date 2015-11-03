@@ -1,14 +1,13 @@
 'use strict'
 
-
 var uuid = require('vjs/lib/util/uuid')
-uuid.val = 'NO_INSTANCE_' + uuid.val
+uuid.val = '3031_NORMAL_CLIENT_' + uuid.val
 
-var Hub = require('../../lib')
+// var Hub = require('../../lib')
 // Hub.prototype.inject(require('vjs/lib/observable/storage'))
 
 var hub = require('../dev/ui').hub
-var app = require('../dev/ui').app
+// var app = require('../dev/ui').app
 var Observable = require('vjs/lib/observable')
 hub.key = 'hubs'
 var a = new Observable({
@@ -19,3 +18,8 @@ var a = new Observable({
 
 setInterval(() => a.val++, 3000)
 setTimeout(() => hub.adapter.val = 3031, 100)
+setTimeout(() => {
+  hub.set({
+    text: 'lulllllz'
+  })
+}, 2000)
