@@ -205,7 +205,7 @@ app.set({
     properties: {
       text: null
     },
-    ChildConstructor: new uikit.InputBadge({
+    ChildConstructor: new uikit.Badge({
       removebtn: {
         text: 'x',
         on: {

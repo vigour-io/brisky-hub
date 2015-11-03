@@ -27,6 +27,10 @@ hub.define({
     return instance
   }
 })
+
+setTimeout(() => {
+  hub.adapter.val = 3033
+}, 500)
 //
 // setInterval(() => {
 //   hub.set({text: 'haha'})
