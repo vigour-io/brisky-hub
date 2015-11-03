@@ -24,7 +24,12 @@ hub.define({
   }
 })
 
-setTimeout(() => {
-  console.log('no!')
-  hub.set({ text: 'from index' })
-}, 3500)
+// console.clear()
+
+
+//.catch(console.log)
+
+// setTimeout(() => {
+//   console.log('no!')
+//   hub.set({ text: 'from index' })
+// }, 3500)

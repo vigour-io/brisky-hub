@@ -210,7 +210,9 @@ app.set({
         text: 'x',
         on: {
           click (data, event) {
-            this.parent.message.text.origin.remove(event)
+            console.clear()
+            console.log('start ---------')
+            this.parent.message.text.origin.remove()
           }
         }
       }
@@ -229,8 +231,8 @@ hub.on('property', function (data, event) {
     }
   }
 
-  console.log('propz', data, event)
   if (data.removed) {
+    // console.clear()
     for (let i in data.removed) {
       app.keysOverview[data.removed[i]] && app.keysOverview[data.removed[i]].remove()
     }
