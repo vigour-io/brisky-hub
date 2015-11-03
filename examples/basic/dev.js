@@ -186,26 +186,26 @@ exports.performance = function (data, event) {
 }
 
 exports.clients = function logClients (data, event) {
-  console.log(
-    '\n',
-    'clients'
-  )
+  // console.log(
+  //   '\n',
+  //   'clients'
+  // )
   if (data) {
     if (data.added) {
-      console.log((isNode ? ADDED.green : ADDED), data.added.join(', '))
+      // console.log((isNode ? ADDED.green : ADDED), data.added.join(', '))
     }
     if (data.removed) {
-      console.log((isNode ? REMOVED.red : REMOVED), data.removed.join(', '))
+      // console.log((isNode ? REMOVED.red : REMOVED), data.removed.join(', '))
     }
   }
   var client = this.parent.adapter.client && this.parent.adapter.client.val
   var arr = this.map((property, key) => key)
-  console.log('    clients:')
+  // console.log('    clients:')
 
   // var str = '[ '
   for (let i in arr) {
-    console.log('      ' +
-    (arr[i] === client ? (isNode ? arr[i].green.bold : '>>>' + arr[i] + '<<<') : arr[i]))
+    // console.log('      ' +
+    // (arr[i] === client ? (isNode ? arr[i].green.bold : '>>>' + arr[i] + '<<<') : arr[i]))
   }
   status({ cl: arr.length })
   // str += ' ]'
