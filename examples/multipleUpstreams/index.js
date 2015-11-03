@@ -3,9 +3,11 @@ var uuid = require('vjs/lib/util/uuid')
 uuid.val = 'server_' + uuid.val
 var Hub = require('../../lib')
 var hub = global.hub = new Hub({
+  key: 'hub',
   adapter: {
     inject: require('../../lib/adapter/websocket')
   },
+  text: 'haha',
   blurf: true
 })
 
@@ -25,3 +27,11 @@ hub.define({
     return instance
   }
 })
+//
+// setInterval(() => {
+//   hub.set({text: 'haha'})
+// }, 3000)
+
+// hub.set({
+//   text: null
+// })

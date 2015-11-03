@@ -1,7 +1,7 @@
 'use strict'
 
 var uuid = require('vjs/lib/util/uuid')
-uuid.val = 'multiple_' + uuid.val
+uuid.val = 'SCOPE_INSTANCE_' + uuid.val
 
 var Hub = require('../../lib')
 // Hub.prototype.inject(require('vjs/lib/observable/storage'))
