@@ -5,14 +5,14 @@ var hub = global.hub = new Hub({
     inject: require('../../lib/adapter/websocket'),
     on: {
       connection () {
-        console.log('connected!')
+        // console.log('connected!')
       }
     }
   },
   clients: {
     on: {
       property (data) {
-        console.log(data)
+        // console.log(data)
       }
     }
   }
