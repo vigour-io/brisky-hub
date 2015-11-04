@@ -1,6 +1,6 @@
 'use strict'
-var isNode = require('vjs/lib/util/is/node')
-var uuid = require('vjs/lib/util/uuid')
+var isNode = require('vigour-js/lib/util/is/node')
+var uuid = require('vigour-js/lib/util/uuid')
 uuid = uuid.val = uuid.val + (isNode ? '_node_c_A' : '_browser_c_A')
 var hub = require('./client')
 hub.key = 'duplex_a'

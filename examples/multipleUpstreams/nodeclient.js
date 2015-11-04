@@ -1,5 +1,5 @@
 'use strict'
-var uuid = require('vjs/lib/util/uuid')
+var uuid = require('vigour-js/lib/util/uuid')
 uuid.val = 'NODE_SCOPE_INSTANCE_' + uuid.val
 var Hub = require('../../lib')
 var hub = new Hub({
