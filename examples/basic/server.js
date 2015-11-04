@@ -1,7 +1,7 @@
 'use strict'
 var Hub = require('../../lib/')
 var colors = require('colors')
-var uuid = require('vjs/lib/util/uuid').val
+var uuid = require('vigour-js/lib/util/uuid').val
 var dev = require('./dev')
 
 module.exports = global.hub = new Hub({

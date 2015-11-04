@@ -1,18 +1,18 @@
 'use strict'
 
-var uuid = require('vjs/lib/util/uuid')
+var uuid = require('vigour-js/lib/util/uuid')
 uuid.val = 'SCOPE_INSTANCE_' + uuid.val
 
 var Hub = require('../../lib')
-// Hub.prototype.inject(require('vjs/lib/observable/storage'))
+// Hub.prototype.inject(require('vigour-js/lib/observable/storage'))
 var hub = require('../dev/ui').hub
 var app = require('../dev/ui').app
-var Observable = require('vjs/lib/observable')
+var Observable = require('vigour-js/lib/observable')
 
 var a = new Observable({
   key: 'a',
   val: 0,
-  inject: require('vjs/lib/observable/storage')
+  inject: require('vigour-js/lib/observable/storage')
 })
 
 // app.holder.labels.set({
@@ -31,8 +31,8 @@ hub.set({
   //   // is this for what gets send out?
   //   // maybe dont use .val but treat dom events as stremas? so eahc letter you type is send
   //   inject: [
-  //     require('vjs/lib/operator/transform'),
-  //     require('vjs/lib/operator/type')
+  //     require('vigour-js/lib/operator/transform'),
+  //     require('vigour-js/lib/operator/type')
   //   ],
   //   $type: 'string',
   //   $transform: (val) => val.toUpperCase()

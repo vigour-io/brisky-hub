@@ -1,16 +1,16 @@
 'use strict'
 require('./style.less')
 
-var Element = require('element')
+var Element = require('vigour-element')
 Element.prototype.inject(
-  require('element/lib/property/text'),
-  require('element/lib/property/transform'),
-  require('element/lib/events/drag')
+  require('vigour-element/lib/property/text'),
+  require('vigour-element/lib/property/transform'),
+  require('vigour-element/lib/events/drag')
 )
-var Observable = require('vjs/lib/observable')
+var Observable = require('vigour-js/lib/observable')
 var Hub = require('../../lib')
-var uikit = require('uikit')
-var uuid = require('vjs/lib/util/uuid').val
+var uikit = require('vigour-uikit')
+var uuid = require('vigour-js/lib/util/uuid').val
 
 var hub = global.hub = new Hub({
   adapter: {
@@ -88,13 +88,13 @@ var FireButton = new uikit.Button({
   },
   text: {
     inject: [
-      require('vjs/lib/operator/transform'),
-      require('vjs/lib/operator/add')
+      require('vigour-js/lib/operator/transform'),
+      require('vigour-js/lib/operator/add')
     ],
     $transform: (val) => val === true ? 'Stop updates' : 'Fire updates'
   },
   css: {
-    inject: require('vjs/lib/operator/transform'),
+    inject: require('vigour-js/lib/operator/transform'),
     $transform: (val) => val === true ? 'ui-button active' : 'ui-button inactive'
   },
   on: {
@@ -121,7 +121,7 @@ var app = global.app = new Element({
         message: {
           text: {
             val: now,
-            inject: require('uikit/lib/transform/time')
+            inject: require('vigour-uikit/lib/transform/time')
           }
         }
       },
@@ -131,7 +131,7 @@ var app = global.app = new Element({
       clock: new uikit.Label({
         text: {
           val: start,
-          inject: require('uikit/lib/transform/time')
+          inject: require('vigour-uikit/lib/transform/time')
         }
       })
     },
@@ -139,7 +139,7 @@ var app = global.app = new Element({
       title: { text: 'Messages' },
       counter: {
         text: {
-          inject: require('uikit/lib/transform/number'),
+          inject: require('vigour-uikit/lib/transform/number'),
           val: msgCount
         }
       }
@@ -148,7 +148,7 @@ var app = global.app = new Element({
       title: { text: 'Msg/s' },
       counter: {
         text: {
-          inject: require('vjs/lib/operator/transform'),
+          inject: require('vigour-js/lib/operator/transform'),
           val: now,
           $transform: (val) => ~~(msgCount.val - msgCount.lastSecond.val)
         }
@@ -156,14 +156,14 @@ var app = global.app = new Element({
     }),
     clients: new uikit.Stat({
       status: {
-        inject: require('vjs/lib/operator/transform'),
+        inject: require('vigour-js/lib/operator/transform'),
         $transform: (val) => val ? 'ok' : 'error',
         val: connected
       },
       title: { text: 'Clients' },
       counter: {
         text: {
-          inject: require('vjs/lib/operator/transform'),
+          inject: require('vigour-js/lib/operator/transform'),
           val: hub.get('clients', {}),
           $transform (val) {
             var cnt = 0
@@ -185,7 +185,7 @@ app.holder.set({
     addfield: new uikit.Button({
       text: {
         val: 'add field: ',
-        inject: require('vjs/lib/operator/add'),
+        inject: require('vigour-js/lib/operator/add'),
         $add: fieldName
       },
       on: {
