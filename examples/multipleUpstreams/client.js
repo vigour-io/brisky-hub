@@ -7,3 +7,7 @@ hub.adapter.val = {
   scope: 'meta',
   val: 3031
 }
+
+require('../../dev/log/colors')
+
+console.log('?xweknweoienwoinde'.blue.bold.rainbow.bgRed)
