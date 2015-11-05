@@ -1,9 +1,8 @@
 'use strict'
 require('colors')
-
 var isNode = require('vigour-js/lib/util/is/node')
 var uuid = String(require('vigour-js/lib/util/uuid').val)
-var isPlainObj = require('vigour-js/lib/util/is/plainobj')
+// var isPlainObj = require('vigour-js/lib/util/is/plainobj')
 // var ADDED = '    added:'
 // var REMOVED = '    removed:'
 var UPDATE = 'incoming'
@@ -12,9 +11,11 @@ var UPSTREAM = 'up  '
 var DOWNSTREAM = 'down'
 
 if (isNode) {
-  let lines = process.stdout.getWindowSize()[1]
-  for (let i = 0; i < lines; i++) {
-    console.log('\r\n')
+  console.clear = function () {
+    let lines = process.stdout.getWindowSize()[1]
+    for (let i = 0; i < lines; i++) {
+      console.log('\r\n')
+    }
   }
   UPDATE = UPDATE.green
   UPDATESELF = UPDATESELF.grey
@@ -23,17 +24,17 @@ if (isNode) {
 }
 
 var dtrack = function (data, event) {
-  var line = ''
   var cols = process.stdout.columns
-  while(cols) {
+  var line = ''
+  cols = cols - line.length
+  while (cols) {
     cols--
-    line += '_'
+    line = '_' + line
   }
-  console.log(line, '\n')
+  console.log(line.grey, '\n')
   dtrackunified.call(this, data, event)
 }
 
-// global.outgoingTrack.call(this, output, data, event, hub, toUpstream)
 global.outgoingTrack = function (output, data, event, hub, toUpstream, path) {
   dtrackunified.call(hub, data, event, this, path, this, toUpstream, output)
 }
@@ -63,7 +64,7 @@ function dtrackunified (data, event, outgoing, path, client, toUpstream, output)
     outgoing ? '\n           └> ' +
     (toUpstream
       ? this.adapter && ('' + this.adapter.val).bold.green
-      : client.val.blue + ' ' + shave(client.scope || '*', 7).yellow
+      : shave(client.val, 25).blue + ' ' + shave(client.scope || '*', 7).yellow
     ) + ' ' + JSON.stringify(output) + '\n'
     : ''
   )

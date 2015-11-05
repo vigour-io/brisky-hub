@@ -18,14 +18,14 @@ var currentStatus = global.currentStatus = {
 var renderStatusInterval = 3000
 var sinterval
 
-if (isNode) {
-  console.clear = function () {
-    let lines = process.stdout.getWindowSize()[1]
-    for (let i = 0; i < lines; i++) {
-      console.log('\r\n')
-    }
-  }
-}
+// if (isNode) {
+//   console.clear = function () {
+//     let lines = process.stdout.getWindowSize()[1]
+//     for (let i = 0; i < lines; i++) {
+//       console.log('\r\n')
+//     }
+//   }
+// }
 // exports.protocol = require('../../lib/adapter/tcp')
 exports.protocol = require('../../lib/adapter/websocket')
 // require('log-buffer')
@@ -40,7 +40,7 @@ function toggleStatus (val) {
     if (!sinterval) {
       sinterval = setInterval(renderStatusProcess, renderStatusInterval)
     }
-    console.clear()
+    // console.clear()
     renderStatusProcess()
   } else if (val === false) {
     clearInterval(sinterval)
@@ -147,10 +147,6 @@ exports.startRepl = function () {
 
 if (isNode) {
   require('colors')
-  let lines = process.stdout.getWindowSize()[1]
-  for (let i = 0; i < lines; i++) {
-    console.log('\r\n')
-  }
   UPDATE = UPDATE.green
   UPDATESELF = UPDATESELF.grey
   UPSTREAM = UPSTREAM.magenta
