@@ -1,5 +1,5 @@
 'use strict'
-var uuid = require('vjs/lib/util/uuid')
+var uuid = require('vigour-js/lib/util/uuid')
 uuid.val = 'meta_' + uuid.val
 var Hub = require('../../lib')
 var hub = global.hub = new Hub({
