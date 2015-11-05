@@ -21,7 +21,7 @@ hub.define({
     if (scope === 'meta') {
       instance.key = 'meta'
       // check is not nessecary pure for loggin (same is auto-blocked)
-      console.log('set meta-instance adapter to 3032'.green.bold)
+      // console.log('set meta-instance adapter to 3032'.green.bold)
       instance.adapter.val = 3032
     }
     return instance
