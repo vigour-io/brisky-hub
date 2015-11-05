@@ -2,6 +2,7 @@
 var uuid = require('vigour-js/lib/util/uuid')
 uuid.val = 'meta_' + uuid.val
 var Hub = require('../../lib')
+Hub.prototype.inject(require('../dev'))
 var hub = global.hub = new Hub({
   trackInstances: true,
   text: 1,
@@ -10,6 +11,5 @@ var hub = global.hub = new Hub({
   }
 })
 hub.adapter.listens.val = 3032
-Hub.prototype.inject(require('../dev'))
 
 require('../basic/dev').startRepl()

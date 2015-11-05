@@ -17,6 +17,7 @@ if (isNode) {
       console.log('\r\n')
     }
   }
+  console.clear()
   UPDATE = UPDATE.green
   UPDATESELF = UPDATESELF.grey
   UPSTREAM = UPSTREAM.magenta
