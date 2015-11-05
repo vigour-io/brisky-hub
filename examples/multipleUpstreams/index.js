@@ -3,7 +3,6 @@ var uuid = require('vigour-js/lib/util/uuid')
 uuid.val = 'server_' + uuid.val
 var Hub = require('../../lib')
 Hub.prototype.inject(require('../dev'))
-console.clear()
 var hub = global.hub = new Hub({
   key: 'origin',
   adapter: {
