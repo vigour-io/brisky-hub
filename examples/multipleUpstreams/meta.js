@@ -9,5 +9,5 @@ var hub = global.hub = new Hub({
     inject: require('../../lib/adapter/websocket')
   }
 })
-require('../basic/dev').startRepl()
 hub.adapter.listens.val = 3032
+Hub.prototype.inject(require('../dev'))
