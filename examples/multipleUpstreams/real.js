@@ -11,3 +11,5 @@ var hub = global.hub = new Hub({
 })
 hub.adapter.listens.val = 3033
 Hub.prototype.inject(require('../dev'))
+
+require('../basic/dev').startRepl()

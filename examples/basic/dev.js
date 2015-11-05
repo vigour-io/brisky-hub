@@ -36,6 +36,7 @@ function toggleStatus (val) {
     val = sinterval ? false : true
   }
   if (val) {
+    // renderStatusProcess()
     if (!sinterval) {
       sinterval = setInterval(renderStatusProcess, renderStatusInterval)
     }
@@ -47,7 +48,7 @@ function toggleStatus (val) {
   }
 }
 var statusbar
-
+// renderStatusProcess(['?'])
 function renderStatusProcess (args) {
   if (sinterval) {
     if (isNode) {
@@ -107,6 +108,7 @@ function renderStatusProcess (args) {
 function status (payload) {
   merge(currentStatus, payload)
 }
+// status()
 
 global.status = status
 

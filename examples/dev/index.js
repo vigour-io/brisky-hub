@@ -1,10 +1,9 @@
 'use strict'
 require('colors')
-var CLI = require('clui'),
-    clc = require('cli-color');
 
 var isNode = require('vigour-js/lib/util/is/node')
 var uuid = String(require('vigour-js/lib/util/uuid').val)
+var isPlainObj = require('vigour-js/lib/util/is/plainobj')
 // var ADDED = '    added:'
 // var REMOVED = '    removed:'
 var UPDATE = 'incoming'
@@ -24,13 +23,19 @@ if (isNode) {
 }
 
 var dtrack = function (data, event) {
-  console.log('____________________________________________________________________________________________')
+  var line = ''
+  var cols = process.stdout.columns
+  while(cols) {
+    cols--
+    line += '_'
+  }
+  console.log(line, '\n')
   dtrackunified.call(this, data, event)
 }
 
 // global.outgoingTrack.call(this, output, data, event, hub, toUpstream)
 global.outgoingTrack = function (output, data, event, hub, toUpstream, path) {
-  dtrackunified.call(hub, data, event, this, path, this, toUpstream)
+  dtrackunified.call(hub, data, event, this, path, this, toUpstream, output)
 }
 
 exports.on = {
@@ -43,7 +48,7 @@ exports.on = {
   data: dtrack
 }
 
-function dtrackunified (data, event, outgoing, path, client, toUpstream) {
+function dtrackunified (data, event, outgoing, path, client, toUpstream, output) {
   var isSelf = typeof event.stamp !== 'string' || event.stamp.indexOf(uuid) === 0
   var isUpstream = toUpstream || event.upstream
   var str = shave(path && path.join('/') || this.path.join('/'), 30)
@@ -55,8 +60,12 @@ function dtrackunified (data, event, outgoing, path, client, toUpstream) {
     outgoing ? 'outgoing'.yellow : isSelf ? UPDATESELF : UPDATE,
     isUpstream ? UPSTREAM : isSelf ? '         ' : DOWNSTREAM,
     event.stamp,
-    outgoing ? '\n                                                        └> ' +
-    (toUpstream ? this.adapter && ('' + this.adapter.val).bold.green : client.val.blue + ' ' + shave(client.scope || '*', 7)) : ''
+    outgoing ? '\n           └> ' +
+    (toUpstream
+      ? this.adapter && ('' + this.adapter.val).bold.green
+      : client.val.blue + ' ' + shave(client.scope || '*', 7).yellow
+    ) + ' ' + JSON.stringify(output) + '\n'
+    : ''
   )
 }
 
