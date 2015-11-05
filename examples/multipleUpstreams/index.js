@@ -12,19 +12,21 @@ var hub = global.hub = new Hub({
 })
 
 hub.adapter.listens.val = 3031
-console.log('set normal adapter!')
 hub.adapter.val = 3033
+
+// console.log('set normal adapter!')
 var _scopes = Hub.prototype.scopes
 hub.define({
   scopes (scope, event) {
     var instance = _scopes.call(this, scope, event)
-    if (scope === 'meta' && !instance.adapter.val) {
+    if (scope === 'meta') {
       // check is not nessecary pure for loggin (same is auto-blocked)
-      console.log('set meta adapter!')
+      // console.log('set meta adapter! -- doing this all the time fixes it')
       instance.adapter.val = 3032
     }
     return instance
   }
 })
-
 Hub.prototype.inject(require('../dev'))
+
+require('../basic/dev').startRepl()

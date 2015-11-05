@@ -43,8 +43,7 @@
     "vigour-element": "*",
     "vigour-uikit": "*",
     "log-buffer": "*",
-    "colors": "*",
-    "clui": "0.3.1"
+    "colors": "*"
   },
   "homepage": "https://github.com/vigour-io/hub#readme",
   "vigour": {
