@@ -232,18 +232,28 @@ hub.on(function (data) {
   console.log('---', data)
 })
 
+var rendered = 0
 hub.on('property', function (data, event) {
   if (data.added) {
     for (let i in data.added) {
+      rendered++
       app.keysOverview.setKey(data.added[i], { message: { text: this[data.added[i]] } }, event)
     }
   }
-
   if (data.removed) {
     // console.clear()
     for (let i in data.removed) {
-      app.keysOverview[data.removed[i]] && app.keysOverview[data.removed[i]].remove()
+      app.keysOverview[data.removed[i]] && app.keysOverview[data.removed[i]].remove(event)
     }
+  }
+  if (rendered > 100) {
+    app.keysOverview.each((property) => {
+      property.remove(event)
+      rendered--
+      if (rendered < 50) {
+        return true
+      }
+    })
   }
 })
 
