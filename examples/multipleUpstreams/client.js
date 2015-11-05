@@ -1,7 +1,7 @@
 'use strict'
-
-var uuid = require('vjs/lib/util/uuid')
+var uuid = require('vigour-js/lib/util/uuid')
 uuid.val = 'SCOPE_INSTANCE_' + uuid.val
+// Hub.prototype.inject(require('vigour-js/lib/observable/storage'))
 var hub = require('../dev/ui').hub
 hub.adapter.val = {
   scope: 'meta',

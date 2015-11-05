@@ -36,12 +36,12 @@
     "js-structures": "^1.0.5",
     "reconnect-core": "^1.0.2",
     "request": "^2.65.0",
-    "vjs": "git+ssh://git@github.com:vigour-io/vjs.git#develop",
+    "vigour-js": "*",
     "websocket": "1.0.x"
   },
   "devDependencies": {
-    "element": "git+ssh://git@github.com:vigour-io/element.git#develop",
-    "uikit": "git+ssh://git@github.com:vigour-io/uikit.git#develop",
+    "vigour-element": "*",
+    "vigour-uikit": "*",
     "log-buffer": "*",
     "colors": "*"
   },

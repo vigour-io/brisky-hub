@@ -1,4 +1,4 @@
-var uuid = require('vjs/lib/util/uuid')
+var uuid = require('vigour-js/lib/util/uuid')
 uuid = uuid.val = uuid.val + '_duplex_a_'
 
 var server = require('./server')

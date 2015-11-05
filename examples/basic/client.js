@@ -1,5 +1,5 @@
 'use strict'
-var uuid = require('vjs/lib/util/uuid').val
+var uuid = require('vigour-js/lib/util/uuid').val
 var Hub = require('../../lib/')
 var dev = require('./dev')
 
@@ -10,7 +10,6 @@ var hub = new Hub({
     on: {
       connection (data) {
         console.log(uuid, 'connected to:', this.val)
-        currentStatus.up = this.val
       },
       error (err) {
         console.error(this.path.join('.') + ' error ', err)

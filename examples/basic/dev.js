@@ -2,8 +2,8 @@
 global.datatrack = true
 // global.amount = 5000000
 
-var isNode = require('vjs/lib/util/is/node')
-var uuid = String(require('vjs/lib/util/uuid').val)
+var isNode = require('vigour-js/lib/util/is/node')
+var uuid = String(require('vigour-js/lib/util/uuid').val)
 var ADDED = '    added:'
 var REMOVED = '    removed:'
 var UPDATE = 'incoming '
@@ -11,7 +11,7 @@ var UPDATESELF = 'self'
 var UPSTREAM = 'up  '
 var log = console.log
 var DOWNSTREAM = 'down'
-var merge = require('vjs/lib/util/merge')
+var merge = require('vigour-js/lib/util/merge')
 var currentStatus = global.currentStatus = {
   '': uuid
 }
