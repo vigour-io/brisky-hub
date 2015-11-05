@@ -119,67 +119,66 @@ var app = global.app = new Element({
       ChildConstructor: uikit.Badge,
       scope:{
         message: { text: hub.adapter.scope } // hub.adapter.scope
+      },
+      uuid: {
+        message: { text: uuid }
+      },
+      time: {
+        message: {
+          text: {
+            val: now,
+            inject: require('vigour-uikit/lib/transform/time')
+          }
+        }
+      },
+      upstream: new uikit.InputBadge({
+        message: { text: hub.adapter }
+      }),
+      clock: new uikit.Label({
+        text: {
+          val: start,
+          inject: require('vigour-uikit/lib/transform/time')
+        }
+      })
+    },
+    msgcnt: new uikit.Stat({
+      title: { text: 'Messages' },
+      counter: {
+        text: {
+          inject: require('vigour-uikit/lib/transform/number'),
+          val: msgCount
+        }
       }
-    }
-    //   uuid: {
-    //     message: { text: uuid }
-    //   },
-    //   time: {
-    //     message: {
-    //       text: {
-    //         val: now,
-    //         inject: require('vigour-uikit/lib/transform/time')
-    //       }
-    //     }
-    //   },
-    //   upstream: new uikit.InputBadge({
-    //     message: { text: hub.adapter }
-    //   }),
-    //   clock: new uikit.Label({
-    //     text: {
-    //       val: start,
-    //       inject: require('vigour-uikit/lib/transform/time')
-    //     }
-    //   })
-    // },
-    // msgcnt: new uikit.Stat({
-    //   title: { text: 'Messages' },
-    //   counter: {
-    //     text: {
-    //       inject: require('vigour-uikit/lib/transform/number'),
-    //       val: msgCount
-    //     }
-    //   }
-    // }),
-    // msg: new uikit.Stat({
-    //   title: { text: 'Msg/s' },
-    //   counter: {
-    //     text: {
-    //       inject: require('vigour-js/lib/operator/transform'),
-    //       val: now,
-    //       $transform: (val) => ~~(msgCount.val - msgCount.lastSecond.val)
-    //     }
-    //   }
-    // }),
-    // clients: new uikit.Stat({
-    //   status: {
-    //     inject: require('vigour-js/lib/operator/transform'),
-    //     $transform: (val) => val ? 'ok' : 'error',
-    //     val: connected
-    //   },
-    //   title: { text: 'Clients' },
-    //   counter: {
-    //     text: {
-    //       inject: require('vigour-js/lib/operator/transform'),
-    //       val: hub.get('clients', {}),
-    //       $transform (val) {
-    //         var cnt = 0
-    //         val.each(() => cnt++)
-    //         return cnt
-    //       }
-    //     }
-    //   }
-    // })
+    }),
+    msg: new uikit.Stat({
+      title: { text: 'Msg/s' },
+      counter: {
+        text: {
+          inject: require('vigour-js/lib/operator/transform'),
+          val: now,
+          $transform: (val) => ~~(msgCount.val - msgCount.lastSecond.val)
+        }
+      }
+    }),
+    clients: new uikit.Stat({
+      status: {
+        inject: require('vigour-js/lib/operator/transform'),
+        $transform: (val) => val ? 'ok' : 'error',
+        val: connected
+      },
+      title: { text: 'Clients' },
+      counter: {
+        text: {
+          inject: require('vigour-js/lib/operator/transform'),
+          val: hub.get('clients', {}),
+          $transform (val) {
+            var cnt = 0
+            val.each(() => cnt++)
+            return cnt
+          }
+        }
+      }
+    })
   }
 })
 
