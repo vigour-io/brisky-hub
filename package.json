@@ -40,10 +40,11 @@
     "websocket": "1.0.x"
   },
   "devDependencies": {
-    "vigour-element": "*",
-    "vigour-uikit": "*",
+    "chalk": "^1.1.1",
+    "colors": "*",
     "log-buffer": "*",
-    "colors": "*"
+    "vigour-element": "*",
+    "vigour-uikit": "*"
   },
   "homepage": "https://github.com/vigour-io/hub#readme",
   "vigour": {
