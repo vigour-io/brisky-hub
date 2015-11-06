@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "vigour-js": "*",
+    "vigour-ua": "^0.0.1",
     "websocket": "1.0.x"
   },
   "devDependencies": {
