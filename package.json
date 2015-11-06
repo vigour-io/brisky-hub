@@ -43,7 +43,7 @@
     "vigour-element": "*",
     "vigour-uikit": "*",
     "log-buffer": "*",
-    "colors-browserify": "0.0.1"
+    "colors-browserify": "0.0.2"
   },
   "homepage": "https://github.com/vigour-io/hub#readme",
   "vigour": {
