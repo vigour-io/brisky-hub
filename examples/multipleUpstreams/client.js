@@ -8,6 +8,5 @@ hub.adapter.val = {
   val: 3031
 }
 
-require('../../dev/log/colors')
-
-console.log('?xweknweoienwoinde'.blue.bold.rainbow.bgRed)
+let colors = require('colors-browserify')
+console.log('?xweknweoienwoinde'.blue.bold.rainbow.bgRed, colors)

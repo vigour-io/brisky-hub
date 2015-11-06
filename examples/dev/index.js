@@ -1,5 +1,5 @@
 'use strict'
-require('colors')
+var colors = require('colors-browserify')
 var isNode = require('vigour-js/lib/util/is/node')
 var uuid = String(require('vigour-js/lib/util/uuid').val)
 // var isPlainObj = require('vigour-js/lib/util/is/plainobj')

@@ -146,7 +146,7 @@ exports.startRepl = function () {
 }
 
 if (isNode) {
-  require('colors')
+  let colors = require('colors-browserify')
   UPDATE = UPDATE.green
   UPDATESELF = UPDATESELF.grey
   UPSTREAM = UPSTREAM.magenta
