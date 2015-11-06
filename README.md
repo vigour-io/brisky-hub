@@ -12,8 +12,8 @@ var hub = new Hub({
     inject: require('vigour-hub/lib/adapter/websocket'),
     // connects to localhost:3031
     val: 'localhost:3031',
-    listen: 3032
     // listens on port 3032
+    listen: 3032
   }
 })
 ```
