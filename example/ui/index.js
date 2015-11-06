@@ -1,5 +1,5 @@
 'use strict'
-require('./style.less')
+require('./ui.less')
 
 var Element = require('vigour-element')
 Element.prototype.inject(
@@ -14,20 +14,7 @@ var uuid = require('vigour-js/lib/util/uuid').val
 
 var hub = global.hub = new Hub({
   adapter: {
-    inject: require('../../lib/adapter/websocket'),
-    on: {
-      connection () {
-        connected.val = true
-        // console.log('CONNECTION')
-      },
-      close () {
-        connected.val = false
-        // console.log('close')
-      },
-      error (err) {
-        console.error('err!', err.stack)
-      }
-    }
+    inject: require('../../lib/adapter/websocket')
   },
   text: {
     on: {
@@ -111,9 +98,9 @@ var app = global.app = new Element({
   holder: {
     labels: {
       ChildConstructor: uikit.Badge,
-      scope: new uikit.InputBadge({
-        message: { text: hub.adapter.scope }
-      }),
+      scope: {
+        message: { text: hub.adapter.scope } // hub.adapter.scope
+      },
       uuid: {
         message: { text: uuid }
       },
@@ -205,13 +192,11 @@ app.set({
     properties: {
       text: null
     },
-    ChildConstructor: new uikit.Badge({
+    ChildConstructor: new uikit.InputBadge({
       removebtn: {
         text: 'x',
         on: {
           click (data, event) {
-            console.clear()
-            console.log('start ---------')
             this.parent.message.text.origin.remove()
           }
         }
@@ -220,22 +205,28 @@ app.set({
   }
 })
 
-hub.on(function (data) {
-  console.log('---', data)
-})
-
+var rendered = 0
 hub.on('property', function (data, event) {
   if (data.added) {
     for (let i in data.added) {
+      rendered++
       app.keysOverview.setKey(data.added[i], { message: { text: this[data.added[i]] } }, event)
     }
   }
-
   if (data.removed) {
     // console.clear()
     for (let i in data.removed) {
-      app.keysOverview[data.removed[i]] && app.keysOverview[data.removed[i]].remove()
+      app.keysOverview[data.removed[i]] && app.keysOverview[data.removed[i]].remove(event)
     }
+  }
+  if (rendered > 100) {
+    app.keysOverview.each((property) => {
+      property.remove(event)
+      rendered--
+      if (rendered < 50) {
+        return true
+      }
+    })
   }
 })
 

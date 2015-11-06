@@ -19,14 +19,14 @@ var c1 = new Hub({
         log.info('-- C1 Connected ')
       },
       error (err, ev) {
-        log.error('-- C1 Error ', err.message)
+        log.error('-- C1 Error ', [err.message])
       }
     }
   },
   clients: {
     on: {
       property (data, ev) {
-        log.info('-- C1 Property ', data)
+        log.info('-- C1 Property ', [JSON.stringify(data)])
       }
     }
   },
@@ -69,7 +69,7 @@ var app = new Element({
       input: {
         on: {
           input () {
-            console.log('-- Scope: ', this.node.value)
+            log.info('-- port: ', [this.node.value])
             c1.adapter.val = this.node.value
           }
         }
@@ -84,7 +84,7 @@ var app = new Element({
       input: {
         on: {
           input () {
-            console.log('-- Scope: ', this.node.value)
+            log.info('-- Scope: ', this.node.value)
           }
         }
       }

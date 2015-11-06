@@ -7,10 +7,12 @@ var hub = new Hub({
     inject: require('../../lib/adapter/websocket')
   }
 })
-setTimeout(() => hub.adapter.val = {
+
+hub.adapter.val = {
   scope: 'meta',
   val: 3031
-}, 2300)
+}
+
 setInterval(() => {
   hub.set({ text: uuid.val + Math.random() * 999 })
 }, 1000 / 24)
