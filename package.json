@@ -32,6 +32,9 @@
   "bugs": {
     "url": "https://github.com/vigour-io/hub/issues"
   },
+  "directories": {
+    "lib": "./lib"
+  },
   "dependencies": {
     "vigour-js": "*",
     "websocket": "1.0.x"
