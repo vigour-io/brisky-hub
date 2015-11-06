@@ -32,19 +32,20 @@
   "bugs": {
     "url": "https://github.com/vigour-io/hub/issues"
   },
+  "directories": {
+    "lib": "./lib"
+  },
   "dependencies": {
-    "js-structures": "^1.0.5",
-    "reconnect-core": "^1.0.2",
-    "request": "^2.65.0",
     "vigour-js": "*",
+    "vigour-ua": "^0.0.1",
     "websocket": "1.0.x"
   },
   "devDependencies": {
-    "chalk": "^1.1.1",
     "colors": "*",
     "log-buffer": "*",
     "vigour-element": "*",
-    "vigour-uikit": "*"
+    "vigour-uikit": "*",
+    "colors-browserify": "0.0.2"
   },
   "homepage": "https://github.com/vigour-io/hub#readme",
   "vigour": {
