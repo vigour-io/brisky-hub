@@ -1,5 +1,5 @@
 {
-  "name": "vhub",
+  "name": "vigour-hub",
   "version": "0.0.1",
   "description": "Vigour.io Hub",
   "engines": {
@@ -44,7 +44,7 @@
     "vigour-element": "*",
     "vigour-uikit": "*",
     "log-buffer": "*",
-    "colors-browserify": "0.0.2"
+    "colors-browserify": "0.0.3"
   },
   "homepage": "https://github.com/vigour-io/hub#readme",
   "vigour": {
