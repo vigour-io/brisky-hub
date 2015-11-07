@@ -8,7 +8,7 @@ var client = new Hub({
         console.log('-- C1 Connected ')
       },
       error (err, ev) {
-        console.log('-- C1 Error ', err.message)
+        console.log('-- C1 Error ', err.message, err.stack)
       }
     }
   },
@@ -26,7 +26,7 @@ var client = new Hub({
   }
 })
 
-setInterval(() => { client.adapter.val = 3031 }, 200)
-setInterval(() => { client.adapter.val = 3032 }, 800)
-setInterval(() => { client.adapter.val = 3033 }, 1400)
-setInterval(() => { client.adapter.val = 3031 }, 2200)
+setTimeout(() => { client.adapter.val = 3031 }, 200)
+setTimeout(() => { client.adapter.val = 3032 }, 800)
+// setInterval(() => { client.adapter.val = 3033 }, 1400)
+// setInterval(() => { client.adapter.val = 3031 }, 2200)
