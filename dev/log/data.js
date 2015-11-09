@@ -37,12 +37,10 @@ function dtrackunified (data, event, outgoing, path, client, toUpstream, output,
     event.stamp,
     outgoing ? '\n           └> ' +
     (toUpstream
-      ? hub && ('' +  hub.adapter.val).bold.green
+      ? hub && ('' + hub.adapter.val).bold.green
       : length(client.val, 25).blue + ' ' + length(client.scope || '*', 7).yellow
     ) + ' ' + JSON.stringify(output) + '\n'
     : ''
   )
 }
-
-// make an emit for on outgoing
 // make an emit for on outgoing
