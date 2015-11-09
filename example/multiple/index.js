@@ -9,6 +9,13 @@ var hub = global.hub = new Hub({
     inject: require('../../lib/adapter/websocket')
     // val: 3033
     // listens: 3031 // this has to be fixed listenes in inject need to fire
+  },
+  clients: {
+    on: {
+      property (data, event) {
+        console.log('set on client'.rainbow, data)
+      }
+    }
   }
 })
 
@@ -16,8 +23,10 @@ hub.adapter.set({
   val: 3033,
   listens: 3031 // this has to be fixed listenes in inject need to fire
 })
+
 // console.log('set normal adapter!')
 var _scopes = Hub.prototype.scopes
+// give this a suitable method name
 hub.define({
   scopes (scope, event) {
     var instance = _scopes.call(this, scope, event)
