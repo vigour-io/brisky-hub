@@ -7,7 +7,7 @@ var hub = global.hub = new Hub({
   trackInstances: true,
   text: 1,
   adapter: {
-    inject: require('../../lib/adapter/websocket')
+    // inject: require('../../lib/adapter/websocket')
   }
 })
 hub.adapter.listens.val = 3032

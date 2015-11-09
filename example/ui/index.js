@@ -14,7 +14,7 @@ var uuid = require('vigour-js/lib/util/uuid').val
 
 var hub = global.hub = new Hub({
   adapter: {
-    inject: require('../../lib/adapter/websocket')
+    // inject: require('../../lib/adapter/websocket')
   },
   text: {
     on: {
