@@ -41,6 +41,8 @@
     "websocket": "1.0.x"
   },
   "devDependencies": {
+    "colors": "*",
+    "log-buffer": "*",
     "vigour-element": "*",
     "vigour-uikit": "*",
     "log-buffer": "*",
