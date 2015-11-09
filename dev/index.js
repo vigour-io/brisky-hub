@@ -2,3 +2,5 @@
 exports.inject = [
   require('./log/data')
 ]
+
+console.clear()
