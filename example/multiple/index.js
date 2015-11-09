@@ -6,7 +6,7 @@ Hub.prototype.inject(require('../../dev'))
 var hub = global.hub = new Hub({
   key: 'origin',
   adapter: {
-    inject: require('../../lib/adapter/websocket')
+    // inject: require('../../lib/adapter/websocket')
     // val: 3033
     // listens: 3031 // this has to be fixed listenes in inject need to fire
   },
