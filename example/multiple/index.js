@@ -13,7 +13,8 @@ var hub = global.hub = new Hub({
   clients: {
     on: {
       property (data, event) {
-        console.log('set on client'.rainbow, data)
+        // whats weird is that we still recieve clients from other hubs -- bit confusing
+        console.log('set on client'.rainbow, data, this.path)
       }
     }
   }
