@@ -18,7 +18,6 @@ describe('hubs', function () {
     a = new Hub({
       key: 'a'
     })
-
     b = new Hub({
       key: 'b'
     })
@@ -27,11 +26,7 @@ describe('hubs', function () {
   it('can set the adapater using a mock protocol', function () {
     a.set({
       adapter: {
-        // multiple protocols! -- first just one
-        // different down then up for example!
         protocol: require('../../../lib/protocol/mock')
-        // down and up in protocol e.g. webrtc! being able to define 2
-        // tcp how to switch when an upstream can recieve tcp - this is the issue
       }
     })
   })
