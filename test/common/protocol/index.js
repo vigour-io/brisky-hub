@@ -14,7 +14,7 @@ describe('protocol', function () {
 describe('hubs', function () {
   var a, b // eslint-disable-line
   var Hub = require('../../../lib')
-  var mock = require('../../../lib/protocol/mock')
+  var Mock = require('../../../lib/protocol/mock')
   it('can create multiple hubs', function () {
     a = new Hub({
       key: 'a'
@@ -28,11 +28,10 @@ describe('hubs', function () {
     a.set({
       adapter: {
         id: 'a',
-        protocol: mock
+        mock: new Mock()
       }
     })
-    expect(a.adapter._protocol.up).to.equal(mock)
-    expect(a.adapter._protocol.down).to.equal(mock)
+    expect(a.adapter.mock).to.be.instanceof(Mock)
     expect(a.adapter.id).to.equal('a')
   })
 
@@ -40,11 +39,24 @@ describe('hubs', function () {
     b.set({
       adapter: {
         id: 'b',
-        protocol: mock
+        mock: new Mock()
       }
     })
-    expect(b.adapter._protocol.up).to.equal(mock)
-    expect(b.adapter._protocol.down).to.equal(mock)
+    expect(b.adapter.mock).to.be.instanceof(Mock)
     expect(b.adapter.id).to.equal('b')
+  })
+
+  it('can create a server "mockA"', function () {
+    a.adapter.set({
+      mock: {
+        server: 'mockA'
+      }
+    })
+  })
+
+  it('b can connect to mockA', function () {
+    a.adapter.set({
+      mock: 'mockA'
+    })
   })
 })
