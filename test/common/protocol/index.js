@@ -23,9 +23,19 @@ describe('hubs', function () {
     })
   })
 
-  it('can set the adapater using a mock protocol', function () {
+  it('can set the adapater using a mock protocol on a', function () {
     a.set({
       adapter: {
+        id: 'a',
+        protocol: require('../../../lib/protocol/mock')
+      }
+    })
+  })
+
+  it('can set the adapater using a mock protocol on b', function () {
+    b.set({
+      adapter: {
+        id: 'a',
         protocol: require('../../../lib/protocol/mock')
       }
     })
