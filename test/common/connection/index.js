@@ -1,9 +1,18 @@
 'use strict'
-// var uuid = require('vigour-js/util/uuid').val
-describe('basic', function () {
+
+describe('basic connection', function () {
+  var Connection = require('../../../lib/connection')
+  it('can create a connection', function () {
+    var connection = new Connection()
+    console.log('hey hey hey')
+
+  })
+})
+
+describe('hubs', function () {
   var a, b
   var Hub = require('../../../lib')
-  it('can create a hub', function () {
+  it('can create multiple hubs', function () {
     a = new Hub({
       key: 'a'
     }) // uuid used!
