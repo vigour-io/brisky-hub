@@ -55,8 +55,18 @@ describe('hubs', function () {
   })
 
   it('b can connect to mockA', function () {
+    console.clear()
     a.adapter.set({
       mock: 'mockA'
     })
+  })
+
+  xit('a can send data to b', function () {
+    // console.clear()
+    a.set({
+      somefield: true
+    })
+    expect(b).to.have.property('somefield')
+      .which.has('_input').equals(true)
   })
 })
