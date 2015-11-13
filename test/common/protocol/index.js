@@ -56,17 +56,20 @@ describe('hubs', function () {
 
   it('b can connect to mockA', function () {
     console.clear()
-    a.adapter.set({
+    b.adapter.set({
       mock: 'mockA'
     })
   })
 
-  xit('a can send data to b', function () {
+  it('a can send data to b', function () {
     // console.clear()
-    a.set({
+    console.log('\n\n-----')
+    b.set({
       somefield: true
     })
-    expect(b).to.have.property('somefield')
-      .which.has('_input').equals(true)
+    global.b = b
+    global.a = a // connections list are only upstream better name! -- maybe not?
+    expect(a).to.have.property('somefield')
+      .which.has.property('_input').equals(true)
   })
 })
