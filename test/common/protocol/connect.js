@@ -1,0 +1,50 @@
+'use strict'
+// describe('connect', function () {
+//   var server, client
+//   var Hub = require('../../../lib')
+//   var Mock = require('../../../lib/protocol/mock')
+//   it('can create multiple hubs', function () {
+//     server = new Hub({
+//       key: 'server'
+//     })
+//     client = new Hub({
+//       key: 'reciever'
+//     })
+//   })
+//
+//   it('can set the adapater using a mock protocol on a', function () {
+//     server.set({
+//       adapter: {
+//         id: 'server',
+//         mock: new Mock()
+//       }
+//     })
+//     expect(server.adapter.mock).to.be.instanceof(Mock)
+//     expect(server.adapter.id).to.equal('server')
+//   })
+//
+//   it('can set the adapater using a mock protocol on b', function () {
+//     client.set({
+//       adapter: {
+//         id: 'reciever',
+//         mock: new Mock()
+//       }
+//     })
+//     expect(client.adapter.mock).to.be.instanceof(Mock)
+//     expect(client.adapter.id).to.equal('reciever')
+//   })
+//
+//   it('can create a server "server"', function () {
+//     server.adapter.set({
+//       mock: {
+//         server: 'server'
+//       }
+//     })
+//   })
+//
+//   it('client can connect to server', function () {
+//     client.adapter.set({
+//       mock: 'server'
+//     })
+//   })
+// })
