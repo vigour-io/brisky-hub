@@ -12,64 +12,69 @@ describe('protocol', function () {
 })
 
 describe('hubs', function () {
-  var a, b // eslint-disable-line
+  var server, client
   var Hub = require('../../../lib')
   var Mock = require('../../../lib/protocol/mock')
+
   it('can create multiple hubs', function () {
-    a = new Hub({
-      key: 'a'
+    server = new Hub({
+      key: 'server'
     })
-    b = new Hub({
-      key: 'b'
+    client = new Hub({
+      key: 'reciever'
     })
   })
 
   it('can set the adapater using a mock protocol on a', function () {
-    a.set({
+    server.set({
       adapter: {
-        id: 'a',
+        id: 'server',
         mock: new Mock()
       }
     })
-    expect(a.adapter.mock).to.be.instanceof(Mock)
-    expect(a.adapter.id).to.equal('a')
+    expect(server.adapter.mock).to.be.instanceof(Mock)
+    expect(server.adapter.id).to.equal('server')
   })
 
   it('can set the adapater using a mock protocol on b', function () {
-    b.set({
+    client.set({
       adapter: {
-        id: 'b',
+        id: 'reciever',
         mock: new Mock()
       }
     })
-    expect(b.adapter.mock).to.be.instanceof(Mock)
-    expect(b.adapter.id).to.equal('b')
+    expect(client.adapter.mock).to.be.instanceof(Mock)
+    expect(client.adapter.id).to.equal('reciever')
   })
 
-  it('can create a server "mockA"', function () {
-    a.adapter.set({
+  it('can create a server "server"', function () {
+    server.adapter.set({
       mock: {
-        server: 'mockA'
+        server: 'server'
       }
     })
   })
 
-  it('b can connect to mockA', function () {
-    console.clear()
-    b.adapter.set({
-      mock: 'mockA'
+  it('client can connect to server', function () {
+    client.adapter.set({
+      mock: 'server'
     })
   })
 
-  it('a can send data to b', function () {
-    // console.clear()
-    console.log('\n\n-----')
-    b.set({
+  it('client can send data to server', function () {
+    client.set({
       somefield: true
     })
-    global.b = b
-    global.a = a // connections list are only upstream better name! -- maybe not?
-    expect(a).to.have.property('somefield')
+    expect(server).to.have.property('somefield')
+      .which.has.property('_input').equals(true)
+  })
+
+  it('server can send data to client', function () {
+    console.log('\n\n\n\n-----------------')
+    server.set({
+      anotherfield: true
+    })
+    expect(client).to.have.property('anotherfield')
       .which.has.property('_input').equals(true)
   })
 })
