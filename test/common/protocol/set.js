@@ -43,25 +43,22 @@ describe('set', function () {
     })
   })
 
-  it('client can connect to server', function () {
-    client.adapter.set({
-      mock: 'server'
-    })
+  it('client can connect to server', function (done) {
+    client.adapter.set({ mock: 'server' })
+    // maybe make this a bit easier to access e.g. protocol will get a connected observable
+    client.adapter.mock.client.origin.connection.origin.on('connect', done)
   })
 
-  xit('client can send data to server', function (done) {
+  it('client can send data to server', function () {
+    console.clear()
     client.set({
       somefield: true
     })
-    server.once(() => {
-      console.log('?', server.somefield)
-      expect(server).to.have.property('somefield')
-      .which.has.property('_input').equals(true)
-      done()
-    })
+    expect(server).to.have.property('somefield')
+    .which.has.property('_input').equals(true)
   })
 
-  xit('server can send data to client', function () {
+  it('server can send data to client', function () {
     console.log('\n\n\n\n-----------------')
     server.set({
       anotherfield: true
