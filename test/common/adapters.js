@@ -6,7 +6,9 @@ describe('scopes', function () {
   var server = global.server = new Hub({
     key: 'server'
   })
-  var getScope = Hub.getScope
+  var server2 = global.server2 = new Hub({
+    key: 'server2'
+  })
   var reciever = new Hub({
     key: 'reciever'
   })
@@ -14,12 +16,6 @@ describe('scopes', function () {
     adapter: {
       id: 'server',
       mock: new Mock()
-    },
-    define: {
-      getScope () {
-        console.log('get dat scopes!', arguments)
-        return getScope.apply(this, arguments)
-      }
     }
   })
   reciever.set({
@@ -28,11 +24,9 @@ describe('scopes', function () {
       mock: new Mock()
     }
   })
-  it('can connect to a scope', function () {
+  it('can connect', function () {
       reciever.adapter.set({
         mock: 'server',
-        // this is correct so you have one scope per multiple protocols (if its on one level!)
-        scope: 'hello'
       })
   })
 })
