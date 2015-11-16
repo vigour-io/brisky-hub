@@ -1,36 +1,28 @@
 'use strict'
 
-describe('scopes', function () {
+describe('single scope', function () {
   var Hub = require('../../../lib')
   var Mock = require('../../../lib/protocol/mock')
   var server = new Hub({
-    key: 'server'
+    key: 'single_server'
   })
-  var getScope = Hub.prototype.getScope
   var receiver = new Hub({
-    key: 'receiver'
+    key: 'single_receiver'
   })
 
   server.set({
     adapter: {
-      id: 'server',
+      id: 'single-server',
       mock: new Mock()
-    },
-    define: {
-      getScope (scope, event) {
-        console.log('get dat scope!', scope)
-        console.log('use this to test a double upstream as well')
-        return getScope.apply(this, arguments)
-      }
     }
   })
 
   // check if we can do this immediatly in the adapter when injecting also make sure that protocls are injectab;e
-  server.adapter.mock.set({ server: 'server' })
+  server.adapter.mock.set({ server: 'single_server' })
 
   receiver.set({
     adapter: {
-      id: 'receiver',
+      id: 'single_receiver',
       mock: new Mock()
     }
   })
@@ -38,7 +30,7 @@ describe('scopes', function () {
   it('can connect to a scope', function (done) {
     // this is correct so you have one scope per multiple protocols (if its on one level!)
     receiver.adapter.set({
-      mock: 'server',
+      mock: 'single_server',
       scope: 'myScope'
     })
     receiver.adapter.mock.on('connect', function () {
@@ -48,7 +40,6 @@ describe('scopes', function () {
       expect(server._scopes.myScope).to.have.property('clients')
       done()
     })
-    global.server = server
   })
 
   it('merges sets from the original sever to client', function () {
