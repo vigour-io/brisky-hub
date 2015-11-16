@@ -13,8 +13,8 @@ describe('multiple adapters', function () {
     key: 'b'
   })
 
-  var reciever = new Hub({
-    key: 'reciever',
+  var receiver = new Hub({
+    key: 'receiver',
     a: {},
     b: {}
   })
@@ -39,39 +39,37 @@ describe('multiple adapters', function () {
   })
 
   it('can connect to 2 servers (a and b)', function (done) {
-    reciever.set({
+    receiver.set({
       a: {
         adapter: {
-          id: 'recieverA',
+          id: 'receiverA',
           mock: new Mock()
         }
       },
       b: {
         adapter: {
-          id: 'recieverB',
+          id: 'receiverB',
           mock: new Mock()
         }
       }
     })
     var connected = []
-    reciever.a.adapter.mock.on('connect', function () {
+    receiver.a.adapter.mock.on('connect', function () {
       connected.push('a')
     })
-    reciever.b.adapter.mock.on('connect', function () {
+    receiver.b.adapter.mock.on('connect', function () {
       connected.push('b')
       expect(connected).to.deep.equal(['a', 'b'])
       done()
     })
-    reciever.a.adapter.mock.val = 'a'
-    reciever.b.adapter.mock.val = 'b'
+    receiver.a.adapter.mock.val = 'a'
+    receiver.b.adapter.mock.val = 'b'
   })
 
   it('it recieves data from a', function () {
-    global.a = a
-    global.r = reciever
-    console.clear()
     a.set({ somefield: true })
-    console.log('hey hey hey hey------------------------'.red)
-    expect(reciever.a).to.have.property('somefield').which.equals(true)
+    expect(receiver.a)
+      .to.have.property('somefield')
+      .which.has.property('_input').equals(true)
   })
 })
