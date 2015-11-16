@@ -64,4 +64,11 @@ describe('scopes', function () {
     })
     expect(receiver.james.val).to.equal(true)
   })
+
+  it('set from client to server only manipulates "myScope"', function () {
+    console.clear()
+    receiver.set({bla: 'hey'})
+    expect(server.bla).to.be.not.ok
+    expect(server._scopes.myScope.bla).to.be.ok
+  })
 })
