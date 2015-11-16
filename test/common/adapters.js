@@ -69,8 +69,9 @@ describe('multiple adapters', function () {
   it('it recieves data from a', function () {
     global.a = a
     global.r = reciever
-    // console.clear()
+    console.clear()
     a.set({ somefield: true })
+    console.log('------------------------')
     expect(reciever.a).to.have.property('somefield').which.equals(true)
   })
 })
