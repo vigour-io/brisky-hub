@@ -1,7 +1,7 @@
 'use strict'
 
 describe('set', function () {
-  var server, reciever
+  var server, receiver
   var Hub = require('../../lib')
   var Mock = require('../../lib/protocol/mock')
 
@@ -9,7 +9,7 @@ describe('set', function () {
     server = new Hub({
       key: 'server'
     })
-    reciever = new Hub({
+    receiver = new Hub({
       key: 'reciever'
     })
   })
@@ -17,54 +17,52 @@ describe('set', function () {
   it('can set the adapater using a mock protocol on a', function () {
     server.set({
       adapter: {
-        id: 'server',
+        id: 'set_server',
         mock: new Mock()
       }
     })
     expect(server.adapter.mock).to.be.instanceof(Mock)
-    expect(server.adapter.id).to.equal('server')
+    expect(server.adapter.id).to.equal('set_server')
   })
 
   it('can set the adapater using a mock protocol on b', function () {
-    reciever.set({
+    receiver.set({
       adapter: {
-        id: 'reciever',
+        id: 'set_reciever',
         mock: new Mock()
       }
     })
-    expect(reciever.adapter.mock).to.be.instanceof(Mock)
-    expect(reciever.adapter.id).to.equal('reciever')
+    expect(receiver.adapter.mock).to.be.instanceof(Mock)
+    expect(receiver.adapter.id).to.equal('set_reciever')
   })
 
   it('can create a server "server"', function () {
     server.adapter.set({
       mock: {
-        server: 'server'
+        server: 'set_server'
       }
     })
   })
 
-  it('reciever can connect to server', function (done) {
-    reciever.adapter.set({ mock: 'server' })
+  it('receiver can connect to server', function (done) {
+    receiver.adapter.set({ mock: 'set_server' })
     // maybe make this a bit easier to access e.g. protocol will get a connected observable
-    reciever.adapter.mock.client.origin.connection.origin.on('connect', done)
+    receiver.adapter.mock.client.origin.connection.origin.on('connect', done)
   })
 
-  it('reciever can send data to server', function () {
-    console.clear()
-    reciever.set({
+  it('receiver can send data to server', function () {
+    receiver.set({
       somefield: true
     })
     expect(server).to.have.property('somefield')
     .which.has.property('_input').equals(true)
   })
 
-  it('server can send data to reciever', function () {
-    console.log('\n\n\n\n-----------------')
+  it('server can send data to receiver', function () {
     server.set({
       anotherfield: true
     })
-    expect(reciever).to.have.property('anotherfield')
+    expect(receiver).to.have.property('anotherfield')
       .which.has.property('_input').equals(true)
   })
 })
