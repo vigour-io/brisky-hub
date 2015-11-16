@@ -9,6 +9,4 @@ describe('protocol', function () {
   it('can create a new protocol', function () {
     var connection = new Protocol() // eslint-disable-line
   })
-  // require('./connect')
-  require('./set')
 })
