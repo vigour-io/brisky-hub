@@ -15,7 +15,7 @@ describe('multiple scopes, clients', function () {
   })
   server.set({
     adapter: {
-      id: 'server',
+      id: 'multiple_server',
       mock: new Mock()
     },
     define: {
@@ -27,11 +27,11 @@ describe('multiple scopes, clients', function () {
     }
   })
   // check if we can do this immediatly in the adapter when injecting also make sure that protocls are injectab;e
-  server.adapter.mock.set({ server: 'server' })
+  server.adapter.mock.set({ server: 'multiple_server' })
 
   receiver.set({
     adapter: {
-      id: 'receiver',
+      id: 'multiple_receiver',
       mock: new Mock()
     }
   })
@@ -39,7 +39,7 @@ describe('multiple scopes, clients', function () {
   it('can connect to a scope', function (done) {
     // this is correct so you have one scope per multiple protocols (if its on one level!)
     receiver.adapter.set({
-      mock: 'server',
+      mock: 'multiple_server',
       scope: 'myScope'
     })
     receiver.adapter.mock.on('connect', function () {
