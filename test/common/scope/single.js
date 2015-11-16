@@ -17,7 +17,6 @@ describe('single scope', function () {
     }
   })
 
-  // check if we can do this immediatly in the adapter when injecting also make sure that protocls are injectab;e
   server.adapter.mock.set({ server: 'single_server' })
 
   receiver.set({
@@ -28,7 +27,6 @@ describe('single scope', function () {
   })
 
   it('can connect to a scope', function (done) {
-    // this is correct so you have one scope per multiple protocols (if its on one level!)
     receiver.adapter.set({
       mock: 'single_server',
       scope: 'myScope'
