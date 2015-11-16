@@ -1,15 +1,16 @@
 'use strict'
+require('colors-browserify')
 // make mock injectable, and create new thing by default (can never not be new)
 describe('multiple adapters', function () {
   var Hub = require('../../lib')
   var Mock = require('../../lib/protocol/mock')
 
   var a = new Hub({
-    key: 'server'
+    key: 'a'
   })
 
   var b = new Hub({
-    key: 'server2'
+    key: 'b'
   })
 
   var reciever = new Hub({
@@ -58,7 +59,7 @@ describe('multiple adapters', function () {
     })
     reciever.b.adapter.mock.on('connect', function () {
       connected.push('b')
-      expect(connected).to.deep.equal(['a', 'b' ])
+      expect(connected).to.deep.equal(['a', 'b'])
       done()
     })
     reciever.a.adapter.mock.val = 'a'
@@ -66,6 +67,10 @@ describe('multiple adapters', function () {
   })
 
   it('it recieves data from a', function () {
-
+    global.a = a
+    global.r = reciever
+    // console.clear()
+    a.set({ somefield: true })
+    expect(reciever.a).to.have.property('somefield').which.equals(true)
   })
 })
