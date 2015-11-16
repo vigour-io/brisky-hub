@@ -1,8 +1,9 @@
 'use strict'
+
 describe('set', function () {
   var server, client
-  var Hub = require('../../../lib')
-  var Mock = require('../../../lib/protocol/mock')
+  var Hub = require('../../lib')
+  var Mock = require('../../lib/protocol/mock')
 
   it('can create multiple hubs', function () {
     server = new Hub({
