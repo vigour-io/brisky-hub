@@ -7,12 +7,8 @@ describe('multiple scopes, clients', function () {
     key: 'server'
   })
   var getScope = Hub.prototype.getScope
-  var scopeReceiver = new Hub({
-    key: 'scopeReceiver'
-  })
-  var receiver = new Hub({
-    key: 'receiver'
-  })
+  var scopeReceiver = new Hub({ key: 'scopeReceiver' })
+  var receiver = new Hub({ key: 'receiver' })
   server.set({
     adapter: {
       id: 'multiple_server',
@@ -26,7 +22,7 @@ describe('multiple scopes, clients', function () {
       }
     }
   })
-  // check if we can do this immediatly in the adapter when injecting also make sure that protocls are injectab;e
+
   server.adapter.mock.set({ server: 'multiple_server' })
 
   receiver.set({
@@ -36,39 +32,23 @@ describe('multiple scopes, clients', function () {
     }
   })
 
-  it('can connect to a scope', function (done) {
-    // this is correct so you have one scope per multiple protocols (if its on one level!)
+  it('connects to the non-scoped data set of server', function (done) {
     receiver.adapter.set({
-      mock: 'multiple_server',
-      scope: 'myScope'
+      mock: 'multiple_server'
     })
     receiver.adapter.mock.on('connect', function () {
-      expect(server).to.not.have.property('clients')
-      expect(server).to.have.property('_scopes')
-        .which.has.property('myScope')
-      expect(server._scopes.myScope).to.have.property('clients')
+      expect(server).to.have.property('clients')
       done()
     })
-    global.server = server
   })
 
-  it('merges sets from the original sever to client', function () {
-    server.set({
-      youri: true
+  it('connects to the non-scoped data set of server', function (done) {
+    receiver.adapter.set({
+      mock: 'multiple_server'
     })
-    expect(receiver.youri.val).to.equal(true)
-  })
-
-  it('merges sets from the "myScope" on the sever to client', function () {
-    server._scopes.myScope.set({
-      james: true
+    receiver.adapter.mock.on('connect', function () {
+      expect(server).to.have.property('clients')
+      done()
     })
-    expect(receiver.james.val).to.equal(true)
-  })
-
-  it('set from client to server only manipulates "myScope"', function () {
-    receiver.set({bla: 'hey'})
-    expect(server.bla).to.be.not.ok
-    expect(server._scopes.myScope.bla).to.be.ok
   })
 })
