@@ -1,16 +1,18 @@
 'use strict'
 
-describe('scopes', function () {
-  var Hub = require('../../lib')
-  var Mock = require('../../lib/protocol/mock')
+describe('multiple scopes, clients', function () {
+  var Hub = require('../../../lib')
+  var Mock = require('../../../lib/protocol/mock')
   var server = new Hub({
     key: 'server'
   })
   var getScope = Hub.prototype.getScope
+  var scopeReceiver = new Hub({
+    key: 'scopeReceiver'
+  })
   var receiver = new Hub({
     key: 'receiver'
   })
-
   server.set({
     adapter: {
       id: 'server',
@@ -24,7 +26,6 @@ describe('scopes', function () {
       }
     }
   })
-
   // check if we can do this immediatly in the adapter when injecting also make sure that protocls are injectab;e
   server.adapter.mock.set({ server: 'server' })
 
@@ -66,7 +67,6 @@ describe('scopes', function () {
   })
 
   it('set from client to server only manipulates "myScope"', function () {
-    console.clear()
     receiver.set({bla: 'hey'})
     expect(server.bla).to.be.not.ok
     expect(server._scopes.myScope.bla).to.be.ok
