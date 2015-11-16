@@ -39,7 +39,6 @@ describe('multiple adapters', function () {
   })
 
   it('can connect to 2 servers (a and b)', function (done) {
-    console.clear()
     reciever.set({
       a: {
         adapter: {
@@ -60,7 +59,6 @@ describe('multiple adapters', function () {
     })
     reciever.b.adapter.mock.on('connect', function () {
       connected.push('b')
-      console.log('??? connect plz....')
       expect(connected).to.deep.equal(['a', 'b'])
       done()
     })
@@ -68,9 +66,10 @@ describe('multiple adapters', function () {
     reciever.b.adapter.mock.val = 'b'
   })
 
-  xit('it recieves data from a', function () {
+  it('it recieves data from a', function () {
     global.a = a
     global.r = reciever
+    console.clear()
     a.set({ somefield: true })
     console.log('hey hey hey hey------------------------'.red)
     expect(reciever.a).to.have.property('somefield').which.equals(true)
