@@ -42,21 +42,23 @@ describe('scopes', function () {
       scope: 'myScope'
     })
     receiver.adapter.mock.on('connect', function () {
+      expect(server).to.not.have.property('clients')
       expect(server).to.have.property('_scopes')
         .which.has.property('myScope')
+      expect(server._scopes.myScope).to.have.property('clients')
       done()
     })
     global.server = server
   })
 
-  xit('merges sets from the original sever to client', function () {
+  it('merges sets from the original sever to client', function () {
     server.set({
       youri: true
     })
     expect(receiver.youri.val).to.equal(true)
   })
 
-  xit('merges sets from the "myScope" on the sever to client', function () {
+  it('merges sets from the "myScope" on the sever to client', function () {
     server._scopes.myScope.set({
       james: true
     })
