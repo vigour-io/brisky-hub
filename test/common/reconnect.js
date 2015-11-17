@@ -49,12 +49,18 @@ describe('reconnect', function () {
   })
 
   it('can connect to another server server-a', function (done) {
-    console.clear()
     receiver.adapter.mock.val = 'server-reconnect-a'
     receiver.adapter.mock.once('connect', function () {
       expect(a.clients).to.have.property('receiver-reconnect').which.is.ok
       expect(b.clients['receiver-reconnect']).to.not.be.ok
       done()
     })
+  })
+
+  it('server gets removed, client disconnects', function (done) {
+    receiver.adapter.mock.once('close', function () {
+      done()
+    })
+    a.clients['receiver-reconnect'].connection.origin.remove()
   })
 })
