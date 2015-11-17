@@ -4,7 +4,7 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
   var Mock = require('../../../lib/protocol/mock')
   var getScope = Hub.prototype.getScope
   // servers
-  var a = global.a = new Hub({ key: 'server_a' })
+  var a = new Hub({ key: 'server_a' })
   // set scope handler
   var b = new Hub({
     key: 'server_b',
