@@ -11,7 +11,6 @@ describe('multiple upstreams, multiple scopes', function () {
     key: 'server_c'
   })
   var scopeReceiver = new Hub({ key: 'scopeReceiver' })
-  var scopeReceiver2 = new Hub({ key: 'scopeReceiver2' })
   var receiver = new Hub({ key: 'receiver' })
 
   // server preparation
@@ -51,14 +50,6 @@ describe('multiple upstreams, multiple scopes', function () {
   scopeReceiver.set({
     adapter: {
       id: 'scope_upstreams_receiver_scope_b',
-      mock: new Mock()
-    }
-  })
-
-  scopeReceiver2.set({
-    adapter: {
-      id: 'scope_upstreams_receiver_scope_2',
-      // this scope has to go to b as well! multi scope to one server
       mock: new Mock()
     }
   })
@@ -106,5 +97,21 @@ describe('multiple upstreams, multiple scopes', function () {
     scopeReceiver.adapter.mock.once('connect', function () {
       connectedToScopeC = true
     })
+  })
+
+  it('both receivers receive updates from a', function () {
+    a.set({
+      hello: true
+    })
+    expect(scopeReceiver).to.have.property('hello')
+    expect(receiver).to.have.property('hello')
+  })
+
+  it('only scopeReceiver receives updates from b', function () {
+    b.set({
+      bye: true
+    })
+    expect(scopeReceiver).to.have.property('bye')
+    expect(receiver).to.not.have.property('bye')
   })
 })
