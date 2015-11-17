@@ -6,10 +6,7 @@ describe('multiple upstreams, multiple scopes', function () {
   var Mock = require('../../../lib/protocol/mock')
   var a = new Hub({ key: 'server_a' })
   var b = new Hub({ key: 'server_b' })
-
-  var c = new Hub({
-    key: 'server_c'
-  })
+  var c = new Hub({ key: 'server_c' })
   var scopeReceiver = new Hub({ key: 'scopeReceiver' })
   var receiver = new Hub({ key: 'receiver' })
 
