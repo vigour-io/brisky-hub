@@ -73,7 +73,11 @@ describe('multiple upstreams, multiple scopes', function () {
       getScope (val, event) {
         var scope = getScope.apply(this, arguments)
         if (val === 'b') {
+          console.clear()
+          // so protocols should not be inherited completely at least there needs to be a check for connection
+          // since connection is used for the lower level only
           scope.set({
+            key: 'b_scope',
             adapter: {
               mock: 'scope_upstreams_server_b'
             }
