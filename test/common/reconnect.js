@@ -58,9 +58,10 @@ describe('reconnect', function () {
   })
 
   it('server gets removed, client reconnects after 1 attempt', function (done) {
+    // nested callbacks to test order
     receiver.adapter.mock.once('close', function () {
-      receiver.adapter.mock.once('connect', function () {
-        done()
+      this.once('reconnect', function () {
+        this.once('connect', done)
       })
     })
     a.clients['receiver-reconnect'].connection.origin.remove()
