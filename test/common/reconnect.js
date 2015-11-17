@@ -7,49 +7,44 @@ describe('reconnect', function () {
 
   it('can create multiple hubs', function () {
     a = new Hub({
-      key: 'server-reconnect-a'
+      key: 'server-reconnect-a',
+      adapter: {
+        id: 'server-reconnect-a',
+        mock: new Mock()
+      }
     })
     b = new Hub({
-      key: 'server-reconnect-b'
+      key: 'server-reconnect-b',
+      adapter: {
+        id: 'server-reconnect-b',
+        mock: new Mock()
+      }
     })
     receiver = new Hub({
-      key: 'receiver-reconnect'
+      key: 'receiver-reconnect',
+      adapter: {
+        id: 'receiver-reconnect',
+        mock: new Mock()
+      }
+    })
+    a.adapter.mock.set({ server: 'server-reconnect-a' })
+    b.adapter.mock.set({ server: 'server-reconnect-b' })
+  })
+
+  it('can connect to server-a', function (done) {
+    receiver.adapter.mock.val = 'server-reconnect-a'
+    receiver.adapter.mock.once('connect', function () {
+      expect(a.clients).to.have.property('receiver-reconnect')
+      done()
     })
   })
 
-  // it('can set the adapater using a mock protocol on a', function () {
-  //   a.set({
-  //     adapter: {
-  //       id: 'server-reconnect-a',
-  //       mock: new Mock()
-  //     }
-  //   })
-  //   expect(server.adapter.mock).to.be.instanceof(Mock)
-  //   expect(server.adapter.id).to.equal('server')
-  // })
-  //
-  // it('can set the adapater using a mock protocol on b', function () {
-  //   receiver.set({
-  //     adapter: {
-  //       id: 'receiver',
-  //       mock: new Mock()
-  //     }
-  //   })
-  //   expect(receiver.adapter.mock).to.be.instanceof(Mock)
-  //   expect(receiver.adapter.id).to.equal('reciever')
-  // })
-  //
-  // it('can create a server "server"', function () {
-  //   server.adapter.set({
-  //     mock: {
-  //       server: 'server'
-  //     }
-  //   })
-  // })
-  //
-  // it('receiver can connect to server', function (done) {
-  //   receiver.adapter.set({ mock: 'server' })
-  //   // maybe make this a bit easier to access e.g. protocol will get a connected observable
-  //   receiver.adapter.mock.client.origin.connection.origin.on('connect', done)
-  // })
+  it('can connect to another server server-b', function (done) {
+    receiver.adapter.mock.val = 'server-reconnect-b'
+    receiver.adapter.mock.once('connect', function () {
+      expect(b.clients).to.have.property('receiver-reconnect')
+      expect(a.clients).to.not.have.property('receiver-reconnect')
+      done()
+    })
+  })
 })
