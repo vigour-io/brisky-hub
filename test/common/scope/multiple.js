@@ -6,7 +6,6 @@ describe('multiple scopes, clients', function () {
   var server = new Hub({
     key: 'server'
   })
-  var getScope = Hub.prototype.getScope
   var scopeReceiver = new Hub({ key: 'scopeReceiver' })
   var receiver = new Hub({ key: 'receiver' })
   server.set({
