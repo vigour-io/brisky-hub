@@ -1,14 +1,28 @@
 'use strict'
-
 describe('multiple upstreams, multiple scopes, multiple clients over single connection', function () {
   var Hub = require('../../../lib')
-  // var getScope = Hub.prototype.getScope
   var Mock = require('../../../lib/protocol/mock')
-  var a = new Hub({ key: 'server_b' })
-  var b = new Hub({ key: 'server_c' })
-  var receiverA1 = new Hub({ key: 'receiverA1' })
-  var receiverA2 = new Hub({ key: 'receiverA2' })
-  // server preparation
+  var getScope = Hub.prototype.getScope
+  // servers
+  var a = new Hub({ key: 'server_a' })
+  // set scope handler
+  var b = new Hub({
+    key: 'server_b',
+    define: {
+      getScope (val, event) {
+        var scope = getScope.apply(this, arguments)
+        scope.set({
+          adapter: {
+            mock: 'scope_connection_server_a',
+            scope: val
+          }
+        })
+        console.log('ok now were doing it! -- multi upstream scopes -- share connection', val)
+        return scope
+      }
+    }
+  })
+
   a.set({
     adapter: {
       id: 'scope_connection_server_a',
@@ -27,6 +41,9 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
   b.adapter.mock.set({ server: 'scope_connection_server_b' })
 
   // recievers
+  var receiverA1 = new Hub({ key: 'receiverA1' })
+  var receiverA2 = new Hub({ key: 'receiverA2' })
+
   receiverA1.set({
     adapter: {
       id: 'scope_connection_receiver_A1',
@@ -40,4 +57,6 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
       mock: new Mock()
     }
   })
+
+
 })
