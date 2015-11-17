@@ -58,5 +58,10 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
     }
   })
 
-
+  it('receiverA1 can connect to b, b._scopes.A1 gets connected to a', function (done) {
+    receiverA1.adapter.mock.val = 'scope_connection_server_b'
+    receiverA1.adapter.mock.once('connect', function () {
+      done()
+    })
+  })
 })
