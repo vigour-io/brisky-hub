@@ -57,9 +57,11 @@ describe('reconnect', function () {
     })
   })
 
-  it('server gets removed, client disconnects', function (done) {
+  it('server gets removed, client reconnects after 1 attempt', function (done) {
     receiver.adapter.mock.once('close', function () {
-      done()
+      receiver.adapter.mock.once('connect', function () {
+        done()
+      })
     })
     a.clients['receiver-reconnect'].connection.origin.remove()
   })
