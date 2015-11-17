@@ -11,30 +11,37 @@ describe('multiple scopes, clients', function () {
   var receiver = new Hub({ key: 'receiver' })
   server.set({
     adapter: {
-      id: 'scope_multiple_server',
+      id: 'scope_upstreams_server_a',
       mock: new Mock()
+    },
+    define: {
+      getScope (scope, event) {
+        console.log('get dat scope!', scope)
+        console.log('use this to test a double upstream as well')
+        return getScope.apply(this, arguments)
+      }
     }
   })
 
-  server.adapter.mock.set({ server: 'scope_multiple_server' })
+  server.adapter.mock.set({ server: 'multiple_server' })
 
   receiver.set({
     adapter: {
-      id: 'scope_multiple_receiver',
+      id: 'multiple_receiver',
       mock: new Mock()
     }
   })
 
   scopeReceiver.set({
     adapter: {
-      id: 'scope_multiple_scope_receiver',
+      id: 'multiple_scope_receiver',
       mock: new Mock()
     }
   })
 
   it('connects to the non-scoped data set of server', function (done) {
     receiver.adapter.set({
-      mock: 'scope_multiple_server'
+      mock: 'multiple_server'
     })
     receiver.adapter.mock.on('connect', function () {
       expect(server).to.have.property('clients')
@@ -45,7 +52,7 @@ describe('multiple scopes, clients', function () {
   it('other client connects to the "myScope" data set of server', function (done) {
     console.clear()
     scopeReceiver.adapter.set({
-      mock: 'scope_multiple_server',
+      mock: 'multiple_server',
       scope: 'myScope'
     })
     scopeReceiver.adapter.mock.on('connect', function () {
@@ -58,8 +65,8 @@ describe('multiple scopes, clients', function () {
   })
 
   it('clients field is not inherited over scopes', function () {
-    expect(server.clients).to.not.have.property('scope_multiple_scope_receiver')
-    expect(server._scopes.myScope.clients).to.have.property('scope_multiple_scope_receiver')
-    expect(server._scopes.myScope.clients).to.not.have.property('scope_multiple_receiver')
+    expect(server.clients).to.not.have.property('multiple_scope_receiver')
+    expect(server._scopes.myScope.clients).to.have.property('multiple_scope_receiver')
+    expect(server._scopes.myScope.clients).to.not.have.property('multiple_receiver')
   })
 })
