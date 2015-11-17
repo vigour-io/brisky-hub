@@ -11,6 +11,7 @@ describe('multiple upstreams, multiple scopes', function () {
     key: 'server_c'
   })
   var scopeReceiver = new Hub({ key: 'scopeReceiver' })
+  var scopeReceiver2 = new Hub({ key: 'scopeReceiver2' })
   var receiver = new Hub({ key: 'receiver' })
 
   // server preparation
@@ -54,6 +55,14 @@ describe('multiple upstreams, multiple scopes', function () {
     }
   })
 
+  scopeReceiver2.set({
+    adapter: {
+      id: 'scope_upstreams_receiver_scope_2',
+      // this scope has to go to b as well! multi scope to one server
+      mock: new Mock()
+    }
+  })
+
   it('server c can connect to a', function (done) {
     c.adapter.mock.once('connect', function () {
       done()
@@ -69,11 +78,11 @@ describe('multiple upstreams, multiple scopes', function () {
   })
 
   it('scope "b" reciever can connect to c, retrieves upstream b', function (done) {
+    var connectedToScopeC
     c.define({
       getScope (val, event) {
         var scope = getScope.apply(this, arguments)
         if (val === 'b') {
-          console.clear()
           // so protocols should not be inherited completely at least there needs to be a check for connection
           // since connection is used for the lower level only
           scope.set({
@@ -81,6 +90,10 @@ describe('multiple upstreams, multiple scopes', function () {
             adapter: {
               mock: 'scope_upstreams_server_b'
             }
+          })
+          scope.adapter.mock.once('connect', function () {
+            expect(connectedToScopeC).ok
+            done()
           })
         }
         return scope
@@ -91,7 +104,7 @@ describe('multiple upstreams, multiple scopes', function () {
       mock: 'scope_upstreams_server_c'
     })
     scopeReceiver.adapter.mock.once('connect', function () {
-      done()
+      connectedToScopeC = true
     })
   })
 })
