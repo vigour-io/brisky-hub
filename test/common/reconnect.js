@@ -42,8 +42,17 @@ describe('reconnect', function () {
   it('can connect to another server server-b', function (done) {
     receiver.adapter.mock.val = 'server-reconnect-b'
     receiver.adapter.mock.once('connect', function () {
-      expect(b.clients).to.have.property('receiver-reconnect')
-      expect(a.clients).to.not.have.property('receiver-reconnect')
+      expect(b.clients).to.have.property('receiver-reconnect').which.is.ok
+      expect(a.clients['receiver-reconnect']).to.not.be.ok
+      done()
+    })
+  })
+
+  it('can connect to another server server-a', function (done) {
+    receiver.adapter.mock.val = 'server-reconnect-a'
+    receiver.adapter.mock.once('connect', function () {
+      expect(a.clients).to.have.property('receiver-reconnect').which.is.ok
+      expect(b.clients['receiver-reconnect']).to.not.be.ok
       done()
     })
   })
