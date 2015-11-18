@@ -1,4 +1,5 @@
 'use strict'
+
 describe('multiple upstreams, multiple scopes, multiple clients over single connection', function () {
   var Hub = require('../../../lib')
   var Mock = require('../../../lib/protocol/mock')
