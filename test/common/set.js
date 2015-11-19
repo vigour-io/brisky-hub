@@ -1,4 +1,5 @@
 'use strict'
+require('colors-browserify')
 
 describe('set', function () {
   var server, receiver
@@ -59,15 +60,30 @@ describe('set', function () {
   })
 
   it('server can send data to receiver', function () {
+    console.clear()
+    global.r = receiver
     server.set({
       anotherfield: true
     })
     expect(receiver).to.have.property('anotherfield')
       .which.has.property('_input').equals(true)
+    console.log('ok wtf wt wtf', receiver)
   })
 
-  it('server can send referenced data to receiver', function () {
-    server.set({ a: true }, false)
-    server.set({ referenced: server.a })
+  xit('server can send referenced data to receiver', function () {
+    // console.clear()
+    var Observable = require('vigour-js/lib/observable')
+    console.log(Observable.prototype._useVal)
+    // var bla = new Observable({
+    //   a: '?'
+    // })
+    //
+    // bla.set({x: bla.a})
+    // console.log(bla.x)
+    // expect(bla.x._input).to.equal(bla.a)
+    // console.log('----------------------------------------------'.rainbow)
+    // server.set({ a: true }, false)
+    // server.set({ referenced: server.a })
+    // console.log('flups!', server.referenced)
   })
 })

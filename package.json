@@ -43,9 +43,6 @@
   "devDependencies": {
     "colors": "*",
     "log-buffer": "*",
-    "vigour-element": "*",
-    "vigour-uikit": "*",
-    "log-buffer": "*",
     "colors-browserify": "0.0.3"
   },
   "homepage": "https://github.com/vigour-io/hub#readme",
