@@ -64,7 +64,7 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
       mock: 'scope_connection_server_b'
     })
     receiverA1.adapter.mock.once('connect', function () {
-      setTimeout(done, 50)
+      setTimeout(done, 50) // once b connects to a
     })
   })
 
@@ -74,4 +74,36 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
       .which.has.property('clients')
       .which.has.property('scope_connection_server_b')
   })
+
+  it('a set a field on scope a1', function () {
+    a._scopes.a1.set({
+      somefield: true
+    })
+    expect(receiverA1).to.have.property('somefield')
+  })
+
+  it('receiverA2 can connect to b, b._scopes.A2 gets connected to a, shares connection', function (done) {
+    receiverA2.adapter.set({
+      scope: 'a2',
+      mock: 'scope_connection_server_b'
+    })
+    receiverA2.adapter.mock.once('connect', function () {
+      setTimeout(done, 50)
+    })
+  })
+
+  it('a2 has scope with correct clients object', function () {
+    expect(a).to.have.property('_scopes')
+      .which.has.property('a2')
+      .which.has.property('clients')
+      .which.has.property('scope_connection_server_b')
+  })
+
+  it('a set a field on scope a2', function () {
+    a._scopes.a2.set({
+      somefield: true
+    })
+    expect(receiverA2).to.have.property('somefield')
+  })
+
 })
