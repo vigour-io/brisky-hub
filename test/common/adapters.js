@@ -1,5 +1,4 @@
 'use strict'
-require('colors-browserify')
 // make mock injectable, and create new thing by default (can never not be new)
 describe('multiple adapters', function () {
   var Hub = require('../../lib')
