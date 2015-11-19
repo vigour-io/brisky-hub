@@ -78,6 +78,15 @@ describe('set', function () {
 
   it('receiver can send referenced data to server', function () {
     receiver.set({ field: receiver.referenced })
-    global.s = server
+    expect(server).to.have.property('field')
+      .which.has.property('_input')
+      .which.equals(server.referenced)
+  })
+
+  it('server can send referenced data to receiver, changing a reference', function () {
+    server.set({ field: server.a })
+    expect(receiver).to.have.property('field')
+      .which.has.property('_input')
+      .which.equals(receiver.a)
   })
 })
