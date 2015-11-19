@@ -5,6 +5,8 @@ describe('set', function () {
   var server, receiver
   var Hub = require('../../lib')
   var Mock = require('../../lib/protocol/mock')
+  var Observable = require('vigour-js/lib/observable')
+  var something = new Observable({ bla: true })
 
   it('can create multiple hubs', function () {
     server = new Hub({
@@ -88,5 +90,19 @@ describe('set', function () {
     expect(receiver).to.have.property('field')
       .which.has.property('_input')
       .which.equals(receiver.a)
+  })
+
+  it('server can send out of adapter scope references to receiver', function () {
+    server.set({ something: something })
+    expect(receiver).to.have.property('something')
+      .which.has.property('bla')
+      .which.has.property('_input').which.equals(true)
+  })
+
+  it('server can send out of adapter scope references to receiver, updates from the references value', function () {
+    console.clear()
+    something.set({ otherfield: true })
+    global.s = receiver
+    expect(receiver.something).to.have.property('otherfield')
   })
 })
