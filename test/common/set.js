@@ -75,4 +75,9 @@ describe('set', function () {
       .which.has.property('_input')
       .which.equals(receiver.a)
   })
+
+  it('receiver can send referenced data to server', function () {
+    receiver.set({ field: receiver.referenced })
+    global.s = server
+  })
 })
