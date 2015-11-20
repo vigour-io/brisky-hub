@@ -29,6 +29,7 @@ describe('single scope', function () {
   })
 
   it('can connect to a scope', function (done) {
+    console.log('HERE IT SHOULD NOT BE SCOPE CHANGIN!'.red)
     receiver.adapter.set({
       mock: 'single_server',
       scope: 'myScope'
@@ -63,11 +64,12 @@ describe('single scope', function () {
   })
 
   it('can change scope dynamicly', function () {
-    console.clear()
+    console.log('HERE IT SHOULD BE SCOPE CHANGIN!'.rainbow)
     receiver.set({
       adapter: {
         scope: 'rick'
       }
     })
+    // console.log(server._scopes)
   })
 })
