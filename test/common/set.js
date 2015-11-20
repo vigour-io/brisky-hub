@@ -100,9 +100,7 @@ describe('set', function () {
   })
 
   it('server can send out of adapter scope references to receiver, updates from the references value', function () {
-    console.clear()
     something.set({ otherfield: true })
-    global.s = receiver
     expect(receiver.something).to.have.property('otherfield')
   })
 })
