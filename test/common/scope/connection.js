@@ -33,7 +33,7 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
         // if(dont) {
           console.log('2'.red.bold, this.adapter !== scope.adapter, this.adapter.mock !== scope.adapter.mock)
           // this is suddenly the same????
-          console.log(this.adapter.mock.val !== scope.adapter.mock.val, this.adapter.mock.val)
+          console.log(this.adapter.mock.val !== scope.adapter.mock.val, this.key)
         // }
 
         console.log('should have fired!-------------\n\n')
@@ -118,14 +118,14 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
     })
   })
 
-  xit('a2 has scope with correct clients object', function () {
+  it('a2 has scope with correct clients object', function () {
     expect(a).to.have.property('_scopes')
       .which.has.property('a2')
       .which.has.property('clients')
       .which.has.property('scope_connection_server_b')
   })
 
-  xit('a set a field on scope a2', function () {
+  it('a set a field on scope a2', function () {
     a._scopes.a2.set({
       somefield: true
     })
