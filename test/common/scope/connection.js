@@ -1,4 +1,5 @@
 'use strict'
+require('colors-browserify')
 
 describe('multiple upstreams, multiple scopes, multiple clients over single connection', function () {
   var Hub = require('../../../lib')
@@ -6,7 +7,6 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
   var getScope = Hub.prototype.getScope
   // servers
   var a = new Hub({ key: 'server_a' })
-  // set scope handler
   var b = new Hub({
     key: 'server_b',
     define: {
@@ -83,6 +83,12 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
   })
 
   it('receiverA2 can connect to b, b._scopes.A2 gets connected to a, shares connection', function (done) {
+    console.clear()
+
+    console.log(receiverA2.adapter.mock.connections === receiverA1.adapter.mock.connections)
+    console.log(require('../../../lib/protocol/mock').prototype.connections)
+    // so this goes wrong for some reason the stuff gets added on the prototype!
+
     receiverA2.adapter.set({
       scope: 'a2',
       mock: 'scope_connection_server_b'
@@ -105,5 +111,4 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
     })
     expect(receiverA2).to.have.property('somefield')
   })
-
 })
