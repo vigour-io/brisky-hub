@@ -1,5 +1,7 @@
 'use strict'
 
+require('colors-browserify')
+
 describe('single scope', function () {
   var Hub = require('../../../lib')
   var Mock = require('../../../lib/protocol/mock')
@@ -58,5 +60,14 @@ describe('single scope', function () {
     receiver.set({bla: 'hey'})
     expect(server.bla).to.be.not.ok
     expect(server._scopes.myScope.bla).to.be.ok
+  })
+
+  it('can change scope dynamicly', function () {
+    console.clear()
+    receiver.set({
+      adapter: {
+        scope: 'rick'
+      }
+    })
   })
 })
