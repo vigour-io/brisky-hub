@@ -1,5 +1,7 @@
 'use strict'
 
+require('colors-browserify')
+
 describe('multiple upstreams, multiple scopes', function () {
   var Hub = require('../../../lib')
   var getScope = Hub.prototype.getScope
