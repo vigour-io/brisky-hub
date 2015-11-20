@@ -33,6 +33,10 @@ describe('client', function () {
 
   it('receiver can connect to server', function (done) {
     receiver.adapter.mock.once('connect', function () {
+      expect(server)
+        .to.have.property('clients')
+        .which.has.property('receiver_client')
+        .which.has.property('browser')
       done()
     })
     receiver.set({
@@ -44,6 +48,10 @@ describe('client', function () {
 
   it('receiver2 can connect to server', function (done) {
     receiver2.adapter.mock.once('connect', function () {
+      expect(server)
+        .to.have.property('clients')
+        .which.has.property('receiver_client_2')
+        .which.has.property('browser')
       done()
     })
     receiver2.set({
@@ -53,6 +61,7 @@ describe('client', function () {
     })
   })
 
+  // has something to do with the events being too tight
   it('reciever has correct client meta data about receiver2', function () {
     expect(receiver)
       .to.have.property('clients')
