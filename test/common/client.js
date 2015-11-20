@@ -46,6 +46,13 @@ describe('client', function () {
     })
   })
 
+  it('reciever has ip', function () {
+    expect(receiver)
+      .to.have.property('clients')
+      .which.has.property('receiver_client')
+      .which.has.property('ip')
+  })
+
   it('receiver2 can connect to server', function (done) {
     receiver2.adapter.mock.once('connect', function () {
       expect(server)
@@ -61,7 +68,14 @@ describe('client', function () {
     })
   })
 
-  // has something to do with the events being too tight
+  it('reciever2 has ip', function () {
+    expect(receiver2)
+      .to.have.property('clients')
+      .which.has.property('receiver_client_2')
+      .which.has.property('ip')
+  })
+
+  // sending info back is weird
   it('reciever has correct client meta data about receiver2', function () {
     expect(receiver)
       .to.have.property('clients')
