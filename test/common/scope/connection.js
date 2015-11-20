@@ -1,27 +1,15 @@
 'use strict'
-require('colors-browserify')
-
 describe('multiple upstreams, multiple scopes, multiple clients over single connection', function () {
   var Hub = require('../../../lib')
   var Mock = require('../../../lib/protocol/mock')
   var getScope = Hub.prototype.getScope
   // servers
-  var a = global.a = new Hub({ key: 'server_a' })
-  var b = global.b = new Hub({
+  var a = new Hub({ key: 'server_a' })
+  var b = new Hub({
     key: 'server_b',
     define: {
       getScope (val, event) {
         var scope = getScope.apply(this, arguments)
-        console.group()
-        console.log('hey scope!', val, scope.adapter.mock.val, this.adapter.mock.val, this !== scope)
-        // for some reason it does not create a new mock/adapter on scope
-        // allready has the upstream!
-
-        // var dont
-        // if(typeof this.adapter.mock.val !== 'string') {
-          console.log('1'.red.bold, this !== scope, this.adapter === scope.adapter)
-          // dont = true
-        // }
         scope.set({
           key: 'server_bSCOPE_' + val,
           adapter: {
@@ -29,15 +17,6 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
             scope: val
           }
         })
-
-        // if(dont) {
-          console.log('2'.red.bold, this.adapter !== scope.adapter, this.adapter.mock !== scope.adapter.mock)
-          // this is suddenly the same????
-          console.log(this.adapter.mock.val !== scope.adapter.mock.val, this.key)
-        // }
-
-        console.log('should have fired!-------------\n\n')
-        console.groupEnd()
         return scope
       }
     }
@@ -103,12 +82,6 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
   })
 
   it('receiverA2 can connect to b, b._scopes.A2 gets connected to a, shares connection', function (done) {
-    // console.clear()
-    // this test is failing so make it better (connect on server is what has to be tested! hard to do since scope is not there yet)
-    console.log('!!!TEST!!!'.magenta.bold.inverse)
-    // console.log(receiverA2.adapter.mock.connections === receiverA1.adapter.mock.connections)
-    // console.log(require('../../../lib/protocol/mock').prototype.connections)
-    // so this goes wrong for some reason the stuff gets added on the prototype!
     receiverA2.adapter.set({
       scope: 'a2',
       mock: 'scope_connection_server_b'
