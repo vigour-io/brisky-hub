@@ -127,8 +127,9 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
 
   it('a set a field on scope a2', function () {
     a._scopes.a2.set({
-      somefield: true
+      anotherfield: true
     })
-    expect(receiverA2).to.have.property('somefield')
+    expect(receiverA2).to.have.property('anotherfield')
+    expect(receiverA1).to.not.have.property('anotherfield')
   })
 })
