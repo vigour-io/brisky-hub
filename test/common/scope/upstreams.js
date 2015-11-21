@@ -72,13 +72,9 @@ describe('multiple upstreams, multiple scopes', function () {
       getScope (val, event) {
         var scope = getScope.apply(this, arguments)
         if (val === 'b') {
-          // so protocols should not be inherited completely at least there needs to be a check for connection
-          // since connection is used for the lower level only
           scope.set({
             key: 'b_scope',
-            adapter: {
-              mock: 'scope_upstreams_server_b'
-            }
+            adapter: { mock: 'scope_upstreams_server_b' }
           })
           scope.adapter.mock.once('connect', function () {
             expect(connectedToScopeC).ok
@@ -98,18 +94,14 @@ describe('multiple upstreams, multiple scopes', function () {
   })
 
   it('both receivers receive updates from a', function () {
-    a.set({
-      hello: true
-    })
-    expect(scopeReceiver).to.have.property('hello')
+    a.set({ hello: true })
     expect(receiver).to.have.property('hello')
+    expect(scopeReceiver).to.have.property('hello')
   })
 
   it('only scopeReceiver receives updates from b', function () {
-    b.set({
-      bye: true
-    })
-    expect(scopeReceiver).to.have.property('bye')
+    b.set({ bye: true })
     expect(receiver).to.not.have.property('bye')
+    expect(scopeReceiver).to.have.property('bye')
   })
 })
