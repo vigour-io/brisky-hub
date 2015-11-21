@@ -1,5 +1,4 @@
 'use strict'
-
 require('colors-browserify')
 
 describe('multiple upstreams, multiple scopes', function () {
