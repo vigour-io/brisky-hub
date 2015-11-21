@@ -39,6 +39,10 @@ describe('reconnect', function () {
     })
   })
 
+  it('connected should be true', function () {
+    expect(receiver.adapter.mock.connected.val).to.equal(true)
+  })
+
   it('can connect to another server server-b', function (done) {
     receiver.adapter.mock.val = 'server-reconnect-b'
     receiver.adapter.mock.once('connect', function () {
@@ -60,6 +64,7 @@ describe('reconnect', function () {
   it('server connections gets removed, client reconnects after 1 attempt', function (done) {
     // nested callbacks to test order
     receiver.adapter.mock.once('close', function () {
+      expect(receiver.adapter.mock.connected.val).to.equal(false)
       this.once('reconnect', function () {
         this.once('connect', done)
       })
