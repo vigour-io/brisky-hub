@@ -93,4 +93,27 @@ describe('single scope', function () {
       done()
     })
   })
+
+  it('can switch from scoped to non-scoped', function () {
+    receiver.set({
+      adapter: {
+        scope: false
+      }
+    })
+    expect(server)
+      .to.have.property('clients')
+      .which.has.property('single_receiver')
+  })
+
+  it('can switch from non-scoped to scoped', function () {
+    receiver.set({
+      adapter: {
+        scope: 'nika'
+      }
+    })
+    expect(server.clients.single_receiver).to.not.ok
+    expect(server._scopes).to.have.property('nika')
+      .which.has.property('clients')
+      .which.has.property('single_receiver')
+  })
 })

@@ -65,7 +65,7 @@ describe('multiple upstreams, multiple scopes', function () {
     receiver.adapter.mock.val = 'scope_upstreams_server_c'
   })
 
-  it('scope "b" reciever can connect to c, retrieves upstream b', function (done) {
+  it('scope "b" receiver can connect to c, retrieves upstream b', function (done) {
     var connectedToScopeC
     c.define({
       getScope (val, event) {
