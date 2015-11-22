@@ -58,7 +58,14 @@ describe('single scope', function () {
   })
 
   it('can change scope dynamicly', function () {
-    console.clear()
     receiver.set({ adapter: { scope: 'rick' } })
+    expect(server._scopes).to.have.property('rick')
+  })
+
+  it('removed client correct, added client to correct scope', function () {
+    expect(server._scopes.rick)
+      .to.have.property('clients')
+      .which.has.property('single_receiver')
+      expect(server._scopes.myScope.clients.single_receiver).not.ok
   })
 })
