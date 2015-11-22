@@ -79,7 +79,19 @@ describe('single scope', function () {
     expect(receiver).to.have.property('randomfield')
   })
 
-  describe('reconnect', function () {
-    // server._scopes.rick.clients['single_receiver'].connection.origin.remove()
+  it('can disconnect and switch scope', function (done) {
+    server._scopes.rick.clients['single_receiver'].connection.origin.remove()
+    receiver.set({
+      adapter: {
+        scope: 'marcus'
+      }
+    })
+    receiver.adapter.mock.once('connect', function () {
+      expect(server._scopes).to.have.property('marcus')
+        .which.has.property('clients')
+        .which.has.property('single_receiver')
+      expect(server._scopes.rick.clients.single_receiver).not.ok
+      done()
+    })
   })
 })
