@@ -1,5 +1,4 @@
 'use strict'
-
 require('colors-browserify')
 
 describe('single scope', function () {
@@ -29,7 +28,6 @@ describe('single scope', function () {
   })
 
   it('can connect to a scope', function (done) {
-    console.log('HERE IT SHOULD NOT BE SCOPE CHANGIN!'.red)
     receiver.adapter.set({
       mock: 'single_server',
       scope: 'myScope'
@@ -44,16 +42,12 @@ describe('single scope', function () {
   })
 
   it('merges sets from the original sever to client', function () {
-    server.set({
-      youri: true
-    })
+    server.set({ youri: true })
     expect(receiver.youri.val).to.equal(true)
   })
 
   it('merges sets from the "myScope" on the sever to client', function () {
-    server._scopes.myScope.set({
-      james: true
-    })
+    server._scopes.myScope.set({ james: true })
     expect(receiver.james.val).to.equal(true)
   })
 
@@ -64,12 +58,7 @@ describe('single scope', function () {
   })
 
   it('can change scope dynamicly', function () {
-    console.log('HERE IT SHOULD BE SCOPE CHANGIN!'.rainbow)
-    receiver.set({
-      adapter: {
-        scope: 'rick'
-      }
-    })
-    // console.log(server._scopes)
+    console.clear()
+    receiver.set({ adapter: { scope: 'rick' } })
   })
 })
