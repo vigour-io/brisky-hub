@@ -31,7 +31,7 @@ describe('single scope', function () {
       mock: 'single_server',
       scope: 'myScope'
     })
-    receiver.adapter.mock.on('connect', function () {
+    receiver.adapter.mock.once('connect', function () {
       expect(server).to.not.have.property('clients')
       expect(server).to.have.property('_scopes')
         .which.has.property('myScope')
