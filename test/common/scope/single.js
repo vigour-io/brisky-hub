@@ -78,4 +78,8 @@ describe('single scope', function () {
     server.set({ randomfield: true })
     expect(receiver).to.have.property('randomfield')
   })
+
+  describe('reconnect', function () {
+    // server._scopes.rick.clients['single_receiver'].connection.origin.remove()
+  })
 })
