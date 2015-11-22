@@ -62,8 +62,11 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
       scope: 'a1',
       mock: 'scope_connection_server_b'
     })
-    receiverA1.adapter.mock.once('connect', function () {
-      setTimeout(done, 50) // once b connects to a
+    b.once('new', function (data) {
+      this.adapter.mock.connected.once(function () {
+        expect(receiverA1.adapter.mock.connected.val).to.equal(true)
+        done()
+      })
     })
   })
 
@@ -82,12 +85,15 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
   })
 
   it('receiverA2 can connect to b, b._scopes.A2 gets connected to a, shares connection', function (done) {
+    b.once('new', function (data) {
+      this.adapter.mock.connected.once(function () {
+        expect(receiverA2.adapter.mock.connected.val).to.equal(true)
+        done()
+      })
+    })
     receiverA2.adapter.set({
       scope: 'a2',
       mock: 'scope_connection_server_b'
-    })
-    receiverA2.adapter.mock.once('connect', function () {
-      setTimeout(done, 50)
     })
   })
 
