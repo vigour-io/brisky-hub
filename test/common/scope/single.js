@@ -1,5 +1,4 @@
 'use strict'
-require('colors-browserify')
 
 describe('single scope', function () {
   var Hub = require('../../../lib')
