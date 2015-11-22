@@ -1,3 +1,5 @@
+'use strict'
+
 describe('constructor', function () {
   var Hub = require('../../lib')
   it('can create a hub', function () {

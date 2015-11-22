@@ -1,4 +1,5 @@
 'use strict'
+
 describe('client', function () {
   var Hub = require('../../lib')
   var Mock = require('../../lib/protocol/mock')
