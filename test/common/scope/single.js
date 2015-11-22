@@ -66,6 +66,16 @@ describe('single scope', function () {
     expect(server._scopes.rick)
       .to.have.property('clients')
       .which.has.property('single_receiver')
-      expect(server._scopes.myScope.clients.single_receiver).not.ok
+    expect(server._scopes.myScope.clients.single_receiver).not.ok
+  })
+
+  it('recieves updates on scope "rick"', function () {
+    server._scopes.rick.set({ james: 'yes' })
+    expect(receiver.james.val).to.equal('yes')
+  })
+
+  it('recieves updates from non-scoped', function () {
+    server.set({ randomfield: true })
+    expect(receiver).to.have.property('randomfield')
   })
 })
