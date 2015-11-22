@@ -1,5 +1,4 @@
 'use strict'
-require('colors-browserify')
 
 describe('set', function () {
   var server, receiver
