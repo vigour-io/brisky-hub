@@ -4,4 +4,5 @@ describe('scopes', function () {
   require('./multiple')
   require('./upstreams')
   require('./connection')
+  require('./adapters')
 })
