@@ -12,7 +12,7 @@ describe('single scope', function () {
 
   server.set({
     adapter: {
-      id: 'single-server',
+      id: 'single_server',
       mock: new Mock()
     }
   })
@@ -115,5 +115,26 @@ describe('single scope', function () {
     expect(server._scopes).to.have.property('nika')
       .which.has.property('clients')
       .which.has.property('single_receiver')
+  })
+
+  it('can switch from a non-scope new reciever to scoped', function (done) {
+    var reciever2 = new Hub({
+      adapter: {
+        id: 'single_receiver_2',
+        mock: new Mock()
+      }
+    })
+    reciever2.adapter.mock.val = 'single_server'
+    reciever2.adapter.mock.once('connect', function () {
+      expect(server.clients.single_receiver_2).to.ok
+      reciever2.adapter.set({
+        scope: 'krystan'
+      })
+      expect(server.clients.single_receiver_2).to.not.ok
+      expect(server._scopes).to.have.property('krystan')
+        .which.has.property('clients')
+        .which.has.property('single_receiver_2')
+      done()
+    })
   })
 })
