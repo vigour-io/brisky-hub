@@ -1,6 +1,6 @@
 'use strict'
 
-describe('scopes', function () {
+describe('property', function () {
   var Hub = require('../../../lib')
   var hub = new Hub()
   it('can define scope using the scope property, setObject', function () {
