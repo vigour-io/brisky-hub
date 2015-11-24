@@ -3,32 +3,33 @@
 describe('reconnect', function () {
   var a, b, receiver
   var Hub = require('../../lib')
-  var Mock = require('../../lib/protocol/mock')
+  var mock = require('../../lib/protocol/mock')
 
   it('can create multiple hubs', function () {
     a = new Hub({
       key: 'server_reconnect_a',
       adapter: {
         id: 'server_reconnect_a',
-        mock: new Mock()
+        inject: mock
       }
     })
     b = new Hub({
       key: 'server_reconnect_b',
       adapter: {
         id: 'server_reconnect_b',
-        mock: new Mock()
+        inject: mock
       }
     })
     receiver = new Hub({
       key: 'receiver_reconnect',
       adapter: {
         id: 'receiver_reconnect',
-        mock: new Mock()
+        inject: mock,
+        mock: {}
       }
     })
-    a.adapter.mock.set({ server: 'server_reconnect_a' })
-    b.adapter.mock.set({ server: 'server_reconnect_b' })
+    a.adapter.set({ mock: { server: 'server_reconnect_a' } })
+    b.adapter.set({ mock: { server: 'server_reconnect_b' } })
   })
 
   it('can connect to server_a', function (done) {

@@ -1,7 +1,7 @@
 'use strict'
 describe('multiple upstreams, multiple scopes, multiple clients over single connection', function () {
   var Hub = require('../../../lib')
-  var Mock = require('../../../lib/protocol/mock')
+  var mock = require('../../../lib/protocol/mock')
   var getScope = Hub.prototype.getScope
   // servers
   var a = new Hub({ key: 'server_a' })
@@ -25,19 +25,19 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
   a.set({
     adapter: {
       id: 'scope_connection_server_a',
-      mock: new Mock()
+      inject: mock
     }
   })
 
   b.set({
     adapter: {
       id: 'scope_connection_server_b',
-      mock: new Mock()
+      inject: mock
     }
   })
 
-  a.adapter.mock.set({ server: 'scope_connection_server_a' })
-  b.adapter.mock.set({ server: 'scope_connection_server_b' })
+  a.adapter.set({ mock: { server: 'scope_connection_server_a' } })
+  b.adapter.set({ mock: { server: 'scope_connection_server_b' } })
 
   // recievers
   var receiverA1 = new Hub({ key: 'receiverA1' })
@@ -46,14 +46,14 @@ describe('multiple upstreams, multiple scopes, multiple clients over single conn
   receiverA1.set({
     adapter: {
       id: 'scope_connection_receiver_A1',
-      mock: new Mock()
+      inject: mock
     }
   })
 
   receiverA2.set({
     adapter: {
       id: 'scope_connection_receiver_A2',
-      mock: new Mock()
+      inject: mock
     }
   })
 

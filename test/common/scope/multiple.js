@@ -2,7 +2,7 @@
 
 describe('multiple scopes, clients', function () {
   var Hub = require('../../../lib')
-  var Mock = require('../../../lib/protocol/mock')
+  var mock = require('../../../lib/protocol/mock')
   var server = new Hub({
     key: 'server'
   })
@@ -11,23 +11,23 @@ describe('multiple scopes, clients', function () {
   server.set({
     adapter: {
       id: 'scope_multiple_server',
-      mock: new Mock()
+      inject: mock
     }
   })
 
-  server.adapter.mock.set({ server: 'scope_multiple_server' })
+  server.adapter.set({ mock: { server: 'scope_multiple_server' } })
 
   receiver.set({
     adapter: {
       id: 'scope_multiple_receiver',
-      mock: new Mock()
+      inject: mock
     }
   })
 
   scopeReceiver.set({
     adapter: {
       id: 'scope_multiple_scope_receiver',
-      mock: new Mock()
+      inject: mock
     }
   })
 
@@ -42,14 +42,12 @@ describe('multiple scopes, clients', function () {
   })
 
   it('other client connects to the "myScope" data set of server', function (done) {
-    console.clear()
     scopeReceiver.adapter.set({
       mock: 'scope_multiple_server',
       scope: 'myScope'
     })
     scopeReceiver.adapter.mock.on('connect', function () {
       expect(server).to.have.property('clients')
-      // now make sure that clients are not connected!
       expect(server).to.have.property('_scopes')
         .which.has.property('myScope')
       done()

@@ -2,7 +2,7 @@
 
 describe('single scope', function () {
   var Hub = require('../../../lib')
-  var Mock = require('../../../lib/protocol/mock')
+  var mock = require('../../../lib/protocol/mock')
   var server = new Hub({
     key: 'single_server'
   })
@@ -13,16 +13,18 @@ describe('single scope', function () {
   server.set({
     adapter: {
       id: 'single_server',
-      mock: new Mock()
+      inject: mock,
+      mock: {
+        server: 'single_server'
+      }
     }
   })
-
-  server.adapter.mock.set({ server: 'single_server' })
 
   receiver.set({
     adapter: {
       id: 'single_receiver',
-      mock: new Mock()
+      inject: mock,
+      mock: {}
     }
   })
 
@@ -121,10 +123,10 @@ describe('single scope', function () {
     var reciever2 = new Hub({
       adapter: {
         id: 'single_receiver_2',
-        mock: new Mock()
+        inject: mock,
+        mock: 'single_server'
       }
     })
-    reciever2.adapter.mock.val = 'single_server'
     reciever2.adapter.mock.once('connect', function () {
       expect(server.clients.single_receiver_2).to.ok
       reciever2.adapter.set({

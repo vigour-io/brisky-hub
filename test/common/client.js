@@ -2,26 +2,28 @@
 
 describe('client', function () {
   var Hub = require('../../lib')
-  var Mock = require('../../lib/protocol/mock')
+  var mock = require('../../lib/protocol/mock')
   var server = new Hub({
     key: 'server_client',
     adapter: {
       id: 'server_client',
-      mock: new Mock()
+      inject: mock
     }
   })
   var receiver = new Hub({
     key: 'receiver_client',
     adapter: {
       id: 'receiver_client',
-      mock: new Mock()
+      inject: mock,
+      mock: {}
     }
   })
   var receiver2 = new Hub({
     key: 'receiver_client_2',
     adapter: {
       id: 'receiver_client_2',
-      mock: new Mock()
+      inject: mock,
+      mock: {}
     }
   })
   server.set({
