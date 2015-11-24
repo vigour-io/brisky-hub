@@ -2,7 +2,7 @@
 
 describe('multiple adapters', function () {
   var Hub = require('../../lib')
-  var Mock = require('../../lib/protocol/mock')
+  var mock = require('../../lib/protocol/mock')
 
   var a = new Hub({
     key: 'a'
@@ -21,20 +21,20 @@ describe('multiple adapters', function () {
   a.set({
     adapter: {
       id: 'a',
-      mock: new Mock()
+      inject: mock
     }
   })
 
   b.set({
     adapter: {
       id: 'b', // need more id!
-      mock: new Mock()
+      inject: mock
     }
   })
 
   it('can create 2 servers', function () {
-    a.adapter.mock.set({ server: 'a' })
-    b.adapter.mock.set({ server: 'b' })
+    a.adapter.set({ mock: { server: 'a' } })
+    b.adapter.set({ mock: { server: 'b' } })
   })
 
   it('can connect to 2 servers (a and b)', function (done) {
@@ -42,13 +42,15 @@ describe('multiple adapters', function () {
       a: {
         adapter: {
           id: 'receiverA',
-          mock: new Mock()
+          inject: mock,
+          mock: {}
         }
       },
       b: {
         adapter: {
           id: 'receiverB',
-          mock: new Mock()
+          inject: mock,
+          mock: {}
         }
       }
     })

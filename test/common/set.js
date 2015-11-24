@@ -3,7 +3,8 @@
 describe('set', function () {
   var server, receiver
   var Hub = require('../../lib')
-  var Mock = require('../../lib/protocol/mock')
+  var mock = require('../../lib/protocol/mock')
+  var Mock = require('../../lib/protocol/mock/constructor')
   var Observable = require('vigour-js/lib/observable')
   var something = new Observable({ bla: true })
 
@@ -20,7 +21,8 @@ describe('set', function () {
     server.set({
       adapter: {
         id: 'set_server',
-        mock: new Mock()
+        inject: mock,
+        mock: {}
       }
     })
     expect(server.adapter.mock).to.be.instanceof(Mock)
@@ -31,7 +33,8 @@ describe('set', function () {
     receiver.set({
       adapter: {
         id: 'set_reciever',
-        mock: new Mock()
+        inject: mock,
+        mock: {}
       }
     })
     expect(receiver.adapter.mock).to.be.instanceof(Mock)

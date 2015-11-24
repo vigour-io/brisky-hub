@@ -3,7 +3,7 @@
 describe('multiple upstreams, multiple scopes', function () {
   var Hub = require('../../../lib')
   var getScope = Hub.prototype.getScope
-  var Mock = require('../../../lib/protocol/mock')
+  var mock = require('../../../lib/protocol/mock')
   var a = new Hub({ key: 'server_a' })
   var b = new Hub({ key: 'server_b' })
   var c = new Hub({ key: 'server_c' })
@@ -14,40 +14,47 @@ describe('multiple upstreams, multiple scopes', function () {
   a.set({
     adapter: {
       id: 'scope_upstreams_server_a',
-      mock: new Mock()
+      inject: mock,
+      mock: {
+        server: 'scope_upstreams_server_a'
+      }
     }
   })
 
   b.set({
     adapter: {
       id: 'scope_upstreams_server_b',
-      mock: new Mock()
+      inject: mock,
+      mock: {
+        server: 'scope_upstreams_server_b'
+      }
     }
   })
 
   c.set({
     adapter: {
       id: 'scope_upstreams_server_c',
-      mock: new Mock()
+      inject: mock,
+      mock: {
+        server: 'scope_upstreams_server_c'
+      }
     }
   })
-
-  a.adapter.mock.set({ server: 'scope_upstreams_server_a' })
-  b.adapter.mock.set({ server: 'scope_upstreams_server_b' })
-  c.adapter.mock.set({ server: 'scope_upstreams_server_c' })
 
   // recievers
   receiver.set({
     adapter: {
       id: 'scope_upstreams_receiver',
-      mock: new Mock()
+      inject: mock,
+      mock: {}
     }
   })
 
   scopeReceiver.set({
     adapter: {
       id: 'scope_upstreams_receiver_scope_b',
-      mock: new Mock()
+      inject: mock,
+      mock: {}
     }
   })
 

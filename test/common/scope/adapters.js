@@ -2,19 +2,19 @@
 
 describe('multiple adapters, multiple scopes', function () {
   var Hub = require('../../../lib')
-  var Mock = require('../../../lib/protocol/mock')
+  var mock = require('../../../lib/protocol/mock')
 
   var serverA = new Hub({
     adapter: {
       id: 'm_scope_a',
-      mock: new Mock()
+      inject: mock
     }
   })
 
   var serverB = new Hub({
     adapter: {
       id: 'm_scope_b',
-      mock: new Mock()
+      inject: mock
     }
   })
 
@@ -34,14 +34,16 @@ describe('multiple adapters, multiple scopes', function () {
     a: {
       adapter: {
         id: 'm_scope_receiver_a',
-        mock: new Mock(),
+        inject: mock,
+        mock: {},
         scope: 'james'
       }
     },
     b: {
       adapter: {
         id: 'm_scope_receiver_b',
-        mock: new Mock(),
+        inject: mock,
+        mock: {},
         scope: 'youzi'
       }
     }
