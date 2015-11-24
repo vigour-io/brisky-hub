@@ -6,6 +6,7 @@ describe('single scope', function () {
   var server = new Hub({
     key: 'single_server'
   })
+
   var receiver = new Hub({
     key: 'single_receiver'
   })
