@@ -7,6 +7,7 @@ describe('set', function () {
   var Mock = require('../../lib/protocol/mock/constructor')
   var Observable = require('vigour-js/lib/observable')
   var something = new Observable({ bla: true })
+  var Event = require('vigour-js/lib/event')
 
   it('can create multiple hubs', function () {
     server = new Hub({
@@ -104,5 +105,30 @@ describe('set', function () {
   it('server can send out of adapter scope references to receiver, updates from the references value', function () {
     something.set({ otherfield: true })
     expect(receiver.something).to.have.property('otherfield')
+  })
+
+  it('receiver can send custom stamps over the server to another receiver', function (done) {
+    var receiver2 = new Hub({
+      adapter: {
+        id: 'set_reciever2',
+        inject: mock
+      }
+    })
+
+    receiver2.adapter.set({
+      mock: 'set_server'
+    })
+
+    receiver2.adapter.mock.once('connect', function () {
+      var event = new Event(receiver, 'data', 'danillo')
+      receiver2.once(function (data, event) {
+        expect(event.stamp.split('|')[1]).equal('danillo')
+        expect(receiver2).to.have.property('danillo')
+        done()
+      })
+      receiver.set({
+        danillo: true
+      }, event)
+    })
   })
 })
