@@ -4,8 +4,7 @@ var Hub = require('../../lib')
 var hub = global.hub = new Hub({
   adapter: {
     inject: require('../../lib/protocol/websocket'),
-    websocket: 'ws://localhost:3031',
-    scope: 'james'
+    websocket: 'ws://localhost:3031'
   }
 })
 
