@@ -14,5 +14,11 @@ Element.prototype
   .inject(require('vigour-element/lib/property/text'))
 
 var app = new App({
-  node: document.body
+  node: document.body,
+  bla: {
+    text: require('vigour-js/lib/util/uuid').val
+  },
+  text: {
+    val: 'hey!'
+  }
 })
