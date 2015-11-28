@@ -18,13 +18,19 @@ var Input = require('vigour-uikit/lib/form/input')
 
 var app = new App({
   node: document.body,
-  uuid: {
-    text: require('vigour-js/lib/util/uuid').val
-  },
-  // crap: new Input({
-    // text: hub.adapter.scope
-  // }),
-  something: new Input({
-    text: hub.get('text', {})
-  })
+  holder: {
+    scope: { text: 'james' },
+    uuid: {
+      text: require('vigour-js/lib/util/uuid').val
+    },
+    // crap: new Input({
+      // text: hub.adapter.scope
+    // }),
+    something: new Input({
+      text: hub.get('text', {})
+    }),
+    something2: new Input({
+      text: hub.get('somethingelse', {})
+    })
+    }
 })
