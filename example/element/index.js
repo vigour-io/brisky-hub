@@ -1,6 +1,13 @@
-require('./style.less')
-
 'use strict'
+require('./style.less')
+var Hub = require('../../lib')
+var hub = global.hub = new Hub({
+  adapter: {
+    inject: require('../../lib/protocol/websocket'),
+    websocket: 'ws://localhost:3031'
+  }
+})
+
 var App = require('vigour-element/lib/app')
 var Element = require('vigour-element')
 Element.prototype
