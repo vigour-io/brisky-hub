@@ -13,12 +13,14 @@ var Element = require('vigour-element')
 Element.prototype
   .inject(require('vigour-element/lib/property/text'))
 
+var Input = require('vigour-uikit/lib/form/input')
+
 var app = new App({
   node: document.body,
-  bla: {
+  uuid: {
     text: require('vigour-js/lib/util/uuid').val
   },
-  text: {
-    val: 'hey!'
-  }
+  something: new Input({
+    text: hub.get('text', {})
+  })
 })
