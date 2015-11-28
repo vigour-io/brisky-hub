@@ -43,7 +43,8 @@
   "devDependencies": {
     "colors": "*",
     "log-buffer": "*",
-    "colors-browserify": "0.0.3"
+    "colors-browserify": "0.0.3",
+    "vigour-element": "*"
   },
   "homepage": "https://github.com/vigour-io/hub#readme",
   "vigour": {
