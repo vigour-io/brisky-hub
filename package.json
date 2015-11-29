@@ -35,7 +35,7 @@
   "directories": {
     "lib": "./lib"
   },
-  "browserify": {
+  "browser": {
     "./lib/protocol/websocket/server/": "./lib/protocol/websocket/server/browser.js"
   },
   "dependencies": {

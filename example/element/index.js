@@ -28,8 +28,6 @@ var make = function (data) {
       y: this[data.added[0]].get('y', 0)
     })
   }
-
-  console.warn('---->', data)
   if (data && data.removed) {
     for (var key of data.removed) {
       app[key].remove()
@@ -43,6 +41,12 @@ hub.set({
   adapter: {
     inject: require('../../lib/protocol/websocket'),
     websocket: 'ws://localhost:3031'
+  }
+})
+
+hub.set({
+  websocket: {
+    server: 3030
   }
 })
 
