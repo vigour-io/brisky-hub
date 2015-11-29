@@ -40,8 +40,7 @@ hub.get('clients', {}).on('property', make)
 hub.set({
   adapter: {
     inject: require('../../lib/protocol/websocket'),
-    websocket: 'ws://localhost:3031',
-    scope: 'james'
+    websocket: 'ws://localhost:3031'
   }
 })
 
@@ -112,7 +111,7 @@ function firegun () {
 
 app = new App({
   node: document.body,
-  scope: { text: 'james' },
+  scope: { text: 'original' },
   uuid: {
     text: require('vigour-js/lib/util/uuid').val
   },
