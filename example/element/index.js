@@ -104,6 +104,13 @@ function firegun () {
 
 app = new App({
   node: document.body,
+  connected: {
+    css: {
+      val: hub.adapter.websocket.connected,
+      inject: require('vigour-js/lib/operator/transform'),
+      $transform: (val) => val ? 'ok' : ''
+    }
+  },
   scope: new Input({
     text: {
       val: hub.adapter.scope,
