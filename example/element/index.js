@@ -3,13 +3,10 @@ require('./style.less')
 var Hub = require('../../lib')
 var hub = global.hub = new Hub()
 var focused = hub.get('focus', {})
-
 var me
 
 var make = function (data) {
   if (data && data.added) {
-    console.warn('!', data, data.added[0])
-    // var client = this[data.added[0]]
     app.setKey(data.added[0], {
       css: {
         val: focused,
@@ -30,12 +27,10 @@ var make = function (data) {
       x: this[data.added[0]].get('x', 0),
       y: this[data.added[0]].get('y', 0)
     })
-    // app.set({ field: data.added })
   }
 }
 
 hub.get('clients', {}).on('property', make)
-
 
 hub.set({
   adapter: {
@@ -43,8 +38,6 @@ hub.set({
     websocket: 'ws://localhost:3031'
   }
 })
-
-// hub.get(['clients', require('vigour-js/lib/util/uuid').val], {})
 
 var App = require('vigour-element/lib/app')
 var app
@@ -111,7 +104,17 @@ function firegun () {
 
 app = new App({
   node: document.body,
-  scope: { text: 'original' },
+  scope: new Input({
+    text: {
+      val: hub.adapter.scope,
+      inject: [
+        require('vigour-js/lib/operator/transform'),
+        require('vigour-js/lib/operator/type')
+      ],
+      $type: 'string',
+      $transform: (val) => val || 'scope'
+    }
+  }),
   uuid: {
     text: require('vigour-js/lib/util/uuid').val
   },
