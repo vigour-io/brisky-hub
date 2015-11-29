@@ -28,6 +28,13 @@ var make = function (data) {
       y: this[data.added[0]].get('y', 0)
     })
   }
+
+  console.warn('---->', data)
+  if (data && data.removed) {
+    for (var key of data.removed) {
+      app[key].remove()
+    }
+  }
 }
 
 hub.get('clients', {}).on('property', make)
@@ -61,12 +68,36 @@ me = global.me = hub.get(['clients', hub.adapter.id], {
   y: 0
 })
 
-window.onfocus = function () {
-  focused.val = false
-  focused.val = me
-}
+var Observable = require('vigour-js/lib/observable')
 
-focused.val = me
+var someobservable = new Observable({
+  properties: {
+    jim: new Observable()
+  },
+  jim: 'james',
+  x: {
+    y: {
+      define: {
+        rick () {
+          console.error('RICK!', this.lookUp('jim').val)
+        }
+      }
+    }
+  }
+})
+
+var someinstance = new someobservable.Constructor()
+someinstance.x.y.rick()
+
+someinstance.jim.val = 'rick'
+someinstance.x.y.rick()
+
+// window.onfocus = function () {
+//   focused.val = false
+//   focused.val = me
+// }
+//
+// focused.val = me
 
 speed.inject(require('vigour-js/lib/operator/type'))
 speed.set({ $type: 'number' })
