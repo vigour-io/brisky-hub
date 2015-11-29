@@ -35,8 +35,11 @@
   "directories": {
     "lib": "./lib"
   },
+  "browserify": {
+    "./lib/protocol/websocket/server/": "./lib/protocol/websocket/server/browser.js"
+  },
   "dependencies": {
-    "vigour-js": "*",
+    "vigour-js": "^0.3.4",
     "vigour-ua": "^0.0.1",
     "websocket": "1.0.x"
   },
