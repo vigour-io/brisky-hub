@@ -107,8 +107,21 @@ app = new App({
   connected: {
     css: {
       val: hub.adapter.websocket.connected,
-      inject: require('vigour-js/lib/operator/transform'),
-      $transform: (val) => val ? 'ok' : ''
+      inject: [
+        require('vigour-js/lib/operator/transform'),
+        require('vigour-js/lib/operator/add')
+      ],
+      // make a listen as well .listen()//
+      $add: hub.adapter.websocket.reconnecting,
+      $transform (val) {
+        if (this.$add.val) {
+          return 'reconnecting'
+        } else if (this.origin.val) {
+          return 'ok'
+        } else {
+          return ''
+        }
+      }
     }
   },
   scope: new Input({

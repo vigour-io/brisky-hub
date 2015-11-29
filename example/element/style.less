@@ -33,4 +33,19 @@
   &.ok {
     background-color: green;
   }
+  &.reconnecting {
+    animation: pulse 1s infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    background-color: red;
+  }
+  50% {
+    background-color: green;
+  }
+  100% {
+    background-color: red;
+  }
 }
