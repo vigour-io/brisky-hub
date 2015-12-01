@@ -7,10 +7,10 @@ var hub = global.hub = new Hub({
       server: 3031
     }
   },
-  scopes: {
+  scope: {
     marcus: {
       adapter: {
-        websocket: 'www.dicks.com'
+        websocket: 'ws://localhost:3033'
       }
     }
   }
