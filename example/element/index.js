@@ -39,7 +39,9 @@ hub.get('clients', {}).on('property', make)
 
 hub.set({
   adapter: {
-    inject: require('../../lib/protocol/websocket'),
+    inject: [
+      require('../../lib/protocol/websocket')
+    ],
     websocket: 'ws://localhost:3031'
   }
 })
@@ -167,7 +169,7 @@ app = new App({
         require('vigour-js/lib/operator/type')
       ],
       $type: 'string',
-      $transform: (val) => val || 'scope'
+      $transform: (val) => val || 'ORIGINAL'
     }
   }),
   uuid: {

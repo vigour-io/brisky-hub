@@ -9,10 +9,31 @@ var hub = new Hub({ //eslint-disable-line
     }
   },
   scope: {
-    marcus: {
+    valerio: {
       adapter: {
         websocket: 'ws://localhost:3032'
       }
     }
   }
 })
+
+
+
+
+
+
+
+
+
+
+// function (key, event, get) {
+//   console.log('---------SCOPE--------'.cyan)
+//   // console.log(arguments)
+//   var scope = get.call(this, key, event)
+//   scope.set({
+//     adapter: {
+//       websocket: 'ws//:localhost:3032'
+//     }
+//   })
+//   return scope
+// }
