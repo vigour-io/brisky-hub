@@ -6,5 +6,12 @@ var hub = global.hub = new Hub({
     websocket: {
       server: 3031
     }
+  },
+  scopes: {
+    marcus: {
+      adapter: {
+        websocket: 'www.dicks.com'
+      }
+    }
   }
 })
