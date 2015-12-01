@@ -44,11 +44,11 @@ hub.set({
   }
 })
 
-hub.set({
-  websocket: {
-    server: 3030
-  }
-})
+// hub.set({
+//   websocket: {
+//     server: 3030
+//   }
+// })
 
 var App = require('vigour-element/lib/app')
 var app
