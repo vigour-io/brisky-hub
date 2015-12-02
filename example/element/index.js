@@ -35,6 +35,10 @@ var make = function (data) {
   }
 }
 
+hub.set({
+  valerio: hub.get()
+})
+
 hub.get('clients', {}).on('property', make)
 
 hub.set({
