@@ -17,15 +17,6 @@ var hub = new Hub({ //eslint-disable-line
   }
 })
 
-
-
-
-
-
-
-
-
-
 // function (key, event, get) {
 //   console.log('---------SCOPE--------'.cyan)
 //   // console.log(arguments)
