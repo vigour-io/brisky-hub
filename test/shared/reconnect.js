@@ -33,9 +33,12 @@ module.exports = function (protocol, key) {
     })
 
     it('can connect to server_a', function (done) {
+      // ok so wait with sendeing connect
       receiver.adapter[key].once('connect', function () {
-        // expect(a.clients).to.have.property('receiver_reconnect')
-        done()
+        a.get('clients', {}).once(function () {
+          expect(a.clients).to.have.property('receiver_reconnect')
+          done()
+        })
       })
       receiver.adapter[key].val = mock ? 'server_reconnect_a' : 'ws://localhost:6002'
     })
