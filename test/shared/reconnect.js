@@ -33,7 +33,6 @@ module.exports = function (protocol, key) {
     })
 
     it('can connect to server_a', function (done) {
-      // ok so wait with sendeing connect
       receiver.adapter[key].once('connect', function () {
         a.get('clients', {}).once(function () {
           expect(a.clients).to.have.property('receiver_reconnect')
@@ -49,8 +48,13 @@ module.exports = function (protocol, key) {
 
     it('can connect to another server server_b', function (done) {
       receiver.adapter[key].once('connect', function () {
+        // console.log('ok ok ok ok ok')
         // expect(b.clients).to.have.property('receiver_reconnect').which.is.ok
-        // expect(a.clients['receiver_reconnect']).to.not.be.ok
+      })
+
+      b.get('clients', {}).once(function () {
+        // console.log('ok ok ok ok ok')
+        expect(a.clients['receiver_reconnect']).to.not.be.ok
         done()
       })
       receiver.adapter[key].val = mock ? 'server_reconnect_b' : 'ws://localhost:6003'
@@ -66,9 +70,7 @@ module.exports = function (protocol, key) {
     })
 
     it('server connections gets removed, client reconnects after 1 attempt', function (done) {
-      // nested callbacks to test order
       receiver.adapter[key].once('close', function () {
-        // close connection if no other clients? no wrong!
         expect(receiver.adapter[key].connected.val).to.equal(false)
         this.once('reconnect', function () {
           this.once('connect', done)
