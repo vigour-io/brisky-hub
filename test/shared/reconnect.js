@@ -68,14 +68,15 @@ module.exports = function (protocol, key) {
     it('server connections gets removed, client reconnects after 1 attempt', function (done) {
       // nested callbacks to test order
       receiver.adapter[key].once('close', function () {
-        console.log('hey!')
+        // close connection if no other clients? no wrong!
         expect(receiver.adapter[key].connected.val).to.equal(false)
         this.once('reconnect', function () {
           this.once('connect', done)
         })
       })
-      console.log('remove? does not work for the stuff yet ?')
       // does not result in a close fire
+      // make a protocol .close method or something or disconnect
+      // client.disconnect // protocol.disconnect
       a.clients['receiver_reconnect'].connection.origin.remove()
     })
   })
