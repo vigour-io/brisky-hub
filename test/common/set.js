@@ -132,7 +132,7 @@ describe('set', function () {
     })
   })
 
-  it('get should not get synced', function (done) {
+  it('get should not get synced', function () {
     function guard () {
       throw new Error('gets should not fire!')
     }
