@@ -131,4 +131,13 @@ describe('set', function () {
       }, event)
     })
   })
+
+  it('get should not get synced', function (done) {
+    function guard () {
+      throw new Error('gets should not fire!')
+    }
+    receiver.once(guard)
+    receiver.get('afield', true)
+    receiver.off(guard)
+  })
 })
