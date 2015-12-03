@@ -48,23 +48,22 @@ module.exports = function (protocol, key) {
 
     it('can connect to another server server_b', function (done) {
       receiver.adapter[key].once('connect', function () {
-        // console.log('ok ok ok ok ok')
-        // expect(b.clients).to.have.property('receiver_reconnect').which.is.ok
-      })
-
-      b.get('clients', {}).once(function () {
-        // console.log('ok ok ok ok ok')
         expect(a.clients['receiver_reconnect']).to.not.be.ok
-        done()
+        b.get('clients', {}).once(function () {
+          expect(b.clients).to.have.property('receiver_reconnect').which.is.ok
+          done()
+        })
       })
       receiver.adapter[key].val = mock ? 'server_reconnect_b' : 'ws://localhost:6003'
     })
 
     it('can connect to another server server_a', function (done) {
       receiver.adapter[key].once('connect', function () {
-        // expect(a.clients).to.have.property('receiver_reconnect').which.is.ok
-        // expect(b.clients['return  ;eceiver_reconnect']).to.not.be.ok
-        done()
+        a.get('clients', {}).once(function () {
+          expect(a.clients).to.have.property('receiver_reconnect')
+          expect(b.clients['receiver_reconnect']).to.not.be.ok
+          done()
+        })
       })
       receiver.adapter[key].val = mock ? 'server_reconnect_a' : 'ws://localhost:6002'
     })
@@ -76,9 +75,6 @@ module.exports = function (protocol, key) {
           this.once('connect', done)
         })
       })
-      // does not result in a close fire
-      // make a protocol .close method or something or disconnect
-      // client.disconnect // protocol.disconnect
       a.clients['receiver_reconnect'].connection.origin.remove()
     })
   })
