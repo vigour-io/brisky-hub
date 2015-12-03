@@ -39,7 +39,7 @@ describe('client', function () {
       expect(server)
         .to.have.property('clients')
         .which.has.property('receiver_client')
-        .which.has.property('browser')
+        .which.has.property('platform')
       done()
     })
     receiver.set({
@@ -61,7 +61,7 @@ describe('client', function () {
       expect(server)
         .to.have.property('clients')
         .which.has.property('receiver_client_2')
-        .which.has.property('browser')
+        .which.has.property('platform')
       done()
     })
     receiver2.set({
@@ -83,6 +83,6 @@ describe('client', function () {
     expect(receiver)
       .to.have.property('clients')
       .which.has.property('receiver_client_2')
-      .which.has.property('browser')
+      .which.has.property('platform')
   })
 })
