@@ -55,17 +55,24 @@ module.exports = function (protocol, key) {
       })
     })
 
-    it('reciever has ip', function (done) {
-      receiver.get('clients.receiver_client', {}).once(function () {
-        expect(receiver)
+    it('receiver has ip', function (done) {
+      function hasip (target) {
+        expect(target)
           .to.have.property('clients')
           .which.has.property('receiver_client')
           .which.has.property('ip')
         done()
-      })
+      }
+      if (!receiver.get('clients.receiver_client.ip')) {
+        receiver.get('clients.receiver_client.ip', {}).once(function () {
+          hasip(receiver)
+        })
+      } else {
+        hasip(receiver)
+      }
     })
 
-    xit('receiver2 can connect to server', function (done) {
+    it('receiver2 can connect to server', function (done) {
       receiver2.adapter.mock.once('connect', function () {
         expect(server)
           .to.have.property('clients')
