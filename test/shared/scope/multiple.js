@@ -52,12 +52,12 @@ module.exports = function (protocol, key) {
         scope: 'myScope'
       })
       scopeReceiver.adapter[key].on('connect', function () {
-        setTimeout(() => {
+        server.once('new', () => setTimeout(() => {
           expect(server).to.have.property('clients')
           expect(server).to.have.property('_scopes')
             .which.has.property('myScope')
           done()
-        })
+        }))
       })
     })
 
