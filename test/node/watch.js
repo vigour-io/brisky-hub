@@ -1,7 +1,7 @@
 try {
   require('./index.js')
 } catch (e) {
-  console.log('yeey')
+  console.log('starting!')
 }
 
 var spawn = require('child_process').spawn
