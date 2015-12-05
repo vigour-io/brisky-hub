@@ -3,55 +3,61 @@
 module.exports = function (protocol, key) {
   describe('multiple scopes, clients', function () {
     var Hub = require('../../../lib')
-    var mock = require('../../../lib/protocol/mock')
-    var server = new Hub({
-      key: 'server'
-    })
-    var scopeReceiver = new Hub({ key: 'scopeReceiver' })
-    var receiver = new Hub({ key: 'receiver' })
-    server.set({
-      adapter: {
-        id: 'scope_multiple_server',
-        inject: mock
-      }
-    })
+    var server, receiver, scopeReceiver
+    it('can create a server, receiver and scopeReceiver', function () {
+      server = new Hub({
+        key: 'server'
+      })
+      scopeReceiver = new Hub({ key: 'scopeReceiver' })
+      receiver = new Hub({ key: 'receiver' })
+      server.set({
+        adapter: {
+          id: 'scope_multiple_server',
+          inject: protocol
+        }
+      })
 
-    server.adapter.set({ mock: { server: 'scope_multiple_server' } })
+      server.adapter.set({ [key]: { server: key === 'mock' ? 'scope_multiple_server' : 6001 } })
 
-    receiver.set({
-      adapter: {
-        id: 'scope_multiple_receiver',
-        inject: mock
-      }
-    })
+      receiver.set({
+        adapter: {
+          id: 'scope_multiple_receiver',
+          inject: protocol
+        }
+      })
 
-    scopeReceiver.set({
-      adapter: {
-        id: 'scope_multiple_scope_receiver',
-        inject: mock
-      }
+      scopeReceiver.set({
+        adapter: {
+          id: 'scope_multiple_scope_receiver',
+          inject: protocol
+        }
+      })
     })
 
     it('connects to the non-scoped data set of server', function (done) {
       receiver.adapter.set({
-        mock: 'scope_multiple_server'
+        [key]: key === 'mock' ? 'scope_multiple_server' : 'ws://localhost:6001'
       })
-      receiver.adapter.mock.on('connect', function () {
-        expect(server).to.have.property('clients')
-        done()
+      receiver.adapter[key].on('connect', function () {
+        setTimeout(() => {
+          expect(server).to.have.property('clients')
+          done()
+        })
       })
     })
 
     it('other client connects to the "myScope" data set of server', function (done) {
       scopeReceiver.adapter.set({
-        mock: 'scope_multiple_server',
+        [key]: key === 'mock' ? 'scope_multiple_server' : 'ws://localhost:6001',
         scope: 'myScope'
       })
-      scopeReceiver.adapter.mock.on('connect', function () {
-        expect(server).to.have.property('clients')
-        expect(server).to.have.property('_scopes')
-          .which.has.property('myScope')
-        done()
+      scopeReceiver.adapter[key].on('connect', function () {
+        setTimeout(() => {
+          expect(server).to.have.property('clients')
+          expect(server).to.have.property('_scopes')
+            .which.has.property('myScope')
+          done()
+        })
       })
     })
 
