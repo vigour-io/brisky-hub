@@ -42,7 +42,7 @@ module.exports = function (protocol, key) {
         setTimeout(() => {
           expect(server).to.have.property('clients')
           done()
-        })
+        }, 100)
       })
     })
 
