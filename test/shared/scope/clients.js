@@ -70,5 +70,12 @@ module.exports = function (protocol, key) {
         receiver2.get('clients.clients_s_receiver.x', {}).is(true).then(() => done())
       })
     })
+
+    it('focus gets changed to receiver2, update ends up in receiver', function (done) {
+      receiver2.set({
+        focus: receiver2.clients.clients_s_receiver2
+      })
+      receiver.get('focus', {}).is('clients_s_receiver2').then(() => done())
+    })
   })
 }
