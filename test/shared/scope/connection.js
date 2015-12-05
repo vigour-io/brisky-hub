@@ -15,7 +15,7 @@ module.exports = function (protocol, key) {
             scope.set({
               key: 'server_bSCOPE_' + val,
               adapter: {
-                [key]: 'scope_connection_server_a',
+                [key]: key === 'mock' ? 'scope_connection_server_a' : 'ws://localhost:6001',
                 scope: val
               }
             })
@@ -63,12 +63,12 @@ module.exports = function (protocol, key) {
     it('receiverA1 can connect to b, b._scopes.A1 gets connected to a', function (done) {
       receiverA1.adapter.set({
         scope: 'a1',
-        mock: 'scope_connection_server_b'
+        [key]: key === 'mock' ? 'scope_connection_server_b' : 'ws://localhost:6002'
       })
       b.once('new', function (data) {
-        this.adapter.mock.connected.once(function () {
-          expect(receiverA1.adapter.mock.connected.val).to.equal(true)
-          done()
+        this.adapter[key].connected.once(function () {
+          expect(receiverA1.adapter[key].connected.val).to.equal(true)
+          a.once('new', () => done())
         })
       })
     })
@@ -80,23 +80,23 @@ module.exports = function (protocol, key) {
         .which.has.property('scope_connection_server_b')
     })
 
-    it('a set a field on scope a1', function () {
+    it('a set a field on scope a1', function (done) {
       a._scopes.a1.set({
         somefield: true
       })
-      expect(receiverA1).to.have.property('somefield')
+      receiverA1.get('somefield', {}).is(true).then(() => done())
     })
 
     it('receiverA2 can connect to b, b._scopes.A2 gets connected to a, shares connection', function (done) {
       b.once('new', function (data) {
-        this.adapter.mock.connected.once(function () {
-          expect(receiverA2.adapter.mock.connected.val).to.equal(true)
-          done()
+        this.adapter[key].connected.once(function () {
+          expect(receiverA2.adapter[key].connected.val).to.equal(true)
+          a.once('new', () => done())
         })
       })
       receiverA2.adapter.set({
         scope: 'a2',
-        mock: 'scope_connection_server_b'
+        [key]: key === 'mock' ? 'scope_connection_server_b' : 'ws://localhost:6002'
       })
     })
 
@@ -107,12 +107,12 @@ module.exports = function (protocol, key) {
         .which.has.property('scope_connection_server_b')
     })
 
-    it('a set a field on scope a2', function () {
-      a._scopes.a2.set({
-        anotherfield: true
+    it('a set a field on scope a2', function (done) {
+      a._scopes.a2.set({ anotherfield: true })
+      receiverA2.get('anotherfield', {}).is(true).then(() => {
+        expect(receiverA1).to.not.have.property('anotherfield')
+        done()
       })
-      expect(receiverA2).to.have.property('anotherfield')
-      expect(receiverA1).to.not.have.property('anotherfield')
     })
   })
 }
