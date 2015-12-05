@@ -56,35 +56,21 @@ module.exports = function (protocol, key) {
     })
 
     it('receiver has ip', function (done) {
-      function hasip (target) {
-        expect(target)
-          .to.have.property('clients')
-          .which.has.property('receiver_client')
-          .which.has.property('ip')
-        done()
-      }
-      if (!receiver.get('clients.receiver_client.ip')) {
-        receiver.get('clients.receiver_client.ip', {}).once(function () {
-          hasip(receiver)
-        })
-      } else {
-        hasip(receiver)
-      }
+      receiver.get('clients.receiver_client.ip', {})
+        .is((val) => val > 0 || typeof val === 'string')
+        .then(() => done())
     })
 
     it('receiver2 can connect to server', function (done) {
-      receiver2.adapter.mock.once('connect', function () {
-        expect(server)
-          .to.have.property('clients')
-          .which.has.property('receiver_client_2')
-          .which.has.property('platform')
-        done()
-      })
       receiver2.set({
         adapter: {
-          mock: 'server_client'
+          [key]: 'server_client'
         }
       })
+
+      receiver2.get('clients.receiver_client_2.platform', {})
+        .is((val) => { return typeof val === 'string' })
+        .then(() => done())
     })
 
     xit('reciever2 has ip', function () {
