@@ -6,4 +6,5 @@ module.exports = function (protocol, key) {
   require('./reconnect')(protocol, key)
   require('./client')(protocol, key)
   require('./adapters')(protocol, key)
+  require('./scope')(protocol, key)
 }
