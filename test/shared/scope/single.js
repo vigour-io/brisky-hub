@@ -104,12 +104,14 @@ module.exports = function (protocol, key) {
       })
       receiver.adapter[key].once('connect', function () {
         // make scopes observable much nicer
-        setTimeout(() => {
-          expect(server._scopes).to.have.property('marcus')
-            .which.has.property('clients')
-            .which.has.property('single_receiver')
-          expect(server._scopes.rick).not.ok
-          done()
+        server.once('new', () => {
+          setTimeout(() => {
+            expect(server._scopes).to.have.property('marcus')
+              .which.has.property('clients')
+              .which.has.property('single_receiver')
+            expect(server._scopes.rick).not.ok
+            done()
+          })
         })
       })
     })
@@ -151,9 +153,6 @@ module.exports = function (protocol, key) {
       reciever2.adapter[key].once('connect', function () {
         setTimeout(() => {
           expect(server.clients.single_receiver_2).to.ok
-          reciever2.adapter.set({
-            scope: 'krystan'
-          })
           server.once('new', () => setTimeout(() => {
             expect(server.clients.single_receiver_2).to.not.ok
             expect(server._scopes).to.have.property('krystan')
@@ -161,7 +160,8 @@ module.exports = function (protocol, key) {
               .which.has.property('single_receiver_2')
             done()
           }))
-        })
+          reciever2.adapter.set({ scope: 'krystan' })
+        }, 100)
       })
     })
   })
