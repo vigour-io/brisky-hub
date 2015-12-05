@@ -64,7 +64,7 @@ module.exports = function (protocol, key) {
     it('receiver2 can connect to server', function (done) {
       receiver2.set({
         adapter: {
-          [key]: 'server_client'
+          [key]: key === 'mock' ? 'server_client' : 'ws://localhost:6001'
         }
       })
 
@@ -73,15 +73,14 @@ module.exports = function (protocol, key) {
         .then(() => done())
     })
 
-    xit('reciever2 has ip', function () {
-      expect(receiver2)
-        .to.have.property('clients')
-        .which.has.property('receiver_client_2')
-        .which.has.property('ip')
+    it('reciever2 has ip', function (done) {
+      receiver2.get('clients.receiver_client_2.ip', {})
+        .is((val) => val > 0 || typeof val === 'string')
+        .then(() => done())
     })
 
     // sending info back is weird
-    xit('reciever has correct client meta data about receiver2', function () {
+    it('reciever has correct client meta data about receiver2', function () {
       expect(receiver)
         .to.have.property('clients')
         .which.has.property('receiver_client_2')
