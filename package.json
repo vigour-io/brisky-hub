@@ -41,7 +41,8 @@
   "dependencies": {
     "vigour-js": "^0.3.6",
     "vigour-ua": "^0.0.1",
-    "websocket": "1.0.x"
+    "websocket": "1.0.x",
+    "bluebird": "3.0.x"
   },
   "devDependencies": {
     "colors": "*",
