@@ -1,5 +1,7 @@
 'use strict'
 var Hub = require('../../lib')
+var fs = require('fs')
+
 var hub = new Hub({ //eslint-disable-line
   adapter: {
     inject: require('../../lib/protocol/websocket'),
@@ -8,6 +10,10 @@ var hub = new Hub({ //eslint-disable-line
       val: 'ws://localhost:3033'
     }
   },
+  speed: {
+
+  },
+  // video: fs.createReadStream('./a.mp4'),
   scope: {
     valerio: {
       adapter: {
@@ -16,6 +22,8 @@ var hub = new Hub({ //eslint-disable-line
     }
   }
 })
+
+hub.speed.pipe(fs.createWriteStream('./output.txt'))
 
 // function (key, event, get) {
 //   console.log('---------SCOPE--------'.cyan)

@@ -50,6 +50,10 @@ hub.set({
   }
 })
 
+hub.get('video', {}).on(function () {
+  console.log('lulz')
+})
+
 // hub.set({
 //   websocket: {
 //     server: 3030

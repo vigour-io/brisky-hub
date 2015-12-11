@@ -1,5 +1,5 @@
 'use strict'
-
+require('colors-browserify')
 module.exports = function (protocol, key) {
   describe('clients', function () {
     var Hub = require('../../../lib')
@@ -82,6 +82,12 @@ module.exports = function (protocol, key) {
       console.clear()
 
       receiver2.adapter.scope.val = 'scoped'
+      server.clients.on('property', function (data) {
+        console.log('server ----'.magenta.bold, data)
+        if (data.removed) {
+          console.log('prop'.magenta, this[data.removed[0]])
+        }
+      })
       server.clients.once('property', function (data) {
         if (data.removed) {
           expect(data.removed).to.deep.equal([ 'clients_s_receiver2' ])
