@@ -39,12 +39,9 @@ module.exports = function (protocol, key) {
         scope: 'myScope'
       })
       receiver.adapter[key].once('connect', function () {
-        console.log('!!!!!')
         expect(server).to.not.have.property('clients')
-        // server.clearContext()
         server.once('new', function () {
           setTimeout(() => {
-            console.log('2hey! does not get removed!', this.path, this._scope)
             expect(server).to.have.property('_scopes')
               .which.has.property('myScope')
             expect(server._scopes.myScope).to.have.property('clients')
@@ -63,117 +60,111 @@ module.exports = function (protocol, key) {
 
     it('merges sets from the "myScope" on the sever to client', function (done) {
       server._scopes.myScope.set({ james: true })
-      console.log('3hey!')
-
       receiver.get('james', {}).is(true).then(() => done())
     })
 
     it('set from client to server only manipulates "myScope"', function (done) {
       receiver.set({bla: 'hey'})
       server._scopes.myScope.get('bla', {}).is('hey').then(() => {
-        console.log('4hey!')
-
         expect(server.bla).not.ok
         done()
       })
     })
 
     it('can change scope dynamicly', function (done) {
-      // console.clear()
       server.once('new', () => setTimeout(() => {
-        console.log('hey!')
         expect(server._scopes).to.have.property('rick')
         done()
       }))
       receiver.set({ adapter: { scope: 'rick' } })
     })
 
-  //   it('removed client correct, added client to correct scope', function () {
-  //     expect(server._scopes.rick)
-  //       .to.have.property('clients')
-  //       .which.has.property('single_receiver')
-  //     expect(server._scopes.myScope).not.ok
-  //   })
-  //
-  //   it('recieves updates on scope "rick"', function (done) {
-  //     server._scopes.rick.set({ james: 'yes' })
-  //     receiver.get('james', {}).is('yes').then(() => done())
-  //   })
-  //
-  //   it('recieves updates from non-scoped', function (done) {
-  //     server.set({ randomfield: true })
-  //     receiver.get('randomfield', {}).is(true).then(() => done())
-  //   })
-  //
-  //   it('can disconnect and switch scope', function (done) {
-  //     // call close
-  //     server._scopes.rick.clients['single_receiver'].connection.origin.remove()
-  //     receiver.set({
-  //       adapter: {
-  //         scope: 'marcus'
-  //       }
-  //     })
-  //     receiver.adapter[key].once('connect', function () {
-  //       // make scopes observable much nicer
-  //       server.once('new', () => {
-  //         setTimeout(() => {
-  //           expect(server._scopes).to.have.property('marcus')
-  //             .which.has.property('clients')
-  //             .which.has.property('single_receiver')
-  //           expect(server._scopes.rick).not.ok
-  //           done()
-  //         })
-  //       })
-  //     })
-  //   })
-  //
-  //   it('can switch from scoped to non-scoped', function (done) {
-  //     receiver.set({
-  //       adapter: {
-  //         scope: false
-  //       }
-  //     })
-  //
-  //     server.get('clients.single_receiver', {})
-  //       .is('single_receiver')
-  //       .then(() => done())
-  //   })
-  //
-  //   it('can switch from non-scoped to scoped', function () {
-  //     receiver.set({
-  //       adapter: {
-  //         scope: 'nika'
-  //       }
-  //     })
-  //     server.once('new', () => setTimeout(() => {
-  //       expect(server.clients.single_receiver).to.not.ok
-  //       expect(server._scopes).to.have.property('nika')
-  //         .which.has.property('clients')
-  //         .which.has.property('single_receiver')
-  //     }))
-  //   })
-  //
-  //   it('can switch from a non-scope new reciever to scoped', function (done) {
-  //     var reciever2 = new Hub({
-  //       adapter: {
-  //         id: 'single_receiver_2',
-  //         inject: protocol,
-  //         [key]: key === 'mock' ? 'single_server' : 'ws://localhost:6001'
-  //       }
-  //     })
-  //     reciever2.adapter[key].once('connect', function () {
-  //       setTimeout(() => {
-  //         expect(server.clients.single_receiver_2).to.ok
-  //         server.once('new', () => setTimeout(() => {
-  //           expect(server.clients.single_receiver_2).to.not.ok
-  //           expect(server._scopes).to.have.property('krystan')
-  //             .which.has.property('clients')
-  //             .which.has.property('single_receiver_2')
-  //           done()
-  //         }))
-  //         reciever2.adapter.set({ scope: 'krystan' })
-  //       }, 100)
-  //     })
-  //   })
+    it('removed client correct, added client to correct scope', function () {
+      expect(server._scopes.rick)
+        .to.have.property('clients')
+        .which.has.property('single_receiver')
+      expect(server._scopes.myScope).not.ok
+    })
+
+    it('recieves updates on scope "rick"', function (done) {
+      server._scopes.rick.set({ james: 'yes' })
+      receiver.get('james', {}).is('yes').then(() => done())
+    })
+
+    it('recieves updates from non-scoped', function (done) {
+      server.set({ randomfield: true })
+      receiver.get('randomfield', {}).is(true).then(() => done())
+    })
+
+    it('can disconnect and switch scope', function (done) {
+      // call close
+      server._scopes.rick.clients['single_receiver'].connection.origin.remove()
+      receiver.set({
+        adapter: {
+          scope: 'marcus'
+        }
+      })
+      receiver.adapter[key].once('connect', function () {
+        // make scopes observable much nicer
+        server.once('new', () => {
+          setTimeout(() => {
+            expect(server._scopes).to.have.property('marcus')
+              .which.has.property('clients')
+              .which.has.property('single_receiver')
+            expect(server._scopes.rick).not.ok
+            done()
+          })
+        })
+      })
+    })
+
+    it('can switch from scoped to non-scoped', function (done) {
+      receiver.set({
+        adapter: {
+          scope: false
+        }
+      })
+
+      server.get('clients.single_receiver', {})
+        .is('single_receiver')
+        .then(() => done())
+    })
+
+    it('can switch from non-scoped to scoped', function () {
+      receiver.set({
+        adapter: {
+          scope: 'nika'
+        }
+      })
+      server.once('new', () => setTimeout(() => {
+        expect(server.clients.single_receiver).to.not.ok
+        expect(server._scopes).to.have.property('nika')
+          .which.has.property('clients')
+          .which.has.property('single_receiver')
+      }))
+    })
+
+    it('can switch from a non-scope new reciever to scoped', function (done) {
+      var reciever2 = new Hub({
+        adapter: {
+          id: 'single_receiver_2',
+          inject: protocol,
+          [key]: key === 'mock' ? 'single_server' : 'ws://localhost:6001'
+        }
+      })
+      reciever2.adapter[key].once('connect', function () {
+        setTimeout(() => {
+          expect(server.clients.single_receiver_2).to.ok
+          server.once('new', () => setTimeout(() => {
+            expect(server.clients.single_receiver_2).to.not.ok
+            expect(server._scopes).to.have.property('krystan')
+              .which.has.property('clients')
+              .which.has.property('single_receiver_2')
+            done()
+          }))
+          reciever2.adapter.set({ scope: 'krystan' })
+        }, 100)
+      })
+    })
   })
 }
