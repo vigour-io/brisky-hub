@@ -8,3 +8,5 @@ var hub = new Hub({ // eslint-disable-line
     }
   }
 })
+
+// fs.createWriteStream('')
