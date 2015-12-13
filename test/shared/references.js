@@ -86,8 +86,7 @@ module.exports = function (protocol, key) {
     })
 
     it('can set remove a reference', function (done) {
-      console.clear()
-      console.line = false
+      // console.line = false
 
       function removed (val, data, event) {
         return data === null
@@ -99,20 +98,19 @@ module.exports = function (protocol, key) {
         receiver2.time.is(removed)
       ]).done(function () {
         assertReferences(null, done)
-        done()
       })
       // add log exentsions , totally possible now :D
       receiver.time.remove()
-      setTimeout(() => {
-        console.log('----------------------------'.magenta)
-        console.log('server time:', server.time)
-        console.log('server list time:', server.list[0].time._input)
-        console.log('reciever time:', receiver.time)
-        console.log('receiver2 time:', receiver2.time && receiver2.time._input)
-        console.log('receiver2 list time:', receiver2.list[0].time.val._input)
-        console.log('reciever list time:', receiver.list[0].time._input)
-        // shouldnt be removed
-      }, 500)
+      // setTimeout(() => {
+      //   console.log('----------------------------'.magenta)
+      //   console.log('server time:', server.time)
+      //   console.log('server list time:', server.list[0].time._input)
+      //   console.log('reciever time:', receiver.time)
+      //   console.log('receiver2 time:', receiver2.time && receiver2.time._input)
+      //   console.log('receiver2 list time:', receiver2.list[0].time.val._input)
+      //   console.log('reciever list time:', receiver.list[0].time._input)
+      //   // shouldnt be removed
+      // }, 500)
     })
   })
 }
