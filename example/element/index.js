@@ -8,6 +8,7 @@ var me
 var make = function (data) {
   if (data && data.added) {
     app.setKey(data.added[0], {
+      node: 'input',
       css: {
         val: focused,
         inject: require('vigour-js/lib/operator/transform'),
@@ -68,7 +69,8 @@ Element.prototype
   .inject(
     require('vigour-element/lib/property/text'),
     require('vigour-element/lib/property/css'),
-    require('vigour-element/lib/property/transform')
+    require('vigour-element/lib/property/transform'),
+    require('vigour-element/lib/property/background/image')
   )
 
 var Input = require('vigour-uikit/lib/form/input')
@@ -149,6 +151,7 @@ function firegun () {
 
 app = new App({
   node: document.body,
+  image: hub.get('img', {}),
   connected: {
     css: {
       val: hub.adapter.websocket.connected,
@@ -182,6 +185,15 @@ app = new App({
   }),
   uuid: {
     text: require('vigour-js/lib/util/uuid').val
+  },
+  jan: {
+    node: 'input',
+    text: hub.get('img', {}),
+    on: {
+      keyup () {
+        this.text.origin.val = this.node.value
+      }
+    }
   },
   speed: new Input({
     text: speed

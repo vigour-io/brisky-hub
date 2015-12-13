@@ -4,7 +4,8 @@ var hub = new Hub({ // eslint-disable-line
   adapter: {
     inject: require('../../lib/protocol/websocket'),
     websocket: {
-      server: 3032
+      server: 3032,
+      val: 'ws://localhost:3033'
     }
   }
 })
