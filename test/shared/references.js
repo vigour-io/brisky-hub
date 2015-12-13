@@ -20,7 +20,7 @@ module.exports = function (protocol, key) {
         }
         done()
       } catch (e) {
-        e.stack = e.stack.split('\n')[2]
+        e.stack = '' // e.stack.split('\n')[2]
         done(e)
       }
     }
@@ -82,25 +82,37 @@ module.exports = function (protocol, key) {
       receiver2.set({ time: 3 })
     })
 
-    xit('can set remove a reference', function (done) {
+    it('can set remove a reference', function (done) {
       console.clear()
       console.line = false
 
+      function removed (val, data, event) {
+        console.log('???--->', event, data, this._path)
+        return data === null
+      }
+
       Promise.all([
-        server.list[0].time.is(undefined),
-        receiver.list[0].time.is(undefined),
-        receiver2.list[0].time.is(undefined)
+        server.time.is(removed),
+        receiver.time.is(removed)
+        // receiver2.time.is(removed)
+
+        // receiver.time.is(null)
+        // receiver2.time.is(null)
       ]).done(function () {
+        console.log('KILLER'.green.inverse)
         done()
+        // assertReferences(null, done)
       })
-      // receiver.time.remove()
+      // add log exentsions , totally possible now :D
+      receiver.time.remove()
       setTimeout(() => {
+        console.log('----------------------------'.magenta)
         console.log('server time:', server.time)
-        console.log('server list time:', server.list[0].time)
-        console.log('receiver2 time:', receiver2.time)
-        console.log('receiver2 list time:', receiver2.list[0].time)
-        console.log('reciever list time:', receiver.list[0].time._input)
+        console.log('server list time:', server.list[0].time._input)
         console.log('reciever time:', receiver.time)
+        console.log('receiver2 time:', receiver2.time && receiver2.time._input)
+        console.log('receiver2 list time:', receiver2.list[0].time.val._input)
+        console.log('reciever list time:', receiver.list[0].time._input)
         // shouldnt be removed
       }, 500)
     })
