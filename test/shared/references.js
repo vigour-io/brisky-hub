@@ -7,7 +7,12 @@ module.exports = function (protocol, key) {
     var util = require('./util')
 
     it('can create and connect to multiple hubs', function (done) {
-      var setup = util.setup(protocol, key, 2, true)
+      var setup = util.setup({
+        protocol: protocol,
+        key: key,
+        receivers: 2,
+        log: true
+      })
       server = setup.server
       receiver = setup[1]
       receiver2 = setup[2]

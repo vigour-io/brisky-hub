@@ -5,7 +5,12 @@ var Promise = require('bluebird')
 var isNode = require('vigour-js/lib/util/is/node')
 var indent = isNode ? '      ' : ''
 
-exports.setup = function (protocol, key, receivers, log, id) {
+exports.setup = function (params) {
+  var protocol = params.protocol
+  var key = params.key
+  var receivers = params.receivers
+  var log = params.log
+  var id = params.id
   var colors = require('colors-browserify') //eslint-disable-line
   var result = {}
   var mock = key === 'mock'
