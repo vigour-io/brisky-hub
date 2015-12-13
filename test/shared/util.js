@@ -2,12 +2,15 @@
 var Hub = require('../../lib')
 var cnt = 0
 var Promise = require('bluebird')
+var isNode = require('vigour-js/lib/util/is/node')
+var indent = isNode ? '      ' : ''
 
-exports.setup = function (protocol, key, receivers, id) {
-  // make this a resuseable function
+exports.setup = function (protocol, key, receivers, log, id) {
+  var colors = require('colors-browserify') //eslint-disable-line
   var result = {}
   var mock = key === 'mock'
   var connected = []
+  var line
 
   if (!receivers) {
     receivers = 1
@@ -16,6 +19,18 @@ exports.setup = function (protocol, key, receivers, id) {
   if (!id) {
     cnt++
     id = cnt
+  }
+
+  if (log) {
+    line = console.line
+    console.line = false
+    console.log(
+    (indent + 'hub test setup').blue.bold,
+      '\n' + indent + 'protocol:', key,
+      '\n' + indent + 'receivers:', receivers,
+      '\n' + indent + 'id:', id
+    )
+    console.line = line
   }
 
   result.server = new Hub({
@@ -38,7 +53,13 @@ exports.setup = function (protocol, key, receivers, id) {
         [key]: mock ? id + '_server' : 'ws://localhost:6001'
       }
     })
-    console.log(result[i].adapter[key].connected)
+    if (log) {
+      result[i].adapter[key].connected.is(true, function () {
+        console.line = false
+        console.log((indent + 'connected').green.bold, this.parent.parent.parent.path.join('.'))
+        console.line = line
+      })
+    }
     connected.push(result[i].adapter[key].connected.is(true))
   }
 

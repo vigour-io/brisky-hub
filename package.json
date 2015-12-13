@@ -21,12 +21,6 @@
     "websocket",
     "xhr"
   ],
-  "gaston": {
-    "source-maps": false,
-    "less-options": {
-      "strictMath": true
-    }
-  },
   "author": "Vigour.io <dev@vigour.io>",
   "license": "MIT",
   "bugs": {
@@ -39,15 +33,13 @@
     "./lib/protocol/websocket/server/": "./lib/protocol/websocket/server/browser.js"
   },
   "dependencies": {
-    "vigour-js": "^0.3.6",
+    "vigour-js": "^0.4.0",
     "vigour-ua": "^0.0.1",
     "websocket": "1.0.x",
     "bluebird": "3.0.x"
   },
   "devDependencies": {
-    "colors": "*",
-    "log-buffer": "*",
-    "colors-browserify": "0.0.3",
+    "colors-browserify": "0.0.7",
     "vigour-element": "^0.0.5",
     "vigour-uikit": "^0.1.0"
   },
@@ -69,5 +61,11 @@
       "expect",
       "xit"
     ]
+  },
+  "gaston": {
+    "source-maps": false,
+    "less-options": {
+      "strictMath": true
+    }
   }
 }
