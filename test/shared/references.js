@@ -11,11 +11,14 @@ module.exports = function (protocol, key) {
       try {
         var obj = [ server, receiver, receiver2 ]
         for (let i in obj) {
-          if (obj[i].time._input !== val) {
-            expect('time').to.equal(val)
+          if (val === null ? obj[i].time !== null : obj[i].time._input !== val) {
+            expect(obj[i].key + 'time').to.equal(val)
           }
-          if (obj[i].list[0].time._input !== obj[i].time) {
-            expect('list time _input').to.equal(obj[i].time._path)
+          if (val === null
+            ? obj[i].list[0].time._input !== void 0
+            : obj[i].list[0].time._input !== obj[i].time
+          ) {
+            expect(obj[i].key + ' list time _input').to.equal(val === null ? 'undefined' : obj[i].time._path)
           }
         }
         done()
@@ -87,21 +90,16 @@ module.exports = function (protocol, key) {
       console.line = false
 
       function removed (val, data, event) {
-        console.log('???--->', event, data, this._path)
         return data === null
       }
 
       Promise.all([
         server.time.is(removed),
-        receiver.time.is(removed)
-        // receiver2.time.is(removed)
-
-        // receiver.time.is(null)
-        // receiver2.time.is(null)
+        receiver.time.is(removed),
+        receiver2.time.is(removed)
       ]).done(function () {
-        console.log('KILLER'.green.inverse)
+        assertReferences(null, done)
         done()
-        // assertReferences(null, done)
       })
       // add log exentsions , totally possible now :D
       receiver.time.remove()
