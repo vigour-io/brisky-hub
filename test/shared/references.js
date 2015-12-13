@@ -6,6 +6,7 @@ module.exports = function (protocol, key) {
     var Promise = require('bluebird')
     var util = require('./util')
 
+    // util assert wrapper that does a sane stack trace?
     function assertReferences (val, done) {
       try {
         var obj = [ server, receiver, receiver2 ]
@@ -69,7 +70,7 @@ module.exports = function (protocol, key) {
       receiver.set({ time: 2 })
     })
 
-    xit('can set reference on both receivers', function (done) {
+    it('can set reference on both receivers', function (done) {
       Promise.all([
         server.list[0].time.is(3),
         receiver.list[0].time.is(3),
