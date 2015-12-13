@@ -96,9 +96,9 @@ module.exports = function (protocol, key) {
       // maybe try to get rid of the nested fields make queue wait until ready
       // console.log(receiver.focus) -- make this default if you remove a ref it removes where its being reffed
       // console.log(receiver)
-      console.log(receiver.clients.clients_s_receiver2)
+      // console.log(receiver.clients.clients_s_receiver2)
       // pretty hard moves --- focus is op original -- change the client within contexts??? super hard!
-      console.log(server.focus)
+      // console.log(server.focus)
       expect(receiver.clients.clients_s_receiver2).not.ok
     })
   })
