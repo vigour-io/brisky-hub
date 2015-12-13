@@ -30,5 +30,29 @@ module.exports = function (protocol, key) {
         list: { 0: { time: server.time } }
       })
     })
+
+    it('can set reference on the receiver', function (done) {
+      Promise.all([
+        server.time.is(2),
+        server.list[0].time.is(2),
+        receiver2.time.is(2),
+        receiver2.list[0].time.is(2)
+      ]).then(function () {
+        done()
+      })
+      receiver.set({ time: 2 })
+    })
+
+    it('can set reference on both receivers', function (done) {
+      Promise.all([
+        server.list[0].time.is(3),
+        receiver.list[0].time.is(3),
+        receiver2.list[0].time.is(3)
+      ]).then(function () {
+        done()
+      })
+      receiver.set({ time: 3 })
+      receiver2.set({ time: 3 })
+    })
   })
 }
