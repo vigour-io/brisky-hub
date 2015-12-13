@@ -11,7 +11,6 @@ exports.setup = function (params) {
   var receivers = params.receivers
   var log = params.log
   var id = params.id
-  var colors = require('colors-browserify') //eslint-disable-line
   var result = {}
   var mock = key === 'mock'
   var connected = []
@@ -27,6 +26,7 @@ exports.setup = function (params) {
   }
 
   if (log) {
+    var colors = require('colors-browserify') //eslint-disable-line
     line = console.line
     console.line = false
     console.log(
