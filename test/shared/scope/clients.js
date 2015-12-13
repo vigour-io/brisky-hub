@@ -79,15 +79,7 @@ module.exports = function (protocol, key) {
     })
 
     it('receiver2 switches scope, remove from server.clients', function (done) {
-      console.clear()
-
       receiver2.adapter.scope.val = 'scoped'
-      server.clients.on('property', function (data) {
-        console.log('server ----'.magenta.bold, data)
-        if (data.removed) {
-          console.log('prop'.magenta, this[data.removed[0]])
-        }
-      })
       server.clients.once('property', function (data) {
         if (data.removed) {
           expect(data.removed).to.deep.equal([ 'clients_s_receiver2' ])
@@ -98,12 +90,15 @@ module.exports = function (protocol, key) {
 
     // first fix that clients get removed!
 
-    xit('expect focus to be nulled on reciever', function () {
+    it('expect focus to be nulled on reciever', function () {
       // this is extra behaviour
       // remove has to work correctly
       // maybe try to get rid of the nested fields make queue wait until ready
       // console.log(receiver.focus) -- make this default if you remove a ref it removes where its being reffed
       // console.log(receiver)
+      console.log(receiver.clients.clients_s_receiver2)
+      // pretty hard moves --- focus is op original -- change the client within contexts??? super hard!
+      console.log(server.focus)
       expect(receiver.clients.clients_s_receiver2).not.ok
     })
   })
