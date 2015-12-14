@@ -105,8 +105,32 @@ var app = new App({
       }
     }
   },
-  val: client
+  // val: client
 })
+
+// var time = client.get('time', {})
+var a = new Observable({
+  bla: 'xxx'
+  // bla: time
+})
+
+// this should add a listener!!!
+a.subscribe({
+  time: true
+}, function () {
+  console.log('fire! subs'.rainbow)
+})
+// unsusbcribe!
+
+app.set({ fieldx: {
+  css: 'thing',
+  s: { text: '???' },
+  // text: a
+}})
+
+console.clear()
+console.log('now subscribe on a.bla')
+a.val = client
 
 // setTimeout(function () {
 // app.val = client
