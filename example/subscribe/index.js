@@ -4,16 +4,16 @@ var Observable = require('vigour-js/lib/observable')
 var colors = require('colors-browserify')
 var Hub = require('../../lib')
 
-var server = global.server = new Hub({
-  key: 'server',
-  adapter: {
-    id: 'randomserver',
-    inject: require('../../lib/protocol/mock/'),
-    mock: {
-      server: 'testserver'
-    }
-  }
-})
+// var server = global.server = new Hub({
+//   key: 'server',
+//   adapter: {
+//     id: 'randomserver',
+//     inject: require('../../lib/protocol/mock/'),
+//     mock: {
+//       server: 'testserver'
+//     }
+//   }
+// })
 
 var server2 = global.server2 = new Hub({
   key: 'server2',
@@ -21,7 +21,7 @@ var server2 = global.server2 = new Hub({
     id: 'randomserver2',
     inject: require('../../lib/protocol/mock/'),
     mock: {
-      val:'testserver',
+      // val:'testserver',
       server: 'testserver2'
     }
   }
@@ -54,7 +54,7 @@ var client2 = global.client2 = new Hub({
 // client.get('time', {})
 // client2.get('time', {})
 
-client.adapter.mock.connected.is(true, function () {
+// client.adapter.mock.connected.is(true, function () {
   // console.log('lullllzzzzzz'.rainbow)
   // setTimeout(() => {
   //   // console.clear()
@@ -62,7 +62,7 @@ client.adapter.mock.connected.is(true, function () {
   //     time: 222
   //   })
   // }, 100)
-})
+// })
 
 // client.subscribe({
 //   time: true
@@ -87,7 +87,7 @@ client.adapter.mock.connected.is(true, function () {
 
 console.line = false
 
-setTimeout(function () {
+// setTimeout(function () {
   // console.clear()
   // client2.subscribe({
   //   time: true
@@ -101,27 +101,29 @@ setTimeout(function () {
   // })
 
   // console.log('ok expect 222 myster ballz 2 to fire')
-}, 2000)
+// }, 2000)
 
 
 // client.set({flurps: true})
 
-var o = new Observable({
-  x: true
-})
+// var o = new Observable({
+//   x: true
+// })
 
-o.x.subscribe({
-  $upward: {
-    time: true
-  }
-}, function (data, event) {
-  console.log('unicorns'.rainbow, event, data)
-})
+// o.x.subscribe({
+//   $upward: {
+//     time: true
+//   }
+// }, function (data, event) {
+//   console.log('unicorns'.rainbow, event, data)
+// })
 
 setTimeout(() => {
   console.clear()
   client.subscribe({
     time: true
+  }, function () {
+    console.log('unicorns'.rainbow)
   })
   // o.val = client
 }, 500)
