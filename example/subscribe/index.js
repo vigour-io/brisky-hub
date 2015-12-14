@@ -120,5 +120,8 @@ o.x.subscribe({
 
 setTimeout(() => {
   console.clear()
-  o.val = client
+  client.subscribe({
+    time: true
+  })
+  // o.val = client
 }, 500)
