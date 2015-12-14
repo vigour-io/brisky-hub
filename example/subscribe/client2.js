@@ -32,10 +32,10 @@ var Hub = require('../../lib')
 
 var client = global.client = new Hub({
   adapter: {
-    // id: 'testclient',
+    id: 'testclient',
     inject: require('../../lib/protocol/websocket'),
     // inject: require('../../lib/protocol/mock'),
-    websocket: 'ws://localhost:3031'
+    websocket: 'ws://localhost:3032'
     // mock: 'testserver2'
   }
 })
@@ -144,18 +144,23 @@ Property.prototype.inject(
   require('vigour-js/lib/operator/subscribe')
 )
 
-var app = new App({
-  node: document.body,
-  james: {
-    node: 'input',
-    text: { $: 'time' },
-    on: {
-      keyup () {
-        this.text.origin.val = this.node.value
+setTimeout(function() {
+  var app = new App({
+    node: document.body,
+    style:{
+      border:'10px solid red'
+    },
+    james: {
+      node: 'input',
+      text: { $: 'time' },
+      on: {
+        keyup () {
+          this.text.origin.val = this.node.value
+        }
       }
     }
-  }
-})
+  })
 
-app.val = client
+  app.val = client
 // app.youzi.val = client2
+}, 500)
