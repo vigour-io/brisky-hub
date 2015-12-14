@@ -3,7 +3,7 @@
 // Observable.prototype.inject(require('vigour-js/li'))
 var colors = require('colors-browserify') //eslint-disable-line
 var Hub = require('../../lib')
-
+require('./style.less')
 // var server = global.server = new Hub({
 //   key: 'server',
 //   adapter: {
@@ -159,6 +159,7 @@ var app = new App({
   },
   bla: {
     ChildConstructor: new Element({
+      css: 'thing',
       text: { $: 'title' }
     }),
     $: 'shows'
