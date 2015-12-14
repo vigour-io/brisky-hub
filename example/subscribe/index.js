@@ -105,8 +105,10 @@ var app = new App({
       }
     }
   },
-  // val: client
+  val: client
 })
+
+// eerst normale method later pas fancyness met on automatisch parsen
 
 // var time = client.get('time', {})
 var a = new Observable({
@@ -130,7 +132,7 @@ app.set({ fieldx: {
 
 console.clear()
 console.log('now subscribe on a.bla')
-a.val = client
+// a.val = client
 
 // setTimeout(function () {
 // app.val = client
