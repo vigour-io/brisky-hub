@@ -143,11 +143,11 @@ Property.prototype.inject(
   require('vigour-js/lib/operator/subscribe')
 )
 
-setTimeout(function() {
+setTimeout(function () {
   var app = new App({
     node: document.body,
-    style:{
-      border:'10px solid red'
+    style: {
+      border: '10px solid red'
     },
     james: {
       node: 'input',
