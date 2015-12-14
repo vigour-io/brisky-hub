@@ -1,5 +1,5 @@
 'use strict'
-// var Observable = require('vigour-js/lib/observable')
+var Observable = require('vigour-js/lib/observable')
 // Observable.prototype.inject(require('vigour-js/li'))
 var colors = require('colors-browserify') //eslint-disable-line
 var Hub = require('../../lib')
@@ -129,6 +129,10 @@ console.line = false
   // o.val = client
 // }, 500)
 
+var randomObs = new Observable({
+  time: 'hahahahahaha'
+})
+
 var Element = require('vigour-element')
 var App = require('vigour-element/lib/app')
 
@@ -194,12 +198,27 @@ var app = new App({
         client.time.val = client.yuzi
       }
     }
-  }
+  },
+  togglehub: {
+    node: 'button',
+    text: 'togglehub',
+    on: {
+      click () {
+        if (this.parent._input === client) {
+          this.parent.val = randomObs
+        } else {
+          console.log('hey hey hey')
+          this.parent.val = client
+        }
+      }
+    }
+  },
+  val: client
 })
 
-setTimeout(function () {
-  app.val = client
-}, 500)
+// setTimeout(function () {
+// app.val = client
+// }, 500)
 // app.youzi.val = client2
 
 /*
