@@ -1,7 +1,7 @@
 'use strict'
 var Observable = require('vigour-js/lib/observable')
 // Observable.prototype.inject(require('vigour-js/li'))
-var colors = require('colors-browserify')
+var colors = require('colors-browserify') //eslint-disable-line
 var Hub = require('../../lib')
 
 // var server = global.server = new Hub({
@@ -103,7 +103,6 @@ console.line = false
 
   // console.log('ok expect 222 myster ballz 2 to fire')
 // }, 2000)
-
 
 // client.set({flurps: true})
 

@@ -5,12 +5,13 @@ var hub = new Hub({ //eslint-disable-line
     inject: require('../../lib/protocol/websocket'),
     id: 'myown',
     websocket: {
-      val: 'ws://localhost:3032',
+      // val: 'ws://localhost:3032',
       server: 3031
     }
-  }
+  },
+  time: 'lulz hub'
 })
-// 
+//
 // var hub = new Hub({ //eslint-disable-line
 //   adapter: {
 //     id: 'funtimes2',

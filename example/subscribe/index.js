@@ -1,7 +1,7 @@
 'use strict'
-var Observable = require('vigour-js/lib/observable')
+// var Observable = require('vigour-js/lib/observable')
 // Observable.prototype.inject(require('vigour-js/li'))
-var colors = require('colors-browserify')
+var colors = require('colors-browserify') //eslint-disable-line
 var Hub = require('../../lib')
 
 // var server = global.server = new Hub({
@@ -38,6 +38,7 @@ var client = global.client = new Hub({
     websocket: 'ws://localhost:3031'
     // mock: 'testserver2'
   }
+  // time: 0
 })
 
 // var client2 = global.client2 = new Hub({
@@ -104,30 +105,29 @@ console.line = false
   // console.log('ok expect 222 myster ballz 2 to fire')
 // }, 2000)
 
-
 // client.set({flurps: true})
+//
+// var o = new Observable({
+//   x: true
+// })
+//
+// o.x.subscribe({
+//   $upward: {
+//     time: true
+//   }
+// }, function (data, event) {
+//   console.log('unicorns'.rainbow, event, data)
+// })
 
-var o = new Observable({
-  x: true
-})
-
-o.x.subscribe({
-  $upward: {
-    time: true
-  }
-}, function (data, event) {
-  console.log('unicorns'.rainbow, event, data)
-})
-
-setTimeout(() => {
-  console.clear()
+// setTimeout(() => {
+  // console.clear()
   // client.subscribe({
   //   time: true
   // }, function () {
   //   console.log('unicorns'.rainbow)
   // })
-  o.val = client
-}, 500)
+  // o.val = client
+// }, 500)
 
 var Element = require('vigour-element')
 var App = require('vigour-element/lib/app')
@@ -146,6 +146,23 @@ Property.prototype.inject(
 
 var app = new App({
   node: document.body,
+  addbtn: {
+    node: 'button',
+    text: 'add show',
+    on: {
+      click () {
+        this.parent.origin.set({
+          shows: { [Date.now()]: { title: 'wow' } }
+        })
+      }
+    }
+  },
+  bla: {
+    ChildConstructor: new Element({
+      text: { $: 'title' }
+    }),
+    $: 'shows'
+  },
   james: {
     node: 'input',
     text: { $: 'time' },
@@ -154,8 +171,42 @@ var app = new App({
         this.text.origin.val = this.node.value
       }
     }
+  },
+  yuzi: {
+    node: 'button',
+    text: 'click me!',
+    on: {
+      click () {
+        client.set({ yuzi: 'yuzi' })
+        client.time.val = client.yuzi
+      }
+    }
+  },
+  jamesx: {
+    node: 'button',
+    text: 'click me if you dare',
+    on: {
+      click () {
+        console.clear()
+        client.set({ james: 'james' })
+        client.set({ yuzi: client.james })
+        client.time.val = client.yuzi
+      }
+    }
   }
 })
 
-app.val = client
+setTimeout(function () {
+  app.val = client
+}, 500)
 // app.youzi.val = client2
+
+/*
+   t -> *
+   t --> y --> *
+   t --> y --> j ---> *
+   t --> y --> *
+
+   t --> y --> j ---> *
+    // data references ---> james --- > origin t krijg ik data reference j mee
+ */
