@@ -38,6 +38,7 @@ Property.prototype.inject(
 )
 
 var app = new App({
+  key: 'app',
   node: document.body,
   addbtn: {
     node: 'button',
