@@ -52,7 +52,7 @@ hub.set({
 })
 
 hub.get('video', {}).on(function () {
-  console.log('lulz')
+  // console.log('lulz')
 })
 
 // hub.set({
