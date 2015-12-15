@@ -123,11 +123,61 @@ var ref = new Observable({
   }
 })
 
+var MockSyncable = new Observable({
+  properties: {
+    _lastStamp: true
+  },
+  define: {
+    // this is fired for every removed listener on syncable
+    set (val, event) {
+      var ret = Observable.prototype.set.apply(this, arguments)
+      if (event.stamp) {
+        this.setKey('_lastStamp', event.stamp)
+      }
+      return ret
+    },
+
+    onSubRemove (emitter) {
+      console.log('removing, emitter:'.bold.red, emitter)
+    },
+    // this is fired when subscription parsing touches syncable
+    onSub (data, event, emitter, pattern, current, mapvalue, map, context) {
+      // console.log('--------- handleSubscribe ----------')
+      // console.log('- emitter:'.bold, emitter.path.join('.'))
+      // console.log('-- pattern:'.bold, pattern.path.join('.'), pattern)
+      // console.log('-- syncable:'.bold, this.path.join('.'))
+      var hashed = emitter.key
+      if (this.substore) {
+        if (this.substore[hashed]) {
+          return
+        }
+      } else {
+        this.substore = {}
+      }
+      this.substore[hashed] = true
+
+      var serializedPattern = pattern.serialize(function (property, key) {
+        if (key !== 'key') {
+          return true
+        }
+      })
+
+      console.log('setting', JSON.stringify(serializedPattern, false, 2))
+      this.set(serializedPattern, new Event(this, 'data'))
+    }
+  },
+  ChildConstructor: 'Constructor'
+}).Constructor
+
+client = new MockSyncable({
+  key: 'client'
+})
+
+var Event = require('vigour-js/lib/event')
+
 var a = new Observable({
   key: 'a',
-  // val: client,
-  b: {},
-  c: {}
+  val: client
 })
 
 var key1 = 'smurk'
@@ -136,53 +186,45 @@ var key2 = 'fool'
 var sub1 = a.subscribe({
   b: true
 }, [ function (data) {
-  console.log('1111fire! subs'.rainbow, data)
+  console.log('sub1 fires:'.rainbow, data)
 }, client], key1)
+
+// console.log('before running sub1:', JSON.stringify(sub1.pattern, function (key, value) {
+//   if (key === 'parent' || key === '_parent' || key === '_uid' || key === 'key') {
+//     return
+//   }
+//   return value
+// }, 2))
+
+sub1.run()
+
+// console.log('after running sub1:', JSON.stringify(sub1.pattern, function (key, value) {
+//   if (key === 'parent' || key === '_parent' || key === '_uid' || key === 'key') {
+//     return
+//   }
+//   return value
+// }, 2))
+
+
+sub1.remove()
 
 var sub2 = a.subscribe({
   b: true
 }, [ function (data) {
-  console.log('2222fire! subs'.rainbow, data)
-}, client], key2)
+  console.log('sub2 fires:'.rainbow, data)
+}, client], key1)
 
-// sub.remove()
+// console.log('before running sub2', JSON.stringify(sub2.pattern, function (key, value) {
+//   if (key === 'parent' || key === '_parent' || key === '_uid' || key === 'key') {
+//     return
+//   }
+//   return value
+// }, 2))
 
-console.log('---run 1')
-sub1.run(void 0, void 0, key1)
-console.log('---run 2')
-sub1.run(void 0, void 0, key2)
-// sub2.run(void 0, void 0, key2)
-console.log('---run all')
-sub1.run()
-console.log('---run 1 and 2')
-sub1.run(void 0, void 0, [key1, key2])
+// sub2.run()
 
-// sub.remove()
-// a.val = false
+client.set({
+  b: 400
+}, new Event(client, 'data'))
 
-// unsusbcribe!
-
-// app.set({ fieldx: {
-//   css: 'thing',
-//   s: { text: '???' }
-//   // text: a
-// }})
-
-// console.clear()
-// console.log('now subscribe on a.bla')
-// a.val = client
-
-// setTimeout(function () {
-// app.val = client
-// }, 500)
-// app.youzi.val = client2
-
-/*
-   t -> *
-   t --> y --> *
-   t --> y --> j ---> *
-   t --> y --> *
-
-   t --> y --> j ---> *
-    // data references ---> james --- > origin t krijg ik data reference j mee
- */
+// sub2.run()
