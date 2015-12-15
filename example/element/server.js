@@ -1,3 +1,5 @@
+process.stdout.write('\033c')
+
 'use strict'
 var Hub = require('../../lib')
 var fs = require('fs')
