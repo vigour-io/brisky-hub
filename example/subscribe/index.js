@@ -6,17 +6,12 @@ require('./style.less')
 
 var client = global.client = new Hub({
   adapter: {
-    // id: 'testclient',
     inject: require('../../lib/protocol/websocket'),
-    // inject: require('../../lib/protocol/mock'),
     websocket: 'ws://localhost:3031'
-    // mock: 'testserver2'
   }
-  // time: 0
 })
 
 console.line = false
-
 
 var randomObs = new Observable({
   time: 'hahahahahaha'
@@ -107,44 +102,3 @@ var app = new App({
   },
   val: client
 })
-
-// eerst normale method later pas fancyness met on automatisch parsen
-
-// var time = client.get('time', {})
-var a = new Observable({
-  bla: 'xxx'
-  // bla: time
-})
-
-// this should add a listener!!!
-a.subscribe({
-  time: true
-}, function () {
-  console.log('fire! subs'.rainbow)
-})
-// unsusbcribe!
-
-app.set({ fieldx: {
-  css: 'thing',
-  s: { text: '???' },
-  // text: a
-}})
-
-console.clear()
-console.log('now subscribe on a.bla')
-// a.val = client
-
-// setTimeout(function () {
-// app.val = client
-// }, 500)
-// app.youzi.val = client2
-
-/*
-   t -> *
-   t --> y --> *
-   t --> y --> j ---> *
-   t --> y --> *
-
-   t --> y --> j ---> *
-    // data references ---> james --- > origin t krijg ik data reference j mee
- */
