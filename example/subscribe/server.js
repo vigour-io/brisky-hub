@@ -9,8 +9,16 @@ var hub = new Hub({ //eslint-disable-line
       server: 3031
     }
   },
-  time: 'lulz hub'
+  time: 'lulz from the hub'
+  // shows: {
+  //   bla: {
+  //     title: 'xxx'
+  //   }
+  // }
 })
+
+// hub.get('time', 'nothing')
+
 //
 // var hub = new Hub({ //eslint-disable-line
 //   adapter: {
