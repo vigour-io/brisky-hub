@@ -98,7 +98,6 @@ var app = new App({
         input () {
           var v = this.node.value
           if (!v) {
-            console.log('remove')
             this.origin.remove()
           } else {
             this.text.origin.val = this.node.value
