@@ -65,7 +65,7 @@ var app = new App({
       $: 'mybitch'
     },
     on: {
-      keyup () {
+      input () {
         this.text.origin.val = this.node.value
       }
     }
