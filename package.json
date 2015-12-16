@@ -39,9 +39,9 @@
     "bluebird": "3.0.x"
   },
   "devDependencies": {
-    "colors-browserify": "0.0.7",
+    "colors-browserify": "0.0.8",
     "vigour-element": "^0.0.5",
-    "vigour-uikit": "^0.1.0"
+    "vigour-uikit": "^0.1.1"
   },
   "homepage": "https://github.com/vigour-io/hub#readme",
   "vigour": {
