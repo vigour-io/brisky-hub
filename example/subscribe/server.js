@@ -9,6 +9,9 @@ var hub = new Hub({ //eslint-disable-line
       server: 3031
     }
   }
+  // block: {
+  //   clients: false
+  // }
 })
 
 require('colors-browserify')
