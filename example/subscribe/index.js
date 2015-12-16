@@ -34,10 +34,10 @@ var app = new App({
         console.clear()
         if (app._input !== client) {
           app.val = client
-          this.text.val = 'ok lets subscribe'
+          this.text.val = 'ok lets unsubscribe'
         } else {
           app.val = false
-          this.text.val = 'ok lets unsubscribe'
+          this.text.val = 'ok lets subscribe'
         }
         // obs.val = obs._input === client ? 'haha' : client
       }
@@ -63,7 +63,6 @@ var app = new App({
     text: {
       inject: require('vigour-js/lib/operator/subscribe'),
       $: 'mybitch'
-      // val:client.get('mybitch',{})
     },
     on: {
       keyup () {
