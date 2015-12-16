@@ -6,7 +6,7 @@ var Syncable = require('../../lib/syncable/')
 var Hub = require('../../lib')
 // var url = require('url')
 require('./style.less')
-console.line = false
+// console.line = false
 
 var client = global.client = new Hub({
   key: 'client',
