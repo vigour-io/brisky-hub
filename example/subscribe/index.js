@@ -18,16 +18,10 @@ var obs = new Observable({
 })
 
 obs.val = client
-//
-// obs.subscribe({
-//   mybitch: true
-// }, function () {
-//   console.log('my subs bitch'.rainbow)
-// })
 
 var App = require('vigour-element/lib/app')
 
-var Element = require('vigour-element').prototype.inject(
+var Element = require('vigour-element').prototype.inject( //eslint-disable-line
   require('vigour-element/lib/property/text'),
   require('vigour-element/lib/property/css'),
   require('vigour-element/lib/events'),
@@ -44,10 +38,12 @@ var app = new App({
     on: {
       click () {
         console.clear()
-        if (obs._input === client) {
-          this.text.val = 'ok lets subscribe'
-        } else {
+        if (app._input !== client) {
+          app.val = client
           this.text.val = 'ok lets unsubscribe'
+        } else {
+          app.val = false
+          this.text.val = 'ok lets subscribe'
         }
         // obs.val = obs._input === client ? 'haha' : client
       }
@@ -62,38 +58,29 @@ var app = new App({
         if (this.parent.textfield) {
           this.parent.textfield.remove()
         } else {
-          this.parent.set({textfield:{ text: { $: 'mybitch' }}})
+          this.parent.set({textfield: {text: { $: 'mybitch' }}})
         }
       }
     }
   },
   textfield: {
     css: 'thing',
-    text: 'xxxx',
-    x: client.get('boeloe.mybitch.x', {}),
-    y: client.get('boeloe.mybitch.y', {}),
+    node: 'input',
+    text: {
+      inject: require('vigour-js/lib/operator/subscribe'),
+      $: 'mybitch'
+    },
     on: {
-      drag (evt) {
-        console.log('beurs')
-        this.parent.origin.mybitch.set({
-          x: evt.x,
-          y: evt.y
-        })
-      },
-      keyup () {
-        console.log('this.text.origin',this.text.origin)
+      input () {
         this.text.origin.val = this.node.value
       }
     }
   },
-  val: client.get('boeloe', {})
+  val: client
 })
 
-app.textfield.subscribe({
-  $upward: {
-    mybitch: {
-      x: true,
-      y: true
-    }
-  }
-})
+// app.textfield.subscribe({
+//   $upward: {
+//     mybitch: true
+//   }
+// })
