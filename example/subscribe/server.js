@@ -14,12 +14,18 @@ var hub = new Hub({ //eslint-disable-line
   // boeloe: {
   //   mybitch: 'lulz from the hub boeloe'
   // },
-  mybitch: 'lulz from the hub'
-  // shows: {
-  //   bla: {
-  //     title: 'xxx'
-  //   }
-  // }
+  mybitch: 'lulz from the hub',
+  shows: {
+    one: {
+      title: 'xxx'
+    },
+    two: {
+      title: 'xxx'
+    },
+    three: {
+      title: 'xxx'
+    }
+  }
 })
 
 // hub.get('time', 'nothing')
