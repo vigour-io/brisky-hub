@@ -11,9 +11,9 @@ var hub = new Hub({ //eslint-disable-line
       server: 3031
     }
   },
-  boeloe: {
-    mybitch: 'lulz from the hub boeloe'
-  },
+  // boeloe: {
+  //   mybitch: 'lulz from the hub boeloe'
+  // },
   mybitch: 'lulz from the hub'
   // shows: {
   //   bla: {

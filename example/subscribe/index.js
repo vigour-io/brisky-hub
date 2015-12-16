@@ -13,20 +13,6 @@ var client = global.client = new Hub({
   }
 })
 
-
-var obs = new Observable({
-  key: 'obsbitch'
-})
-
-obs.val = client
-//
-// obs.subscribe({
-//   mybitch: true
-// }, function () {
-//   console.log('my subs bitch'.rainbow)
-// })
-
-
 var App = require('vigour-element/lib/app')
 
 var Element = require('vigour-element').prototype.inject(
@@ -46,9 +32,11 @@ var app = new App({
     on: {
       click () {
         console.clear()
-        if (obs._input === client) {
+        if (app._input !== client) {
+          app.val = client
           this.text.val = 'ok lets subscribe'
         } else {
+          app.val = false
           this.text.val = 'ok lets unsubscribe'
         }
         // obs.val = obs._input === client ? 'haha' : client
@@ -71,31 +59,23 @@ var app = new App({
   },
   textfield: {
     css: 'thing',
-    text: 'xxxx',
-    x: client.get('boeloe.mybitch.x', {}),
-    y: client.get('boeloe.mybitch.y', {}),
+    node: 'input',
+    text: {
+      inject: require('vigour-js/lib/operator/subscribe'),
+      $: 'mybitch'
+      // val:client.get('mybitch',{})
+    },
     on: {
-      drag (evt) {
-        console.log('beurs')
-        this.parent.origin.mybitch.set({
-          x: evt.x,
-          y: evt.y
-        })
-      },
       keyup () {
-        console.log('this.text.origin',this.text.origin)
         this.text.origin.val = this.node.value
       }
     }
   },
-  val: client.get('boeloe', {})
+  val: client
 })
 
-app.textfield.subscribe({
-  $upward: {
-    mybitch: {
-      x: true,
-      y: true
-    }
-  }
-})
+// app.textfield.subscribe({
+//   $upward: {
+//     mybitch: true
+//   }
+// })
