@@ -106,16 +106,17 @@ var app = new App({
       }
     }),
     $: 'shows'
+    // $origin: client.get('shows',{})
   },
   val: client
 })
 
-app.subscribe({
-  $upward: {
-    shows: {
-      $any: {
-        title: true
-      }
-    }
-  }
-})
+// app.subscribe({
+//   // $upward: {
+//     shows: {
+//       $any: {
+//         title: true
+//       }
+//     }
+//   // }
+// })
