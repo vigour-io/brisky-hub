@@ -8,6 +8,11 @@ var hub = new Hub({ //eslint-disable-line
       val: 'ws://localhost:3032',
       server: 3031
     }
+  },
+  shows: {
+    one: {
+      title: 'flur'
+    }
   }
   // block: {
   //   clients: false
