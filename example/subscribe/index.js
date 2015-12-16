@@ -13,7 +13,6 @@ var client = global.client = new Hub({
   }
 })
 
-
 var obs = new Observable({
   key: 'obsbitch'
 })
@@ -25,7 +24,6 @@ obs.val = client
 // }, function () {
 //   console.log('my subs bitch'.rainbow)
 // })
-
 
 var App = require('vigour-element/lib/app')
 
