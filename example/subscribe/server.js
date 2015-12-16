@@ -1,3 +1,5 @@
+process.stdout.write('\033c')
+
 var Hub = require('../../lib')
 
 var hub = new Hub({ //eslint-disable-line
@@ -9,7 +11,10 @@ var hub = new Hub({ //eslint-disable-line
       server: 3031
     }
   },
-  time: 'lulz from the hub'
+  boeloe: {
+    mybitch: 'lulz from the hub boeloe'
+  },
+  mybitch: 'lulz from the hub'
   // shows: {
   //   bla: {
   //     title: 'xxx'
@@ -30,3 +35,6 @@ var hub = new Hub({ //eslint-disable-line
 //     }
 //   }
 // })
+
+require('colors-browserify')
+console.log('server start:', hub.adapter.id.rainbow)
