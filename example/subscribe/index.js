@@ -3,10 +3,8 @@ var Observable = require('vigour-js/lib/observable')
 var colors = require('colors-browserify') //eslint-disable-line
 
 var Syncable = require('../../lib/syncable/')
-
-
 var Hub = require('../../lib')
-var url = require('url')
+// var url = require('url')
 require('./style.less')
 console.line = false
 
@@ -83,6 +81,15 @@ var app = new App({
     on: {
       keyup () {
         this.text.origin.val = this.node.value
+      }
+    }
+  },
+  connected: {
+    css: {
+      val: client.adapter.websocket.connected,
+      inject: require('vigour-js/lib/operator/transform'),
+      $transform (val) {
+        return val ? 'ok' : 'no'
       }
     }
   },
