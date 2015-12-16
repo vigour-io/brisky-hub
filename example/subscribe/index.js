@@ -39,7 +39,7 @@ Element.prototype.inject(
   require('vigour-element/lib/events/drag')
 )
 
-client.get('scroll',{})
+client.get('scroll', {})
 
 var app = new App({
   key: 'app',
