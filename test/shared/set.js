@@ -8,6 +8,7 @@ module.exports = function (protocol, key) {
     var something = new Observable({ bla: true })
     var Event = require('vigour-js/lib/event')
     var mock = key === 'mock'
+    var seperator = require('../../lib/util').seperator
 
     it('can create multiple hubs', function () {
       server = new Hub({
@@ -140,7 +141,7 @@ module.exports = function (protocol, key) {
       receiver2.adapter[key].once('connect', function () {
         var event = new Event(receiver, 'data', 'danillo')
         receiver2.once(function (data, event) {
-          expect(event.stamp.split('|')[1]).equal('danillo')
+          expect(event.stamp.split(seperator)[1]).equal('danillo')
           expect(receiver2).to.have.property('danillo')
           done()
         })
