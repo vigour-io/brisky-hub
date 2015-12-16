@@ -9,7 +9,7 @@ var client = global.client = new Hub({
   key: 'client',
   adapter: {
     inject: require('../../lib/protocol/websocket'),
-    websocket: 'ws://localhost:3031'
+    websocket: 'ws://jim.local:3032'
   }
 })
 
