@@ -24,99 +24,93 @@ Element.prototype.inject(
   require('vigour-element/lib/events/drag')
 )
 
+client.get('scroll',{})
+
 var app = new App({
   key: 'app',
   node: document.body,
-  // btn: {
-  //   node: 'button',
-  //   text: 'ok lets unsubscribe',
-  //   on: {
-  //     click () {
-  //       console.clear()
-  //       if (app._input !== client) {
-  //         app.val = client
-  //         this.text.val = 'ok lets unsubscribe'
-  //       } else {
-  //         app.val = false
-  //         this.text.val = 'ok lets subscribe'
-  //       }
-  //       // obs.val = obs._input === client ? 'haha' : client
-  //     }
-  //   }
-  // },
-  // removebtn: {
-  //   node: 'button',
-  //   text: 'REMOVE',
-  //   on: {
-  //     click () {
-  //       console.clear()
-  //       if (this.parent.textfield) {
-  //         this.parent.textfield.remove()
-  //       } else {
-  //         this.parent.set({textfield:{ text: { $: 'mybitch' }}})
-  //       }
-  //     }
-  //   }
-  // },
-  // textfield: {
-  //   css: 'thing',
-  //   node: 'input',
-  //   text: {
-  //     inject: require('vigour-js/lib/operator/subscribe'),
-  //     $: 'mybitch'
-  //   },
-  //   on: {
-  //     input () {
-  //       this.text.origin.val = this.node.value
-  //     }
-  //   }
-  // },
-  addBtn: {
-    node: 'button',
-    text: 'add something',
+  holder: {
+    inject: require('vigour-element/lib/property/scroll/top'),
+    scrollTop: {
+      inject: require('vigour-js/lib/operator/subscribe'),
+      $: 'scroll'
+    },
     on: {
-      click () {
-        this.parent.collection.origin.set({
-          [Math.random()]:{
-            title: Math.random()
-          }
-        })
-      }
-    }
-  },
-  collection: {
-    text: 'collection',
-    inject: require('vigour-js/lib/operator/subscribe'),
-    ChildConstructor: new Element({
-      css: 'thing',
-      node: 'input',
-      text: {
-        inject: require('vigour-js/lib/operator/subscribe'),
-        $: 'title'
-      },
-      on: {
-        input () {
-          var v = this.node.value
-          if (!v) {
-            this.origin.remove()
-          } else {
-            this.text.origin.val = this.node.value
-          }
+      keyup (e) {
+        if (e.keyCode === 13) {
+          this.collection.origin.set({
+            [Math.random()]: {
+              title: ''
+            }
+          })
         }
       }
-    }),
-    $: 'shows'
-    // $origin: client.get('shows',{})
+    },
+    addBtn: {
+      node: 'button',
+      text: 'add something',
+      on: {
+        click () {
+          this.parent.collection.origin.set({
+            [Math.random()]: {
+              title: ''
+            }
+          })
+        }
+      }
+    },
+    collection: {
+      text: 'collection',
+      inject: require('vigour-js/lib/operator/subscribe'),
+      ChildConstructor: new Element({
+        css: 'thing',
+        titlefield: {
+          text: {
+            inject: [
+              require('vigour-js/lib/operator/subscribe'),
+              require('vigour-js/lib/operator/transform')
+            ],
+            $: '../../title',
+            $transform (val) {
+              if (typeof val !== 'string') {
+                val = ''
+              }
+              return 'TASK:' + val.toUpperCase()
+            }
+          }
+        },
+        thing: {
+          node: 'input',
+          inject: require('vigour-element/lib/property/attributes'),
+          attributes: {
+            placeholder: 'Enter text'
+          },
+          text: {
+            inject: require('vigour-js/lib/operator/subscribe'),
+            $: '../../title'
+          },
+          on: {
+            input () {
+              this.text.origin.val = this.node.value
+            },
+            keyup (e) {
+              if (e.keyCode === 8) {
+                let node = this.node
+                if (!node.value) {
+                  let parentNode = node.parentNode
+                  let next = parentNode.previousSibling || parentNode.nextSibling
+                  this.parent.origin.remove()
+                  if (next) {
+                    next.childNodes[1].focus()
+                  }
+                }
+              }
+            }
+          }
+        }
+      }),
+      $: 'shows'
+    }
   },
   val: client
 })
-
-// app.subscribe({
-//   // $upward: {
-//     shows: {
-//       $any: {
-//         title: true
-//       }
-//     }
-//   // }
-// })
