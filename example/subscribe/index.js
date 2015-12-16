@@ -1,7 +1,12 @@
 'use strict'
-// var Observable = require('vigour-js/lib/observable')
+var Observable = require('vigour-js/lib/observable')
 var colors = require('colors-browserify') //eslint-disable-line
+
+var Syncable = require('../../lib/syncable/')
+Syncable.prototype.inject(require('vigour-js/lib/observable/storage'))
+
 var Hub = require('../../lib')
+var url = require('url')
 require('./style.less')
 console.line = false
 
@@ -9,17 +14,26 @@ var client = global.client = new Hub({
   key: 'client',
   adapter: {
     inject: require('../../lib/protocol/websocket'),
-    websocket: 'ws://localhost:3031'
+    websocket: {
+      val: 'ws://localhost:3031',
+      inject: require('vigour-js/lib/observable/storage')
+    }
   }
 })
 
-client.get('shows', {})
+// client.get('scroll',)
+
+// client.adapter.websocket.val = 'ws://localhost:3031'
+
+client.get('scroll', 0)
+client.get('field.flapper', 'loading it!')
 
 var App = require('vigour-element/lib/app')
 
 var Element = require('vigour-element')
 Element.prototype.inject(
   require('vigour-element/lib/property/text'),
+  require('vigour-element/lib/property/html'),
   require('vigour-element/lib/property/css'),
   require('vigour-element/lib/events'),
   require('vigour-element/lib/property/transform'),
@@ -29,114 +43,63 @@ Element.prototype.inject(
 var app = new App({
   key: 'app',
   node: document.body,
+  properties: {
+    data: Observable
+  },
+  unsubscribeit: {
+    css: 'button',
+    text: {
+      inject: [
+        require('vigour-js/lib/operator/transform'),
+        require('vigour-js/lib/operator/subscribe'),
+        require('vigour-js/lib/operator/add')
+      ],
+      $: '../../data',
+      $transform (val) {
+        return val === false ? 'resubscribe!' : 'unsubscribe'
+      },
+      $add (val) {
+        let target = this.parent._stored || this.parent.parent.data._input
+        return '[' + target.path.join('.') + ']'
+      }
+    },
+    on: {
+      click () {
+        var input = this.parent.data._input
+        if (input) {
+          this._stored = input
+        }
+        console.clear()
+        this.parent.data.val = input ? false : this._stored
+      }
+    }
+  },
+  title: {
+    node: 'input',
+    text: client.adapter.websocket,
+    on: {
+      keyup () {
+        this.text.origin.val = this.node.value
+      }
+    }
+  },
   bla: {
-    text: client.get('field', 'loading...')
-  }
+    node: 'input',
+    text: {
+      inject: require('vigour-js/lib/operator/subscribe'),
+      $: 'data'
+    },
+    on: {
+      keyup () {
+        this.text.origin.val = this.node.value
+      }
+    }
+  },
+  data: client.scroll
 })
 
-client.subscribe({
-  field: true
-}, () => {
-  console.log('hey subs gots it!'.rainbow)
-})
+app.title.node.setAttribute('style', 'x'.rainbow.style)
 
-// var app = new App({
-//   key: 'app',
-//   node: document.body,
-//   // btn: {
-//   //   node: 'button',
-//   //   text: 'ok lets unsubscribe',
-//   //   on: {
-//   //     click () {
-//   //       console.clear()
-//   //       if (app._input !== client) {
-//   //         app.val = client
-//   //         this.text.val = 'ok lets unsubscribe'
-//   //       } else {
-//   //         app.val = false
-//   //         this.text.val = 'ok lets subscribe'
-//   //       }
-//   //       // obs.val = obs._input === client ? 'haha' : client
-//   //     }
-//   //   }
-//   // },
-//   // removebtn: {
-//   //   node: 'button',
-//   //   text: 'REMOVE',
-//   //   on: {
-//   //     click () {
-//   //       console.clear()
-//   //       if (this.parent.textfield) {
-//   //         this.parent.textfield.remove()
-//   //       } else {
-//   //         this.parent.set({textfield:{ text: { $: 'mybitch' }}})
-//   //       }
-//   //     }
-//   //   }
-//   // },
-//   // textfield: {
-//   //   css: 'thing',
-//   //   node: 'input',
-//   //   text: {
-//   //     inject: require('vigour-js/lib/operator/subscribe'),
-//   //     $: 'mybitch'
-//   //   },
-//   //   on: {
-//   //     input () {
-//   //       this.text.origin.val = this.node.value
-//   //     }
-//   //   }
-//   // },
-//   addBtn: {
-//     node: 'button',
-//     text: 'add something',
-//     on: {
-//       click () {
-//         this.parent.collection.origin.set({
-//           [Math.random()]: {
-//             title: Math.random()
-//           }
-//         })
-//       }
-//     }
-//   },
-//   collection: {
-//     text: 'collection',
-//     inject: require('vigour-js/lib/operator/subscribe'),
-//     ChildConstructor: new Element({
-//       css: 'thing',
-//       textfield: {
-//         node: 'input',
-//         text: {
-//           inject: require('vigour-js/lib/operator/subscribe'),
-//           $: 'title'
-//         },
-//         on: {
-//           input () {
-//             var v = this.node.value
-//             if (!v) {
-//               this.origin.remove()
-//             } else {
-//               this.text.origin.val = this.node.value
-//             }
-//           }
-//         }
-//       },
-//       rmvBtn: {
-//         node: 'button',
-//         text: 'remove X',
-//         on: {
-//           click () {
-//             this.parent.origin.remove()
-//           }
-//         }
-//       }
-//     }),
-//     $: 'shows'
-//   },
-//   val: client
-// })
-//
 // app.subscribe({
 //   $upward: {
 //     shows: {
