@@ -3,102 +3,99 @@ var Observable = require('vigour-js/lib/observable')
 var colors = require('colors-browserify') //eslint-disable-line
 var Hub = require('../../lib')
 require('./style.less')
+console.line = false
 
 var client = global.client = new Hub({
+  key: 'client',
   adapter: {
     inject: require('../../lib/protocol/websocket'),
     websocket: 'ws://localhost:3031'
   }
 })
 
-console.line = false
 
-var randomObs = new Observable({
-  time: 'hahahahahaha'
+var obs = new Observable({
+  key: 'obsbitch'
 })
 
-var Element = require('vigour-element')
+obs.val = client
+//
+// obs.subscribe({
+//   mybitch: true
+// }, function () {
+//   console.log('my subs bitch'.rainbow)
+// })
+
+
 var App = require('vigour-element/lib/app')
 
-Element.prototype.inject(
-  require('vigour-js/lib/operator/subscribe'),
+var Element = require('vigour-element').prototype.inject(
   require('vigour-element/lib/property/text'),
   require('vigour-element/lib/property/css'),
-  require('vigour-element/lib/property/style')
-)
-
-var Property = require('vigour-element/lib/property')
-Property.prototype.inject(
-  require('vigour-js/lib/operator/subscribe')
+  require('vigour-element/lib/events'),
+  require('vigour-element/lib/property/transform'),
+  require('vigour-element/lib/events/drag')
 )
 
 var app = new App({
   key: 'app',
   node: document.body,
-  addbtn: {
+  btn: {
     node: 'button',
-    text: 'add show',
-    on: {
-      click () {
-        this.parent.origin.set({
-          shows: { [Date.now()]: { title: 'wow' } }
-        })
-      }
-    }
-  },
-  bla: {
-    ChildConstructor: new Element({
-      css: 'thing',
-      text: { $: 'title' }
-    }),
-    $: 'shows'
-  },
-  james: {
-    node: 'input',
-    text: { $: 'time' },
-    on: {
-      keyup () {
-        this.text.origin.val = this.node.value
-      }
-    }
-  },
-  yuzi: {
-    node: 'button',
-    text: 'click me!',
-    on: {
-      click () {
-        client.set({ yuzi: 'yuzi' })
-        client.time.val = client.yuzi
-      }
-    }
-  },
-  jamesx: {
-    node: 'button',
-    text: 'click me if you dare',
+    text: 'ok lets unsubscribe',
     on: {
       click () {
         console.clear()
-        client.set({ james: 'james' })
-        client.set({ yuzi: client.james })
-        client.time.val = client.yuzi
-      }
-    }
-  },
-  togglehub: {
-    node: 'button',
-    text: 'togglehub',
-    on: {
-      click () {
-        console.clear()
-        console.log('TOGGLE SHINY!'.rainbow, 'hubs:', this.parent._input === client ? 'NO!'.red : 'YES!'.green)
-        if (this.parent._input === client) {
-          this.parent.val = randomObs
+        if (obs._input === client) {
+          this.text.val = 'ok lets subscribe'
         } else {
-          console.log('hey hey hey')
-          this.parent.val = client
+          this.text.val = 'ok lets unsubscribe'
+        }
+        // obs.val = obs._input === client ? 'haha' : client
+      }
+    }
+  },
+  removebtn: {
+    node: 'button',
+    text: 'REMOVE',
+    on: {
+      click () {
+        console.clear()
+        if (this.parent.textfield) {
+          this.parent.textfield.remove()
+        } else {
+          this.parent.set({textfield:{ text: { $: 'mybitch' }}})
         }
       }
     }
   },
-  val: client
+  textfield: {
+    css: 'thing',
+    text: 'xxxx',
+    x: client.get('boeloe.mybitch.x', {}),
+    y: client.get('boeloe.mybitch.y', {}),
+    on: {
+      drag (evt) {
+        console.log('beurs')
+        this.parent.origin.mybitch.set({
+          x: evt.x,
+          y: evt.y
+        })
+      },
+      keyup () {
+        console.log('this.text.origin',this.text.origin)
+        this.text.origin.val = this.node.value
+      }
+    }
+  },
+  val: client.get('boeloe', {})
+})
+
+app.textfield.subscribe({
+  $upward: {
+    mybitch: {
+      x: true,
+      y: true
+    }
+  }
 })
