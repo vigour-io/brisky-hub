@@ -51,7 +51,11 @@ Syncable.prototype.set({
         }
         if (!(this.val instanceof Base)) {
           let path = __dirname + '/dump/' + safePath(this.syncPath)
-          fs.writeFile(path, event.stamp + ':' + this.val, function () {})
+          if(data.length > 2000) {
+            fs.writeFile(path, this.val, function () {})
+          } else {
+            fs.writeFile(path, event.stamp + ':' + this.val, function () {})
+          }
         }
       }
     },
@@ -62,7 +66,9 @@ Syncable.prototype.set({
         }
         if (data === null) {
           let path = safePath(this.syncPath)
-          fs.unlink(__dirname + '/dump/' + path, function () {})
+          fs.unlink(__dirname + '/dump/' + path, function () {
+            // needs queue else too much
+          })
         }
       }
     }
@@ -86,14 +92,22 @@ function read (i, queue) {
     if (err || !data) {
       return
     }
+    // make dat abse 64?
+    // if (data.length > 2500) {
+      // data = data.toString('base64')
+    // } else {
     data = data.toString()
+    // }
     var origin = hub.get(parsePath(queue[i]), {})
     var piv = data.indexOf(':')
-    var stamp = data.slice(0, piv - 1)
+    if (piv < 0 || piv > 20) {
+      piv = false
+    }
+    var stamp = piv === false ? void 0 : data.slice(0, piv - 1)
     var event = new Event(origin, 'data', stamp)
     event.fsevent = true
     event.upstream = true
-    origin.set(data.slice(piv + 1), event)
+    origin.set(piv === false ? data : data.slice(piv + 1), event)
     read(++i, queue)
   })
 }

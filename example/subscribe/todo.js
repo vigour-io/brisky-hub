@@ -21,19 +21,29 @@ Element.prototype.inject(
   require('vigour-element/lib/property/css'),
   require('vigour-element/lib/events'),
   require('vigour-element/lib/property/transform'),
-  require('vigour-element/lib/events/drag')
+  require('vigour-element/lib/events/drag'),
+  require('vigour-element/lib/property/background/image')
 )
+
 var Property = require('vigour-element/lib/property')
 
 client.get('scroll', {})
 
 client.subscribe({
-  focus: true
+  focus: true,
+  img2: {
+    png: true
+  }
 }, function () {})
 
 var app = new App({ //eslint-disable-line
   key: 'app',
   node: document.body,
+  image: {
+    inject: require('vigour-js/lib/operator/add'),
+    val: 'data:image/png;base64,',
+    $add: client.get('img2.png', '')
+  },
   holder: {
     inject: require('vigour-element/lib/property/scroll/top'),
     scrollTop: {
