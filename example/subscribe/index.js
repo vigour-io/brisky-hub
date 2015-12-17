@@ -55,7 +55,7 @@ var app = new App({
         require('vigour-js/lib/operator/subscribe'),
         require('vigour-js/lib/operator/add')
       ],
-      $: '../../data',
+      $: '../../data/',
       $transform (val) {
         return val === false ? 'resubscribe!' : 'unsubscribe'
       },
