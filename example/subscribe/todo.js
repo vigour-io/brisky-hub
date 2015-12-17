@@ -3,7 +3,7 @@ var Observable = require('vigour-js/lib/observable')
 var colors = require('colors-browserify') //eslint-disable-line
 var Hub = require('../../lib')
 require('./style.less')
-console.line = false
+// console.line = false
 
 var client = global.client = new Hub({
   key: 'client',
@@ -76,7 +76,7 @@ var app = new App({ //eslint-disable-line
           on: {
             data (data, event) {
               if (this.parent.val[this.val]) {
-                if (this.parent.val._focused) {
+                if (this.parent.val._focused && this.parent.val._focused._input !== null) {
                   this.parent.val._focused.css.set({ removeClass: 'focus' })
                 }
                 this.parent.val._focused = this.parent.val[this.val]
