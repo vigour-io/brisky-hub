@@ -3,6 +3,7 @@ require('colors-browserify')
 var Hub = require('../../lib')
 var fs = require('fs')
 var Base = require('vigour-js/lib/base')
+var Observable = require('vigour-js/lib/observable')
 var Event = require('vigour-js/lib/event')
 var Syncable = require('../../lib/syncable/')
 
@@ -41,6 +42,36 @@ function parsePath (str) {
   return path
 }
 
+var currentList
+var timeout
+var listrdy = new Observable({
+  val: false,
+  inject: require('vigour-js/lib/observable/is')
+})
+function list (rdy) {
+  if (currentList) {
+    rdy()
+  } else {
+    listrdy.is(true, rdy)
+    if (!timeout) {
+      timeout = setTimeout(function () {
+        listrdy.val = false
+        currentList = null
+        timeout = false
+      }, 100)
+      fs.readdir(__dirname + '/dump', function (err, data) {
+        if (err) {
+          return
+        }
+        if (data) {
+          currentList = data
+          listrdy.val = true
+        }
+      })
+    }
+  }
+}
+
 Syncable.prototype.set({
   on: {
     value: {
@@ -61,15 +92,12 @@ Syncable.prototype.set({
         }
         if (data === null) {
           let path = safePath(this.syncPath)
-          fs.readdir(__dirname + '/dump', function (err, data) {
-            if (err) {
-              return
-            }
-            if (data) {
-              for (var i in data) {
-                if (data[i].indexOf(path) > -1) {
-                  fs.unlink(__dirname + '/dump/' + data[i], function () {})
-                }
+          list(function () {
+            for (var i in currentList) {
+              if (currentList[i].indexOf(path) === 0) {
+                fs.unlink(__dirname + '/dump/' + currentList[i], function () {
+
+                })
               }
             }
           })
