@@ -1,9 +1,29 @@
 'use strict'
 require('colors-browserify')
-
 var Hub = require('../../lib')
 var fs = require('fs')
 var Base = require('vigour-js/lib/base')
+var Event = require('vigour-js/lib/event')
+var Syncable = require('../../lib/syncable/')
+
+var hub = new Hub({ //eslint-disable-line
+  adapter: {
+    id: 'funtimes2',
+    inject: require('../../lib/protocol/websocket'),
+    websocket: {
+      server: 3032
+      // val: 'ws://localhost:3033'
+    }
+  },
+  shows: {
+    dummy: {
+      title: 'why!'
+    }
+  }
+})
+
+// -- make this a module -- injectable
+// make a dir structure!
 
 function safePath (path) {
   var str = ''
@@ -21,7 +41,6 @@ function parsePath (str) {
   return path
 }
 
-var Syncable = require('../../lib/syncable/')
 Syncable.prototype.set({
   on: {
     value: {
@@ -41,34 +60,24 @@ Syncable.prototype.set({
           return
         }
         if (data === null) {
-          let path = __dirname + '/dump/' + safePath(this.syncPath)
-          fs.unlink(path, function () {})
+          let path = safePath(this.syncPath)
+          fs.readdir(__dirname + '/dump', function (err, data) {
+            if (err) {
+              return
+            }
+            if (data) {
+              for (var i in data) {
+                if (data[i].indexOf(path) > -1) {
+                  fs.unlink(__dirname + '/dump/' + data[i], function () {})
+                }
+              }
+            }
+          })
         }
       }
     }
   }
 })
-
-var hub = new Hub({ //eslint-disable-line
-  adapter: {
-    id: 'funtimes2',
-    inject: require('../../lib/protocol/websocket'),
-    websocket: {
-      server: 3032
-      // val: 'ws://localhost:3033'
-    }
-  }
-})
-
-hub.set({
-  shows: {
-    a: {
-      title: 'x'
-    }
-  }
-})
-
-var Event = require('vigour-js/lib/event')
 
 fs.readdir(__dirname + '/dump', function (err, data) {
   if (err) {
@@ -93,6 +102,7 @@ function read (i, queue) {
     var stamp = data.slice(0, piv - 1)
     var event = new Event(origin, 'data', stamp)
     event.fsevent = true
+    event.upstream = true
     origin.set(data.slice(piv + 1), event)
     read(++i, queue)
   })
