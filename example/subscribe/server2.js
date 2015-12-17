@@ -42,36 +42,6 @@ function parsePath (str) {
   return path
 }
 
-var currentList
-var timeout
-var listrdy = new Observable({
-  val: false,
-  inject: require('vigour-js/lib/observable/is')
-})
-function list (rdy) {
-  if (currentList) {
-    rdy()
-  } else {
-    listrdy.is(true, rdy)
-    if (!timeout) {
-      timeout = setTimeout(function () {
-        listrdy.val = false
-        currentList = null
-        timeout = false
-      }, 100)
-      fs.readdir(__dirname + '/dump', function (err, data) {
-        if (err) {
-          return
-        }
-        if (data) {
-          currentList = data
-          listrdy.val = true
-        }
-      })
-    }
-  }
-}
-
 Syncable.prototype.set({
   on: {
     value: {
@@ -92,15 +62,7 @@ Syncable.prototype.set({
         }
         if (data === null) {
           let path = safePath(this.syncPath)
-          list(function () {
-            for (var i in currentList) {
-              if (currentList[i].indexOf(path) === 0) {
-                fs.unlink(__dirname + '/dump/' + currentList[i], function () {
-
-                })
-              }
-            }
-          })
+          fs.unlink(__dirname + '/dump/' + path, function () {})
         }
       }
     }
