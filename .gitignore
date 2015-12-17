@@ -16,6 +16,7 @@ build.css
 build.js
 build.html
 
+dump/
 vendor/
 report/
 
