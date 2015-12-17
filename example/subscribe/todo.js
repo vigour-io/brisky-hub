@@ -41,7 +41,7 @@ var app = new App({ //eslint-disable-line
       $: 'scroll'
     },
     on: {
-      keyup (e, event) {
+      keydown (e, event) {
         if (e.keyCode === 13) {
           this.addBtn.emit('click', e, event)
         }
@@ -57,6 +57,15 @@ var app = new App({ //eslint-disable-line
             [key]: { title: '' }
           }, event)
           client.focus.val = key
+        }
+      }
+    },
+    clearBtn: {
+      node: 'button',
+      text: 'remove all',
+      on: {
+        click (e, event) {
+          client.shows.clear()
         }
       }
     },
