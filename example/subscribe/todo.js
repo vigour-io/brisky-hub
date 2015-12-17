@@ -9,7 +9,7 @@ var client = global.client = new Hub({
   key: 'client',
   adapter: {
     inject: require('../../lib/protocol/websocket'),
-    websocket: 'ws://localhost:3031'
+    websocket: 'ws://localhost:3032'
   }
 })
 
@@ -23,10 +23,15 @@ Element.prototype.inject(
   require('vigour-element/lib/property/transform'),
   require('vigour-element/lib/events/drag')
 )
+var Property = require('vigour-element/lib/property')
 
-client.get('scroll',{})
+client.get('scroll', {})
 
-var app = new App({
+client.subscribe({
+  focus: true
+}, function () {})
+
+var app = new App({ //eslint-disable-line
   key: 'app',
   node: document.body,
   holder: {
@@ -36,13 +41,9 @@ var app = new App({
       $: 'scroll'
     },
     on: {
-      keyup (e) {
+      keyup (e, event) {
         if (e.keyCode === 13) {
-          this.collection.origin.set({
-            [Math.random()]: {
-              title: ''
-            }
-          })
+          this.addBtn.emit('click', e, event)
         }
       }
     },
@@ -50,20 +51,51 @@ var app = new App({
       node: 'button',
       text: 'add something',
       on: {
-        click () {
+        click (e, event) {
+          var key = Date.now()
           this.parent.collection.origin.set({
-            [Math.random()]: {
-              title: ''
-            }
-          })
+            [key]: { title: '' }
+          }, event)
+          client.focus.val = key
         }
       }
     },
     collection: {
       text: 'collection',
+      properties: {
+        focus: new Property({
+          on: {
+            data (data, event) {
+              if (this.parent.val[this.val]) {
+                if (this.parent.val._focused) {
+                  this.parent.val._focused.css.set({ removeClass: 'focus' })
+                }
+                this.parent.val._focused = this.parent.val[this.val]
+                this.parent.val[this.val].css.set({ addClass: 'focus' })
+                this.parent.val[this.val].thing.node.focus()
+              }
+            }
+          }
+        })
+      },
+      focus: {
+        val: client.get('focus', {})
+      },
       inject: require('vigour-js/lib/operator/subscribe'),
       ChildConstructor: new Element({
         css: 'thing',
+        on: {
+          new () {
+            if (this.key === this.parent.origin.parent.focus.val) {
+              this._frame = window.requestAnimationFrame(() => {
+                this.parent.origin.parent.focus.emit('data')
+              })
+            }
+          },
+          remove () {
+            window.cancelAnimationFrame(this._frame)
+          }
+        },
         titlefield: {
           text: {
             inject: [
@@ -75,7 +107,7 @@ var app = new App({
               if (typeof val !== 'string') {
                 val = ''
               }
-              return 'TASK:' + val.toUpperCase()
+              return 'TASK:' + this.parent.parent.key + ' ' + val.toUpperCase()
             }
           }
         },
@@ -93,16 +125,20 @@ var app = new App({
             input () {
               this.text.origin.val = this.node.value
             },
+            focus () {
+              this.parent.parent.origin.parent.focus.origin.val = this.parent.key
+            },
             keyup (e) {
-              if (e.keyCode === 8) {
+              var keyCode = e.keyCode
+              if (keyCode === 8) {
                 let node = this.node
                 if (!node.value) {
                   let parentNode = node.parentNode
                   let next = parentNode.previousSibling || parentNode.nextSibling
-                  this.parent.origin.remove()
                   if (next) {
-                    next.childNodes[1].focus()
+                    this.parent.parent.origin.parent.focus.origin.val = next.base.key
                   }
+                  this.parent.origin.remove()
                 }
               }
             }
@@ -114,3 +150,5 @@ var app = new App({
   },
   val: client
 })
+
+//a --- b -- multiple instances b --- fire all instances / contexts of b!!!!
