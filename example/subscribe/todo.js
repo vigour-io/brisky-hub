@@ -9,7 +9,7 @@ var client = global.client = new Hub({
   key: 'client',
   adapter: {
     inject: require('../../lib/protocol/websocket'),
-    websocket: 'ws://localhost:3032'
+    websocket: 'ws://youzi.local:3031'
   }
 })
 
@@ -28,6 +28,7 @@ Element.prototype.inject(
 var Property = require('vigour-element/lib/property')
 
 client.get('scroll', {})
+client.get('tasks', {})
 
 client.subscribe({
   focus: true,
@@ -63,6 +64,7 @@ var app = new App({ //eslint-disable-line
       on: {
         click (e, event) {
           var key = Date.now()
+          console.log('set:',this.parent.collection.origin)
           this.parent.collection.origin.set({
             [key]: { title: '' }
           }, event)
@@ -75,7 +77,7 @@ var app = new App({ //eslint-disable-line
       text: 'remove all',
       on: {
         click (e, event) {
-          client.shows.clear()
+          client.tasks.clear()
         }
       }
     },
@@ -154,7 +156,7 @@ var app = new App({ //eslint-disable-line
                 if (!node.value) {
                   let parentNode = node.parentNode
                   let next = parentNode.previousSibling || parentNode.nextSibling
-                  if (next) {
+                  if (next && next.base) {
                     this.parent.parent.origin.parent.focus.origin.val = next.base.key
                   }
                   this.parent.origin.remove()
@@ -164,7 +166,7 @@ var app = new App({ //eslint-disable-line
           }
         }
       }),
-      $: 'shows'
+      $: 'tasks'
     }
   },
   val: client
