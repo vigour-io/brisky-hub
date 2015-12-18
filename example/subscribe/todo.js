@@ -125,7 +125,10 @@ var app = new App({ //eslint-disable-line
     },
     collection: {
       text: 'collection',
-      inject: require('vigour-js/lib/operator/subscribe'),
+      inject: [
+        require('vigour-js/lib/operator/subscribe'),
+        require('vigour-js/lib/operator/origin')
+      ],
       ChildConstructor: new Element({
         css: 'thing',
         // focus: client.get('focus', {}),
@@ -182,11 +185,39 @@ var app = new App({ //eslint-disable-line
         //   }
         // }
       }),
-      $: 'tasks'
+      $origin: client.tasks
+      // $: 'tasks'
     }
   },
   val: client
 })
+//
+// var bla = new Observable({
+//   on: {
+//     data () {
+//       console.error('xxxxx!@@#! no')
+//     }
+//   }
+// })
+// //
+// // bla.val = 'x'
+// //
+// // var x = new Observable({
+// //   val: 'xxx',
+// //   inject: require('vigour-js/lib/operator/origin'),
+// //   ChildConstructor: new Observable({
+// //     bla: {
+// //       on: {
+// //         data () {
+// //           console.log('xxxx')
+// //         }
+// //       }
+// //     }
+// //   }),
+// //   $origin: {
+// //     hh: true
+// //   }
+// // })
 
 // a --- b -- multiple instances b --- fire all instances / contexts of b!!!!
-console.clear()
+// console.clear()
