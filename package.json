@@ -35,6 +35,7 @@
   "dependencies": {
     "level-js": "2.2.3",
     "level-up": "1.3.1",
+    "leveldown": "1.4.3",
     "vigour-js": "^0.4.0",
     "vigour-ua": "^0.0.1",
     "websocket": "1.0.x",
