@@ -6,7 +6,7 @@ require('./style.less')
 // console.line = false
 
 var client = global.client = new Hub({
-  key: 'client',
+  // key: 'client',
   adapter: {
     inject: require('../../lib/protocol/websocket'),
     websocket: 'ws://localhost:3031'
@@ -115,21 +115,6 @@ var app = new App({ //eslint-disable-line
             window.cancelAnimationFrame(this._frame)
           }
         },
-        titlefield: {
-          text: {
-            inject: [
-              require('vigour-js/lib/operator/subscribe'),
-              require('vigour-js/lib/operator/transform')
-            ],
-            $: '../../title',
-            $transform (val) {
-              if (typeof val !== 'string') {
-                val = ''
-              }
-              return 'TASK:' + this.parent.parent.key + ' ' + val.toUpperCase()
-            }
-          }
-        },
         thing: {
           node: 'input',
           inject: require('vigour-element/lib/property/attributes'),
@@ -145,7 +130,7 @@ var app = new App({ //eslint-disable-line
               this.text.origin.val = this.node.value
             },
             focus () {
-              this.parent.parent.origin.parent.focus.origin.val = this.parent.key
+              // this.parent.parent.origin.parent.focus.origin.val = this.parent.key
             },
             keyup (e) {
               var keyCode = e.keyCode
