@@ -2,7 +2,7 @@
 var Observable = require('vigour-js/lib/observable')
 var colors = require('colors-browserify') //eslint-disable-line
 
-var Syncable = require('../../lib/syncable/')
+// var Syncable = require('../../lib/syncable/')
 var Hub = require('../../lib')
 // var url = require('url')
 require('./style.less')
