@@ -115,11 +115,11 @@ var app = new App({ //eslint-disable-line
     },
     toggleFocus: {
       node: 'button',
-      text: 'randomizer [focus]',
+      text: 'randomizer [scroll]',
       on: {
         click (e, event) {
           console.clear()
-          client.focus.val = Math.random() * 9999
+          client.scroll.val = Math.random() * 9999
         }
       }
     },
@@ -147,7 +147,7 @@ var app = new App({ //eslint-disable-line
         //     }
         //   }
         // },
-        text: client.get('focus', 99)
+        text: client.get('scroll', 99)
         // blurf: {
         //   text: client.get('focus', 99)
         // },
