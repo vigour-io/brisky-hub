@@ -7,6 +7,10 @@ var hub = new Hub({ //eslint-disable-line
     websocket: {
       server: 3031
     }
+  },
+  levelup: 'myown',
+  shows: {
+    a: true
   }
 })
 

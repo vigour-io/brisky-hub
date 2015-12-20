@@ -9,7 +9,7 @@ require('./style.less')
 // console.line = false
 
 var client = global.client = new Hub({
-  key: 'client',
+  // key: 'client',
   adapter: {
     inject: require('../../lib/protocol/websocket'),
     websocket: {
@@ -17,6 +17,7 @@ var client = global.client = new Hub({
       inject: require('vigour-js/lib/observable/storage')
     }
   }
+  // levelup: 'hubson'
 })
 
 // Syncable.prototype.inject(require('vigour-js/lib/observable/storage'))
