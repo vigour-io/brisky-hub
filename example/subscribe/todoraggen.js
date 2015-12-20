@@ -1,5 +1,5 @@
 'use strict'
-var Observable = require('vigour-js/lib/observable')
+// var Observable = require('vigour-js/lib/observable')
 var colors = require('colors-browserify') //eslint-disable-line
 var Hub = require('../../lib')
 require('./style.less')
@@ -156,4 +156,4 @@ var app = new App({ //eslint-disable-line
   val: client
 })
 
-//a --- b -- multiple instances b --- fire all instances / contexts of b!!!!
+// a --- b -- multiple instances b --- fire all instances / contexts of b!!!!
