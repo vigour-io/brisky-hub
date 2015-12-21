@@ -8,6 +8,7 @@ docs/*
 *.mp4
 *.mov
 
+level*
 bundles/
 bundle.css
 bundle.js
