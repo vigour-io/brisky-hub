@@ -19,7 +19,7 @@ hub.levelready.is(true, function () {
   if (!hub.datafromjson || hub.datafromjson.val !== true) {
     console.log('start loading!'.magenta)
     http.request({
-      host: 'scraper-de-staging.dev.vigour.io',
+      host:  'scraper.dev.vigour.io', //'scraper-de-staging.dev.vigour.io',
       path: '/new.json',
       port: 80,
       method: 'get',
