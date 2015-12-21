@@ -13,7 +13,7 @@ var client = global.client = new Hub({
   adapter: {
     inject: require('../../lib/protocol/websocket'),
     websocket: {
-      val: 'ws://youzi.local:3032',
+      // val: 'ws://youzi.local:3032',
       inject: require('vigour-js/lib/observable/storage')
     }
   }
