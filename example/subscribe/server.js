@@ -7,16 +7,19 @@ var hub = new Hub({ //eslint-disable-line
     inject: require('../../lib/protocol/websocket'),
     id: 'mtv',
     websocket: {
-      server: 3031,
-      val: 'ws://localhost:3032'
+      server: 3031
+      // val: 'ws://localhost:3032'
     }
   },
   shows: {},
-  levelup: 'mtv'
-  // datafromjson: false
+  levelup: 'mtv',
+  datafromjson: false
 })
 
 hub.levelready.is(true, function () {
+  if (hub.get('shows.1138.seasons.10.episodes.0.title')) {
+    console.log('shows.1138.seasons.10.episodes.0.title --->', hub.get('shows.1138.seasons.10.episodes.0.title').val)
+  }
   if (!hub.datafromjson || hub.datafromjson.val !== true) {
     console.log('start loading!'.magenta)
     http.request({
@@ -31,13 +34,15 @@ hub.levelready.is(true, function () {
       res.pipe(JSONStream.parse('mtvData.*.*.shows.*'))
       .on('data', function (data) {
         if (data.id) {
-          hub.shows.setKey(data.id , data)
+          hub.shows.set({ [data.id]: data })
         }
       })
       .on('end', function () {
+        // console.log('LOADED!'.magenta)
         hub.setKey('datafromjson', true)
-        console.log('LOADED!'.magenta)
       })
     }).end()
+  } else {
+    console.log('allready got data from the server')
   }
 })
