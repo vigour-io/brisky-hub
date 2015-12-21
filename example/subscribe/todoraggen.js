@@ -1,5 +1,5 @@
 'use strict'
-// var Observable = require('vigour-js/lib/observable')
+var Observable = require('vigour-js/lib/observable')
 var colors = require('colors-browserify') //eslint-disable-line
 var Hub = require('../../lib')
 require('./style.less')
@@ -8,9 +8,10 @@ require('./style.less')
 var client = global.client = new Hub({
   // key: 'client',
   adapter: {
+    // scope: 'jim',
     inject: require('../../lib/protocol/websocket'),
     websocket: 'ws://localhost:3031'
-  },
+  }
   // levelup: 'hubson'
 })
 
@@ -40,6 +41,20 @@ client.subscribe({
 var app = new App({ //eslint-disable-line
   key: 'app',
   node: document.body,
+  properties: {
+    james: function(val, event) {
+      console.log(val, event)
+      this.james = 'flapper'
+    },
+    x: new Observable({
+      on: {
+        data () {
+          console.log('!')
+        }
+      }
+    })
+  },
+  x: 1212,
   image: {
     inject: require('vigour-js/lib/operator/add'),
     val: 'data:image/png;base64,',
