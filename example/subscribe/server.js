@@ -11,13 +11,15 @@ var hub = new Hub({ //eslint-disable-line
       val: 'ws://localhost:3032'
     }
   },
-  levelup: 'mtv'
+  levelup: 'mtv',
+  datafromjson: false
 })
 
 hub.levelready.is(true, function () {
-  if (!hub.datafromjson) {
+  if (!hub.datafromjson || hub.datafromjson.val !== true) {
+    console.log('start loading!'.magenta)
     http.request({
-      host: 'scraper.dev.vigour.io', // 'scraper-de-staging.dev.vigour.io',
+      host: 'scraper-de-staging.dev.vigour.io',
       path: '/new.json',
       port: 80,
       method: 'get',
@@ -27,6 +29,8 @@ hub.levelready.is(true, function () {
     }, function (res) {
       res.pipe(JSONStream.parse('mtvData.*.*'))
       .on('data', function (data) {
+        console.log('CHUNK!'.magenta)
+        // make this atomic wat to heavy
         hub.set(data)
       })
       .on('end', function () {
