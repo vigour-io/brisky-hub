@@ -11,8 +11,8 @@ var hub = new Hub({ //eslint-disable-line
       val: 'ws://localhost:3032'
     }
   },
-  levelup: 'mtv',
-  datafromjson: false
+  levelup: 'mtv'
+  // datafromjson: false
 })
 
 hub.levelready.is(true, function () {
