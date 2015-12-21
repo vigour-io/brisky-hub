@@ -11,15 +11,11 @@ var hub = new Hub({ //eslint-disable-line
       val: 'ws://localhost:3032'
     }
   },
-  levelup: 'mtv',
-  shows: {
-    a: true
-  }
+  levelup: 'mtv'
 })
 
 hub.levelready.is(true, function () {
   if (!hub.datafromjson) {
-    console.log('LOAD DATA EXTERNAL!'.magenta)
     http.request({
       host: 'scraper.dev.vigour.io', // 'scraper-de-staging.dev.vigour.io',
       path: '/new.json',
@@ -29,8 +25,10 @@ hub.levelready.is(true, function () {
         accepts: '*/*'
       }
     }, function (res) {
-      console.log('xxxx')
       res.pipe(JSONStream.parse('mtvData.*.*'))
+      .on('data', function (data) {
+        hub.set(data)
+      })
       .on('end', function () {
         hub.setKey('datafromjson', true)
       })
