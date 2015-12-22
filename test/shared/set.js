@@ -67,6 +67,8 @@ module.exports = function (protocol, key) {
     })
 
     it('server can send data to receiver', function (done) {
+      // subscribe
+      // make a subscribe once
       receiver.once(function () {
         expect(receiver).to.have.property('anotherfield')
           .which.has.property('_input').equals(true)
