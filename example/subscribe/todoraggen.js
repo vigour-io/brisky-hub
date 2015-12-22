@@ -12,8 +12,10 @@ var client = global.client = new Hub({
     inject: require('../../lib/protocol/websocket'),
     websocket: 'ws://localhost:3031'
   },
-  leveldb: 'hubson'
+  leveldb: 'hubsonx'
 })
+
+client.get('shows', {})
 
 var App = require('vigour-element/lib/app')
 
