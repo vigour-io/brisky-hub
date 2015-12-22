@@ -8,15 +8,15 @@ var hub = new Hub({ //eslint-disable-line
     id: 'mtv',
     websocket: {
       server: 3031,
-      val: 'ws://localhost:3032'
+      // val: 'ws://youzi.local:3032'
     }
   },
   shows: {},
-  leveldb: 'mtv',
+  // leveldb: 'mtv',
   // datafromjson: false
 })
 
-hub.levelready.is(true, function () {
+// hub.levelready.is(true, function () {
   if (hub.get('shows.1138.seasons.10.episodes.0.title')) {
     console.log('shows.1138.seasons.10.episodes.0.title --->', hub.get('shows.1138.seasons.10.episodes.0.title').val)
   }
@@ -45,4 +45,4 @@ hub.levelready.is(true, function () {
   } else {
     console.log('allready got data from the server')
   }
-})
+// })
