@@ -53,7 +53,7 @@ exports.setup = function (params) {
     result[i] = new Hub({
       key: 'reciever' + i,
       adapter: {
-        id: id + 'receiver' + i,
+        id: id + '_receiver_' + i,
         inject: protocol,
         [key]: mock ? id + '_server' : 'ws://localhost:6001'
       }

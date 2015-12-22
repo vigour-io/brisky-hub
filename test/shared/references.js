@@ -12,13 +12,13 @@ module.exports = function (protocol, key) {
         var obj = [ server, receiver, receiver2 ]
         for (let i in obj) {
           if (val === null ? obj[i].time !== null : obj[i].time._input !== val) {
-            expect(obj[i].key + 'time').to.equal(val)
+            expect(obj[i].key + '.time').to.equal(val)
           }
           if (val === null
             ? obj[i].list[0].time._input !== void 0
             : obj[i].list[0].time._input !== obj[i].time
           ) {
-            expect(obj[i].key + ' list time _input').to.equal(val === null ? 'undefined' : obj[i].time._path)
+            expect(obj[i].key + ' list[0].time._input').to.equal(val === null ? 'undefined' : obj[i].time._path)
           }
         }
         done()
@@ -29,7 +29,7 @@ module.exports = function (protocol, key) {
     }
 
     it('can create and connect to multiple hubs', function (done) {
-      var setup = util.setup({
+      var setup = global.setup = util.setup({
         protocol: protocol,
         key: key,
         receivers: 2,
@@ -44,8 +44,21 @@ module.exports = function (protocol, key) {
     })
 
     it('can set a reference on the server', function (done) {
-      console.clear()
-      console.line = false
+      receiver.subscribe({
+        list: {
+          '0': {
+            time: true
+          }
+        }
+      })
+
+      receiver2.subscribe({
+        list: {
+          '0': {
+            time: true
+          }
+        }
+      })
 
       Promise.all([
         receiver.get('time', {}).is(1),
@@ -85,9 +98,8 @@ module.exports = function (protocol, key) {
       receiver2.set({ time: 3 })
     })
 
-    it('can set remove a reference', function (done) {
-      // console.line = false
-
+    it('can remove a reference', function (done) {
+      console.clear()
       function removed (val, data, event) {
         return data === null
       }
@@ -99,18 +111,7 @@ module.exports = function (protocol, key) {
       ]).done(function () {
         assertReferences(null, done)
       })
-      // add log exentsions , totally possible now :D
       receiver.time.remove()
-      // setTimeout(() => {
-      //   console.log('----------------------------'.magenta)
-      //   console.log('server time:', server.time)
-      //   console.log('server list time:', server.list[0].time._input)
-      //   console.log('reciever time:', receiver.time)
-      //   console.log('receiver2 time:', receiver2.time && receiver2.time._input)
-      //   console.log('receiver2 list time:', receiver2.list[0].time.val._input)
-      //   console.log('reciever list time:', receiver.list[0].time._input)
-      //   // shouldnt be removed
-      // }, 500)
     })
   })
 }
