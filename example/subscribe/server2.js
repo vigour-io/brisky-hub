@@ -3,7 +3,7 @@ require('colors-browserify')
 var Hub = require('../../lib')
 var fs = require('fs')
 var Base = require('vigour-js/lib/base')
-var Observable = require('vigour-js/lib/observable')
+// var Observable = require('vigour-js/lib/observable')
 var Event = require('vigour-js/lib/event')
 var Syncable = require('../../lib/syncable/')
 
@@ -51,7 +51,7 @@ Syncable.prototype.set({
         }
         if (!(this.val instanceof Base)) {
           let path = __dirname + '/dump/' + safePath(this.syncPath)
-          if(data.length > 2000) {
+          if (data.length > 2000) {
             fs.writeFile(path, this.val, function () {})
           } else {
             fs.writeFile(path, event.stamp + ':' + this.val, function () {})

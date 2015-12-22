@@ -11,8 +11,8 @@ var client = global.client = new Hub({
     // scope: 'jim',
     inject: require('../../lib/protocol/websocket'),
     websocket: 'ws://localhost:3031'
-  }
-  // levelup: 'hubson'
+  },
+  leveldb: 'hubson'
 })
 
 var App = require('vigour-element/lib/app')
@@ -42,7 +42,7 @@ var app = new App({ //eslint-disable-line
   key: 'app',
   node: document.body,
   properties: {
-    james: function(val, event) {
+    james: function (val, event) {
       console.log(val, event)
       this.james = 'flapper'
     },
