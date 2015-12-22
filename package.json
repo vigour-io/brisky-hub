@@ -30,7 +30,8 @@
     "lib": "./lib"
   },
   "browser": {
-    "./lib/protocol/websocket/server/": "./lib/protocol/websocket/server/browser.js"
+    "./lib/protocol/websocket/server/": "./lib/protocol/websocket/server/browser.js",
+    "./lib/level/db/": "./lib/level/db/browser.js"
   },
   "dependencies": {
     "level-js": "2.2.3",
