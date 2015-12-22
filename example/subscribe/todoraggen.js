@@ -11,8 +11,8 @@ var client = global.client = new Hub({
     // scope: 'jim',
     inject: require('../../lib/protocol/websocket'),
     websocket: 'ws://localhost:3031'
-  },
-  leveldb: 'hubsonx'
+  }
+  // leveldb: 'hubsonxxx'
 })
 
 client.get('shows', {})
