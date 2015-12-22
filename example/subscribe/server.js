@@ -1,7 +1,7 @@
 require('colors-browserify')
 var Hub = require('../../lib')
-var http = require('http')
-var JSONStream = require('JSONStream')
+// var http = require('http')
+// var JSONStream = require('JSONStream')
 var hub = new Hub({ //eslint-disable-line
   adapter: {
     inject: require('../../lib/protocol/websocket'),
@@ -12,7 +12,7 @@ var hub = new Hub({ //eslint-disable-line
     }
   },
   shows: {},
-  levelup: 'mtv',
+  leveldb: 'mtv',
   datafromjson: false
 })
 
