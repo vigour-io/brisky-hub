@@ -36,7 +36,6 @@ module.exports = function (protocol, key) {
     it('can connect to a scope', function (done) {
       receiver.adapter.set({
         [key]: key === 'mock' ? 'single_server' : 'ws://localhost:6001',
-        scope: 'myScope'
       })
       receiver.subscribe({
         youri: true,
@@ -44,6 +43,11 @@ module.exports = function (protocol, key) {
         bla: true,
         randomfield: true
       })
+
+      receiver.adapter.scope.val = 'myScope'
+
+      global.server = server
+      global.receiver = receiver
       receiver.adapter[key].once('connect', function () {
         expect(server).to.not.have.property('clients')
         server.once('new', function () {

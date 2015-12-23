@@ -49,7 +49,7 @@ module.exports = function (protocol, key) {
       // recievers
       receiver.set({
         adapter: {
-          id: 'scope_upstreams_receiver',
+          id: 'scope_upstreams_receiver_(a)',
           inject: protocol,
           [key]: {}
         }
@@ -57,7 +57,7 @@ module.exports = function (protocol, key) {
 
       scopeReceiver.set({
         adapter: {
-          id: 'scope_upstreams_receiver_scope_b',
+          id: 'scope_upstreams_receiver_scope_(b)',
           inject: protocol,
           [key]: {}
         }
@@ -97,8 +97,8 @@ module.exports = function (protocol, key) {
         }
       })
       scopeReceiver.adapter.set({
-        scope: 'b',
-        [key]: key === 'mock' ? 'scope_upstreams_server_c' : 'ws://localhost:6003'
+        [key]: key === 'mock' ? 'scope_upstreams_server_c' : 'ws://localhost:6003',
+        scope: 'b'
       })
       scopeReceiver.adapter[key].once('connect', function () {
         connectedToScopeC = true
@@ -106,18 +106,44 @@ module.exports = function (protocol, key) {
     })
 
     it('both receivers receive updates from a', function (done) {
-      a.set({ hello: true })
+      console.clear()
+      receiver.subscribe({
+        hello: true,
+        bye: true
+      })
+
+      // other order and it does work -- scope receiver cannot use the instance of the hello reciever
+      scopeReceiver.subscribe({
+        hello: true,
+        bye: true
+      })
+
       Promise.all([
         receiver.get('hello', {}).is(true),
         scopeReceiver.get('hello', {}).is(true)
       ]).then(() => done())
+
+      a.set({ hello: true })
+
+      global.receiver = receiver
+      global.scopeReceiver = scopeReceiver
+      global.a = a
+      global.b = b
+      global.c = c
     })
 
     it('only scopeReceiver receives updates from b', function (done) {
       b.set({ bye: true })
       scopeReceiver.get('bye', {}).is(true).then(() => {
-        expect(receiver).to.not.have.property('bye')
-        done()
+        console.clear()
+        console.log('yo')
+        try {
+          expect(receiver).to.not.have.property('bye')
+          done()
+        } catch (e) {
+          e.stack = ''
+          done(e)
+        }
       })
     })
   })
