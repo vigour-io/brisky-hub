@@ -73,5 +73,6 @@ exports.setup = function (params) {
 }
 
 exports.removed = function (val, data, event) {
-  return data === null
+  console.log('?!@#!@#!@#?')
+  return data === null || val === null
 }
