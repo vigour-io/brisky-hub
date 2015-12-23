@@ -16,10 +16,6 @@ var hub = new Hub({ //eslint-disable-line
   // datafromjson: false
 })
 
-// hub.levelready.is(true, function () {
-if (hub.get('shows.1138.seasons.10.episodes.0.title')) {
-  console.log('shows.1138.seasons.10.episodes.0.title --->', hub.get('shows.1138.seasons.10.episodes.0.title').val)
-}
 if (!hub.datafromjson || hub.datafromjson.val !== true) {
   console.log('start loading!'.magenta)
   http.request({
@@ -33,9 +29,11 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
   }, function (res) {
     res.pipe(JSONStream.parse('mtvData.*.*.shows.*'))
     .on('data', function (data) {
-      console.log('hey hello'.blue, data)
       if (data.id) {
+        console.log('show from json:'.blue, data.id)
         hub.shows.set({ [data.id]: data })
+      } else {
+        console.log('show from json --> no id:'.red, data)
       }
     })
     .on('end', function () {
