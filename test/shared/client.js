@@ -4,6 +4,14 @@ module.exports = function (protocol, key) {
   describe('client', function () {
     var Hub = require('../../lib')
     var server, receiver, receiver2
+    var pattern = {
+      clients: {
+        $any: {
+          ip: true,
+          platform: true
+        }
+      }
+    }
 
     it('can create a server and clients', function () {
       server = new Hub({
@@ -53,12 +61,13 @@ module.exports = function (protocol, key) {
           [key]: key === 'mock' ? 'server_client' : 'ws://localhost:6001'
         }
       })
+      receiver.subscribe(pattern)
     })
 
     it('receiver has ip', function (done) {
       receiver.get('clients.receiver_client.ip', {})
         .is((val) => val > 0 || typeof val === 'string')
-        .then(() => done())
+        .done(() => done())
     })
 
     it('receiver2 can connect to server', function (done) {
@@ -68,18 +77,19 @@ module.exports = function (protocol, key) {
         }
       })
 
+      receiver2.subscribe(pattern)
+
       receiver2.get('clients.receiver_client_2.platform', {})
         .is((val) => { return typeof val === 'string' })
-        .then(() => done())
+        .done(() => done())
     })
 
     it('reciever2 has ip', function (done) {
       receiver2.get('clients.receiver_client_2.ip', {})
         .is((val) => val > 0 || typeof val === 'string')
-        .then(() => done())
+        .done(() => done())
     })
 
-    // sending info back is weird
     it('reciever has correct client meta data about receiver2', function () {
       expect(receiver)
         .to.have.property('clients')
