@@ -31,12 +31,12 @@ var client = global.client = new Hub({
   adapter: {
     inject: require('../../lib/protocol/websocket'),
     websocket: 'ws://localhost:3031'
-  },
-  projects: {
-    a: {
-      title: 'xxx'
-    }
   }
+  // projects: {
+  //   a: {
+  //     title: 'xxx'
+  //   }
+  // }
 })
 //
 // data.subscribe({
@@ -47,6 +47,7 @@ var app = new Element({ //eslint-disable-line
   key: 'app',
   node: document.body,
   projectList: {
+    xx: {},
     text: 'projects',
     inject: require('vigour-js/lib/operator/subscribe'),
     ChildConstructor: new Element({
