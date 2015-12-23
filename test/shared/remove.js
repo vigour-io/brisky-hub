@@ -33,11 +33,12 @@ module.exports = function (protocol, key) {
       receiver.subscribe(pattern)
       receiver2.subscribe(pattern)
 
+      var shows = receiver2.get('shows', {})
       Promise.all([
-        receiver2.shows.get('a.title').is('a'),
-        receiver2.shows.get('b.title').is('b'),
-        receiver2.shows.get('c.title').is('c'),
-        receiver2.shows.get('d.title').is('d')
+        shows.get('a.title').is('a'),
+        shows.get('b.title').is('b'),
+        shows.get('c.title').is('c'),
+        shows.get('d.title').is('d')
       ]).done(function () {
         done()
       })
