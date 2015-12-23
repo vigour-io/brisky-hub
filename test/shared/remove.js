@@ -22,7 +22,7 @@ module.exports = function (protocol, key) {
       })
     })
 
-    it('can set any subscriotions on the recievers', function (done) {
+    it('can set and use any subscriptions on the recievers', function (done) {
       var pattern = {
         shows: {
           $any: {
@@ -33,12 +33,9 @@ module.exports = function (protocol, key) {
       receiver.subscribe(pattern)
       receiver2.subscribe(pattern)
 
-      var shows = receiver2.get('shows', {})
       Promise.all([
-        shows.get('a.title', {}).is('a'),
-        shows.get('b.title', {}).is('b'),
-        shows.get('c.title', {}).is('c'),
-        shows.get('d.title', {}).is('d')
+        createPromises(receiver2.get('shows', {})),
+        createPromises(server.get('shows', {}))
       ]).done(function () {
         done()
       })
@@ -48,9 +45,18 @@ module.exports = function (protocol, key) {
           a: { title: 'a' },
           b: { title: 'b' },
           c: { title: 'c' },
-          d: { title: 'd'}
+          d: { title: 'd' }
         }
       })
+
+      function createPromises (shows) {
+        return Promise.all([
+          shows.get('a.title', {}).is('a'),
+          shows.get('b.title', {}).is('b'),
+          shows.get('c.title', {}).is('c'),
+          shows.get('d.title', {}).is('d')
+        ])
+      }
     })
 
 
