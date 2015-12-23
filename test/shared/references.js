@@ -5,9 +5,10 @@ module.exports = function (protocol, key) {
     var server, receiver, receiver2 //eslint-disable-line
     var Promise = require('bluebird')
     var util = require('./util')
-
+    var setup
     // util assert wrapper that does a sane stack trace?
     function assertReferences (val, done) {
+      console.log('make it now'.bold.white.inverse)
       try {
         var obj = [ server, receiver, receiver2 ]
         for (let i in obj) {
@@ -29,7 +30,7 @@ module.exports = function (protocol, key) {
     }
 
     it('can create and connect to multiple hubs', function (done) {
-      var setup = global.setup = util.setup({
+      setup = util.setup({
         protocol: protocol,
         key: key,
         receivers: 2,
@@ -38,7 +39,7 @@ module.exports = function (protocol, key) {
       server = setup.server
       receiver = setup[1]
       receiver2 = setup[2]
-      setup.connected.then(function () {
+      setup.connected.done(function () {
         done()
       })
     })
@@ -111,6 +112,7 @@ module.exports = function (protocol, key) {
       ]).done(function () {
         assertReferences(null, done)
       })
+      // difference is here
       receiver.time.remove()
     })
   })
