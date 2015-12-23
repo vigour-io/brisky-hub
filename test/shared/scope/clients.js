@@ -3,6 +3,7 @@ require('colors-browserify')
 module.exports = function (protocol, key) {
   describe('clients', function () {
     var Hub = require('../../../lib')
+    var removed = require('../util').removed
     var server, receiver, receiver2
     it('can create a server and 2 clients', function () {
       server = new Hub({
@@ -64,6 +65,21 @@ module.exports = function (protocol, key) {
       receiver2.adapter.set({
         [key]: key === 'mock' ? 'clients_s_server' : 'ws://localhost:6001'
       })
+      receiver2.subscribe({
+        clients: {
+          $any: {
+            x: true
+          }
+        }
+      })
+
+      receiver.subscribe({
+        clients: {
+          $any: {
+            platform: true
+          }
+        }
+      })
       receiver2.adapter[key].once('connect', function () {
         receiver.clients.clients_s_receiver.set({ x: true })
         receiver2.get('clients.clients_s_receiver.x', {}).is(true).then(() => done())
@@ -71,6 +87,9 @@ module.exports = function (protocol, key) {
     })
 
     it('focus gets changed to receiver2, update ends up in receiver', function (done) {
+      receiver.subscribe({
+        focus: true
+      })
       receiver2.set({
         focus: receiver2.clients.clients_s_receiver2
       })
@@ -86,19 +105,14 @@ module.exports = function (protocol, key) {
         }
       })
     })
-
-    // first fix that clients get removed!
-
-    xit('expect focus to be nulled on reciever', function () {
-      // this is extra behaviour
-      // remove has to work correctly
-      // maybe try to get rid of the nested fields make queue wait until ready
-      // console.log(receiver.focus) -- make this default if you remove a ref it removes where its being reffed
-      // console.log(receiver)
-      // console.log(receiver.clients.clients_s_receiver2)
-      // pretty hard moves --- focus is op original -- change the client within contexts??? super hard!
-      // console.log(server.focus)
-      expect(receiver.clients.clients_s_receiver2).not.ok
+    it('expect focus to be nulled on reciever', function (done) {
+      if (receiver.clients.clients_s_receiver2 === null) {
+        done()
+      } else {
+        receiver.clients.clients_s_receiver2.once('remove', function () {
+          done()
+        })
+      }
     })
   })
 }
