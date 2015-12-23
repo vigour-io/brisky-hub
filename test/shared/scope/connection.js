@@ -81,6 +81,9 @@ module.exports = function (protocol, key) {
     })
 
     it('a set a field on scope a1', function (done) {
+      receiverA1.subscribe({
+        somefield: true
+      })
       a._scopes.a1.set({
         somefield: true
       })
@@ -108,6 +111,9 @@ module.exports = function (protocol, key) {
     })
 
     it('a set a field on scope a2', function (done) {
+      receiverA2.subscribe({
+        anotherfield: true
+      })
       a._scopes.a2.set({ anotherfield: true })
       receiverA2.get('anotherfield', {}).is(true).then(() => {
         expect(receiverA1).to.not.have.property('anotherfield')
