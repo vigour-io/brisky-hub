@@ -71,3 +71,7 @@ exports.setup = function (params) {
   result.connected = Promise.all(connected)
   return result
 }
+
+exports.removed = function (val, data, event) {
+  return data === null
+}
