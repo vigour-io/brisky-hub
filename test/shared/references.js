@@ -9,7 +9,6 @@ module.exports = function (protocol, key) {
     var setup
     // util assert wrapper that does a sane stack trace?
     function assertReferences (val, done) {
-      console.log('make it now'.bold.white.inverse)
       try {
         var obj = [ server, receiver, receiver2 ]
         for (let i in obj) {
@@ -101,7 +100,6 @@ module.exports = function (protocol, key) {
     })
 
     it('can remove a reference', function (done) {
-      console.clear()
       Promise.all([
         server.time.is(removed),
         receiver.time.is(removed),

@@ -6,7 +6,6 @@ module.exports = function (protocol, key) {
     var mock = key === 'mock'
 
     it('can create multiple hubs', function () {
-      console.clear()
       a = new Hub({
         key: 'server_reconnect_a',
         adapter: {
@@ -34,7 +33,6 @@ module.exports = function (protocol, key) {
     })
 
     it('can connect to server_a', function (done) {
-      console.log('wtf wtf wtf', receiver)
       receiver.adapter[key].once('connect', function () {
         a.get('clients', {}).once(function () {
           expect(a.clients).to.have.property('receiver_reconnect')

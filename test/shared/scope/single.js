@@ -38,6 +38,12 @@ module.exports = function (protocol, key) {
         [key]: key === 'mock' ? 'single_server' : 'ws://localhost:6001',
         scope: 'myScope'
       })
+      receiver.subscribe({
+        youri: true,
+        james: true,
+        bla: true,
+        randomfield: true
+      })
       receiver.adapter[key].once('connect', function () {
         expect(server).to.not.have.property('clients')
         server.once('new', function () {
@@ -72,6 +78,8 @@ module.exports = function (protocol, key) {
     })
 
     it('can change scope dynamicly', function (done) {
+      console.clear()
+      console.log('-----> yo switch it up'.blue)
       server.once('new', () => setTimeout(() => {
         expect(server._scopes).to.have.property('rick')
         done()
