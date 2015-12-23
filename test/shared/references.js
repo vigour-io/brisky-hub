@@ -5,6 +5,7 @@ module.exports = function (protocol, key) {
     var server, receiver, receiver2 //eslint-disable-line
     var Promise = require('bluebird')
     var util = require('./util')
+    var removed = util.removed
     var setup
     // util assert wrapper that does a sane stack trace?
     function assertReferences (val, done) {
@@ -101,10 +102,6 @@ module.exports = function (protocol, key) {
 
     it('can remove a reference', function (done) {
       console.clear()
-      function removed (val, data, event) {
-        return data === null
-      }
-
       Promise.all([
         server.time.is(removed),
         receiver.time.is(removed),

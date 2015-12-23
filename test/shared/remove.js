@@ -5,6 +5,7 @@ module.exports = function (protocol, key) {
     var server, receiver, receiver2 //eslint-disable-line
     var Promise = require('bluebird')
     var util = require('./util')
+    var removed = util.removed
     var setup
 
     it('can create and connect to multiple hubs', function (done) {
@@ -60,8 +61,11 @@ module.exports = function (protocol, key) {
       }
     })
 
-    it('can remove ')
-
-
+    it('can remove a field from the receiver', function (done) {
+      receiver.shows.a.remove()
+      receiver.get('a.title', {}).is(removed).done(function () {
+        done()
+      })
+    })
   })
 }
