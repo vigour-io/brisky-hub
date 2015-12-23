@@ -1,4 +1,5 @@
 var Observable = require('vigour-js/lib/observable')
+
 var Element = require('vigour-element')
 Element.prototype.inject(
   require('vigour-element/lib/property/text')
@@ -22,14 +23,19 @@ var data = new Observable({
   projects: { a: 'x', b: 'y' }
 })
 
-var app = new App({ //eslint-disable-line
+data.subscribe({
+  a: true
+})
+
+var app = new Element({ //eslint-disable-line
+  key:'app',
   node: document.body,
+  data: data,
   projectList: {
     inject: require('vigour-js/lib/operator/subscribe'),
     ChildConstructor: new Element({
       text: 'dsfsdf'
     }),
-    $: 'projects'
-  },
-  val: data
+    $: 'data.projects'
+  }
 })
