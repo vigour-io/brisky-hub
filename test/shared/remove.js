@@ -22,6 +22,36 @@ module.exports = function (protocol, key) {
       })
     })
 
+    it('can set any subscriotions on the recievers', function (done) {
+      var pattern = {
+        shows: {
+          $any: {
+            title: true
+          }
+        }
+      }
+      receiver.subscribe(pattern)
+      receiver2.subscribe(pattern)
+
+      Promise.all([
+        receiver2.shows.get('a.title').is('a'),
+        receiver2.shows.get('b.title').is('b'),
+        receiver2.shows.get('c.title').is('c'),
+        receiver2.shows.get('d.title').is('d')
+      ]).done(function () {
+        done()
+      })
+
+      receiver.set({
+        shows: {
+          a: { title: 'a' },
+          b: { title: 'b' },
+          c: { title: 'c' },
+          d: { title: 'd'}
+        }
+      })
+    })
+
 
   })
 }
