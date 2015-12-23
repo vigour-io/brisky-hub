@@ -33,6 +33,7 @@ var hub = new Hub({ //eslint-disable-line
     }, function (res) {
       res.pipe(JSONStream.parse('mtvData.*.*.shows.*'))
       .on('data', function (data) {
+        console.log('hey hello'.blue, data)
         if (data.id) {
           hub.shows.set({ [data.id]: data })
         }
