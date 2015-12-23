@@ -35,10 +35,10 @@ module.exports = function (protocol, key) {
 
       var shows = receiver2.get('shows', {})
       Promise.all([
-        shows.get('a.title').is('a'),
-        shows.get('b.title').is('b'),
-        shows.get('c.title').is('c'),
-        shows.get('d.title').is('d')
+        shows.get('a.title', {}).is('a'),
+        shows.get('b.title', {}).is('b'),
+        shows.get('c.title', {}).is('c'),
+        shows.get('d.title', {}).is('d')
       ]).done(function () {
         done()
       })
