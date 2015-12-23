@@ -70,6 +70,9 @@ module.exports = function (protocol, key) {
     })
 
     it('it recieves data from a', function (done) {
+      receiver.a.subscribe({
+        somefield: true
+      })
       a.set({ somefield: true })
       receiver.a.once(() => {
         expect(receiver.a)
