@@ -62,10 +62,14 @@ module.exports = function (protocol, key) {
     })
 
     it('can remove a field from the receiver', function (done) {
-      receiver.shows.a.remove()
-      receiver.get('a.title', {}).is(removed).done(function () {
+      console.clear()
+      receiver2.shows.a.is(removed).done(function () {
         done()
       })
+      receiver2.shows.a.on(function (data, event) {
+        console.log('FIRE RECEIVER 2', data, event)
+      })
+      receiver.shows.a.remove()
     })
   })
 }
