@@ -4,7 +4,6 @@ module.exports = function (protocol, key) {
   describe('clients', function () {
     var Hub = require('../../../lib')
     var server, receiver, receiver2
-
     it('can create a server and 2 clients', function () {
       server = new Hub({
         key: 'clients_s_server'

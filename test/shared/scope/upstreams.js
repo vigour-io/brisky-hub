@@ -106,13 +106,11 @@ module.exports = function (protocol, key) {
     })
 
     it('both receivers receive updates from a', function (done) {
-      console.clear()
       receiver.subscribe({
         hello: true,
         bye: true
       })
 
-      // other order and it does work -- scope receiver cannot use the instance of the hello reciever
       scopeReceiver.subscribe({
         hello: true,
         bye: true
@@ -124,26 +122,13 @@ module.exports = function (protocol, key) {
       ]).then(() => done())
 
       a.set({ hello: true })
-
-      global.receiver = receiver
-      global.scopeReceiver = scopeReceiver
-      global.a = a
-      global.b = b
-      global.c = c
     })
 
     it('only scopeReceiver receives updates from b', function (done) {
       b.set({ bye: true })
-      scopeReceiver.get('bye', {}).is(true).then(() => {
-        console.clear()
-        console.log('yo')
-        try {
-          expect(receiver).to.not.have.property('bye')
-          done()
-        } catch (e) {
-          e.stack = ''
-          done(e)
-        }
+      scopeReceiver.get('bye', {}).is(true, () => {
+        expect(receiver).to.not.have.property('bye')
+        done()
       })
     })
   })
