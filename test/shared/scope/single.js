@@ -35,7 +35,7 @@ module.exports = function (protocol, key) {
 
     it('can connect to a scope', function (done) {
       receiver.adapter.set({
-        [key]: key === 'mock' ? 'single_server' : 'ws://localhost:6001',
+        [key]: key === 'mock' ? 'single_server' : 'ws://localhost:6001'
       })
       receiver.subscribe({
         youri: true,

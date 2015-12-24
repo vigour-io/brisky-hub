@@ -49,6 +49,17 @@ exports.setup = function (params) {
     }
   })
 
+  normalReceivers(connected, result, id, protocol, key, mock, receivers, log, line)
+  result.connected = Promise.all(connected)
+  return result
+}
+
+exports.removed = function (val, data, event) {
+  console.log('?!@#!@#!@#?')
+  return data === null || val === null
+}
+
+function normalReceivers (connected, result, id, protocol, key, mock, receivers, log, line) {
   for (let i = 1; i < (receivers + 1); i++) {
     result[i] = new Hub({
       key: 'reciever' + i,
@@ -67,12 +78,4 @@ exports.setup = function (params) {
     }
     connected.push(result[i].adapter[key].connected.is(true))
   }
-
-  result.connected = Promise.all(connected)
-  return result
-}
-
-exports.removed = function (val, data, event) {
-  console.log('?!@#!@#!@#?')
-  return data === null || val === null
 }
