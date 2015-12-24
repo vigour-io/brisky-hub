@@ -44,7 +44,7 @@
     "bluebird": "3.0.x"
   },
   "devDependencies": {
-    "colors-browserify": "0.1.0",
+    "colors-browserify": "0.1.1",
     "vigour-element": "^0.0.5",
     "vigour-uikit": "^0.1.1"
   },
