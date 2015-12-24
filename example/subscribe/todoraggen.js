@@ -71,7 +71,6 @@ var app = new Element({ //eslint-disable-line
 
 var Event = require('vigour-js/lib/event')
 var holder = new Element()
-app.setKey('holder', holder)
 var event = new Event(holder, 'data')
 // event.isTriggered = true
 console.time(1)
@@ -80,9 +79,9 @@ var Thing = new Element({
     text: 'bla'
   }
 }).Constructor
-for (var i = 0 ; i < 10000 ; i++) {
+for (var i = 0 ; i < 1000 ; i++) {
   var a = new Observable(i)
-  window[i] = a
+  // window[i] = a
   holder.setKey(i, new Thing({
     nested: {
       text: a
@@ -109,5 +108,6 @@ for (var i = 0 ; i < 10000 ; i++) {
 console.timeEnd(1)
 
 console.time(2)
-holder.remove()
+// holder.remove()
 console.timeEnd(2)
+app.setKey('holder', holder)
