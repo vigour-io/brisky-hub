@@ -16,6 +16,10 @@ var hub = new Hub({ //eslint-disable-line
   // datafromjson: false
 })
 
+// lastupdate poller
+// abu dahbi whats updated?
+//  this field -- load -- and set on the hub
+
 if (!hub.datafromjson || hub.datafromjson.val !== true) {
   console.log('start loading!'.magenta)
   http.request({
