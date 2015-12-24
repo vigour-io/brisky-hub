@@ -80,7 +80,7 @@ var Thing = new Element({
     text: 'bla'
   }
 }).Constructor
-for (var i = 0 ; i < 1000 ; i++) {
+for (var i = 0 ; i < 10000 ; i++) {
   var a = new Observable(i)
   window[i] = a
   holder.setKey(i, new Thing({
