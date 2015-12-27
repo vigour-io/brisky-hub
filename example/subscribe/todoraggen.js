@@ -132,7 +132,7 @@ console.timeEnd(1)
 var last = 0
 function loop () {
   cntr++
-  j = j++
+  j++
   for (var i = 0 ; i < 3000 ; i++) {
     app.holder[i].val = i + j
   }
