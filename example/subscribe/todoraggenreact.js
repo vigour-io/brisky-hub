@@ -1,13 +1,12 @@
-// var Hub = require('../../lib') //eslint-disable-line
+var Hub = require('../../lib') //eslint-disable-line
 var Element = require('vigour-element/lib/element')
 
 var Observable = require('vigour-js/lib/observable')
 Observable.prototype.inject(require('vigour-js/lib/operator/subscribe'))
-require('./style.less')
+
 var App = require('vigour-element/lib/app') //eslint-disable-line
 Element.prototype.inject(
   require('vigour-element/lib/property/text'),
-  require('vigour-element/lib/property/css'),
   require('vigour-element/lib/events')
 )
 
@@ -70,30 +69,16 @@ var app = new Element({ //eslint-disable-line
 //     }
 //   }
 // })
-var j = 1
 
 var Event = require('vigour-js/lib/event')
 // event.isTriggered = true
 var Thing = new Element({
-  // css: 'thing',
   val: 'lulz',
   text: function () {
     return this.parent._input
   }
-  // click: {
-  //   node: 'button',
-  //   text: 'bla',
-  //   on: {
-  //     click () {
-  //
-  //     }
-  //   }
-  // },
-  // bla: {
-  //   node: 'span',
-  //   text: 'xxx'
-  // }
 }).Constructor
+// Thing.prototype.node.style.border = '1px solid red'
 window.cntr = 0
 if (app.holder) {
   app.holder.remove()
@@ -101,10 +86,8 @@ if (app.holder) {
 console.time(1)
 var holder = new Element()
 var event = new Event(holder, 'data')
-// event.isTriggered = true
-
 // Thing.prototype.node.style.border = (Math.random() * 10) + 'px solid red'
-for (var i = 0 ; i < 3000; i++) {
+for (var i = 0 ; i < 4e4 ; i++) {
   // var a = new Observable(i, event)
   // window[i] = a
   holder.setKey(i, new Thing(i, event), event)
@@ -114,39 +97,26 @@ for (var i = 0 ; i < 3000; i++) {
   // holder.setKey(i, new Thing(i, event), event)
   // Thing.prototype.text.emit('data', i, event)
 }
+// Thing.prototype.text.emit('data', i, event)
 
-// var ins = Thing.prototype._instances
-// for (var i in ins) {
-  // ins[i].text.emit('data', i, event)
-// }
-// so strange why does this not happen ? maybe missing trigger
-// Thing.prototype.text._on.data.emitting = true
-// maybe make emitting thing on obs?
-// we can use it
-Thing.prototype.text.clearContextUp()
-Thing.prototype.text.emit('data', i, event)
 event.trigger()
 app.setKey('holder', holder)
 console.timeEnd(1)
 
 var last = 0
+var j = 1
 function loop () {
   cntr++
-  j = j++
-  for (var i = 0 ; i < 3000 ; i++) {
-    app.holder[i].val = i + j
+  j++
+  for (var i = 0 ; i < 40000 ; i++) {
+    // app.holder[i].text.val = i + j
   }
-  // Thing.prototype.text.clearContextUp()
-  Thing.prototype.text.emit('data', i + j)
   window.requestAnimationFrame(loop)
 }
-//
-setInterval(function () {
-  last = cntr
-  cntr = 0
-  console.log(last , 'fps')
-}, 1000)
 
-console.time('updates')
-loop()
-console.timeEnd('updates')
+// setInterval(function () {
+//   last = cntr
+//   cntr = 0
+//   console.log(last , 'fps')
+// }, 1000)
+// loop()

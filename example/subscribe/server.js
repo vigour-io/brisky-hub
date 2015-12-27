@@ -7,7 +7,7 @@ var hub = new Hub({ //eslint-disable-line
     inject: require('../../lib/protocol/websocket'),
     id: 'mtv',
     websocket: {
-      server: 3031,
+      server: 3031
       // val: 'ws://youzi.local:3032'
     }
   },
