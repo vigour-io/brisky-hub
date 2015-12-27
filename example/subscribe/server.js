@@ -11,7 +11,17 @@ var hub = new Hub({ //eslint-disable-line
       // val: 'ws://youzi.local:3032'
     }
   },
-  shows: {}
+  shows: {},
+  discover: {
+    carousel: {},
+    lists: {
+      free: {},
+      recommended: {},
+      popular: {},
+      new:{}
+    }
+  },
+  channels: {}
   // leveldb: 'mtv',
   // datafromjson: false
 })
@@ -22,6 +32,9 @@ var hub = new Hub({ //eslint-disable-line
 
 if (!hub.datafromjson || hub.datafromjson.val !== true) {
   console.log('start loading!'.magenta)
+
+  var count = 0
+
   http.request({
     host: 'scraper.dev.vigour.io',
     path: '/new.json',
@@ -31,11 +44,45 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
       accepts: '*/*'
     }
   }, function (res) {
+    // load channels
+    res.pipe(JSONStream.parse('mtvData.*.*.channels.*'))
+    .on('data', function (data) {
+      if (data.id) {
+        console.log('channel from json:'.green, data.id)
+        hub.channels.set({ [data.id]: data })
+      } else {
+        console.log('channel from json --> no id:'.red, data)
+      }
+    })
+
+    // load shows
     res.pipe(JSONStream.parse('mtvData.*.*.shows.*'))
     .on('data', function (data) {
       if (data.id) {
         console.log('show from json:'.blue, data.id)
         hub.shows.set({ [data.id]: data })
+        count++
+        if (count <= 5) {
+          hub.discover.carousel.set({
+            [data.id]: data
+          })
+        } else if (count <= 10) {
+          hub.discover.lists.free.set({
+            [data.id]: data
+          })
+        } else if (count <= 15) {
+          hub.discover.lists.recommended.set({
+            [data.id]: data
+          })
+        } else if (count <= 20) {
+          hub.discover.lists.popular.set({
+            [data.id]: data
+          })
+        } else if (count <= 25) {
+          hub.discover.lists.new.set({
+            [data.id]: data
+          })
+        }
       } else {
         console.log('show from json --> no id:'.red, data)
       }
