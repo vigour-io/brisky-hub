@@ -77,10 +77,9 @@ var Event = require('vigour-js/lib/event')
 var Thing = new Element({
   // css: 'thing',
   val: 'lulz',
-  text: 'bla'
-  // text: function () {
-  //   return this.parent._input
-  // }
+  text: function () {
+    return this.parent._input
+  }
   // click: {
   //   node: 'button',
   //   text: 'bla',
@@ -108,7 +107,7 @@ var event = new Event(holder, 'data')
 for (var i = 0 ; i < 3000; i++) {
   // var a = new Observable(i, event)
   // window[i] = a
-  holder.setKey(i, new Thing({ text: i }, event), event)
+  holder.setKey(i, new Thing(i, event), event)
   // holder.setKey(i, new Thing(i, event), event)
   // so no binding on text directly just from the first listener SO we share also the text prop-- this is master move
   // holder[i].text
@@ -124,8 +123,8 @@ for (var i = 0 ; i < 3000; i++) {
 // Thing.prototype.text._on.data.emitting = true
 // maybe make emitting thing on obs?
 // we can use it
-// Thing.prototype.text.clearContextUp()
-// Thing.prototype.text.emit('data', i, event)
+Thing.prototype.text.clearContextUp()
+Thing.prototype.text.emit('data', i, event)
 event.trigger()
 app.setKey('holder', holder)
 console.timeEnd(1)
@@ -135,10 +134,10 @@ function loop () {
   cntr++
   j++
   for (var i = 0 ; i < 3000 ; i++) {
-    app.holder[i].text.val = i + j
+    app.holder[i].val = i + j
   }
   // Thing.prototype.text.clearContextUp()
-  // Thing.prototype.text.emit('data', i + j)
+  Thing.prototype.text.emit('data', i + j)
   window.requestAnimationFrame(loop)
 }
 //
