@@ -30,7 +30,7 @@ var Event = require('vigour-js/lib/event')
 // }).Constructor
 var cntr = 0
 console.log('start')
-var n = 1
+var n = 300
 console.time('create: ' + n)
 // var holder = new Element({
 //   key: 'myholder'
@@ -249,8 +249,7 @@ var Thing = new NewElement({
 var holder = new NewElement()
 var event = new Event(holder, 'data')
 for (let i = 0; i < n; i++) {
-  console.clear()
-  var a = new Observable(i)
+  let a = new Observable(i)
   global[i] = a
   holder.setKey(i, new Thing({
     text: a,
@@ -266,9 +265,9 @@ for (let i = 0; i < n; i++) {
     xxx: {
       text: a
     }
-  }, event), event)
+  }, false), false)
 }
-event.trigger()
+// event.trigger()
 app.set({
   holder: holder
 })
@@ -305,10 +304,10 @@ function loop () {
   global.eventPush = 0
   cntr++ //eslint-disable-line
   j++
-  for (var i = 0; i < n; i++) {
-    global[i].set(i + j)  // = i + j
-  }
   var ev = new Event()
+  for (var i = 0; i < n; i++) {
+    global[i].set(i + j, ev)  // = i + j
+  }
 
   // Thing.prototype.text.emit('data', void 0, ev)
   ev.trigger()
@@ -328,11 +327,11 @@ var last = 0
 console.time('updates')
 if (!require('vigour-js/lib/util/is/node')) {
   loop()
-  // setInterval(function () {
-  //   last = cntr
-  //   cntr = 0
-  //   console.clear()
-  //   console.log(last / 5, 'fps')
-  // }, 5000)
+  setInterval(function () {
+    last = cntr
+    cntr = 0
+    console.clear()
+    console.log(last / 5, 'fps')
+  }, 5000)
 }
 console.timeEnd('updates')
