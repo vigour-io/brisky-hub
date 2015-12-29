@@ -62,7 +62,7 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
         console.log('show from json:'.blue, data.id)
         hub.shows.set({ [data.id]: data })
         count++
-        if (count <= 5) {
+        if (count <= 3) {
           hub.discover.carousel.set({
             [data.id]: data
           })
