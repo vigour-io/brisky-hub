@@ -16,17 +16,17 @@ var app = require('vigour-element/lib/app')
 
 var A = new Element({
   $: true,
-  text: { $: 'text' },
+  text: { $: 'title' },
   button: {
     type: 'button',
     text: 'yo button',
     on: {
       click () {
         if (hub.blurf.origin === hub.blarf) {
-          hub.blurf.val = false
+          hub.blurf.val = false //.remove()
         } else {
           hub.set({'blarf': {
-            text: 'its a blurf!'
+            title: 'its a blurf!'
           }})
           hub.blurf.val = hub.blarf
         }
@@ -36,5 +36,19 @@ var A = new Element({
 }).Constructor
 
 app.set({
+  c: {
+    $: true,
+    text: 'list',
+    blurf: {
+      type: 'ul',
+      $collection: true,
+      ChildConstructor: new Element({
+        type: 'li',
+        text: { $: 'title' }
+      })
+    },
+    val: hub
+  },
   b: new A(hub.get('blurf', {}))
 })
+
