@@ -113,7 +113,7 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
 
           hub.shows[data.id].seasons.each((p) => {
             p.episodes.each((p) => {
-              p.set({ time: 0.5 })
+              p.set({ time: Math.random() })
             })
           })
           // getImgBase64(hub.shows[data.id])
