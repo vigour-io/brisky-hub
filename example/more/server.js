@@ -11,7 +11,7 @@ var hub = new Hub({ //eslint-disable-line
     inject: require('../../lib/protocol/websocket'),
     id: 'mtv',
     websocket: {
-      server: 3031
+
       // val: 'ws://youzi.local:3032'
     }
   },
@@ -141,7 +141,10 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
       })
       .on('end', function () {
         console.log('LOADED!'.magenta)
+
         hub.setKey('datafromjson', true)
+
+        hub.adapter.websocket.server.val = 3031
       })
     }).end()
 
