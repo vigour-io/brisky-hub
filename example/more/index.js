@@ -1,7 +1,8 @@
 'use strict'
-require('./style.less')
 var Hub = require('../../lib')
 var hub = global.hub = new Hub()
+
+require('./style.less')
 
 hub.set({
   adapter: {
@@ -35,20 +36,63 @@ var A = new Element({
   }
 }).Constructor
 
+var PAGE = new Element({
+  $: true,
+  shows: {
+    $collection: 'shows',
+    ChildConstructor: new Element({
+      css: 'show',
+      text: { $: 'title' },
+      // image: {
+      //   // url(data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7)
+      //   $prepend: 'data:image/jpg;base64,',
+      //   $: 'thumb'
+      //   // val: 'R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7'
+      // },
+      seasons: {
+        $collection: 'seasons',
+        ChildConstructor: new Element({
+          css: 'season',
+          text: { $prepend: 'season: ', $: 'number' },
+          episodes: {
+            $collection: 'episodes',
+            ChildConstructor: new Element({
+              css: 'episode',
+              text: { $: 'number' },
+              img: {
+                type: 'img',
+                src: {
+                  $: 'img',
+                  $transform (val) {
+                    if (typeof val === 'string') {
+                      var ret = `https://imgmtvplay-a.akamaihd.net/image/20/20?url=http://images.mtvnn.com/${val}/original`
+                      return ret
+                    }
+                    return
+                  }
+                }
+              }
+            })
+          }
+        })
+      }
+    })
+  }
+}).Constructor
+
 app.set({
-  c: {
-    $: true,
-    text: 'list',
-    blurf: {
-      type: 'ul',
-      $collection: true,
-      ChildConstructor: new Element({
-        type: 'li',
-        text: { $: 'title' }
-      })
-    },
-    val: hub
-  },
+  c: new PAGE(hub),
   b: new A(hub.get('blurf', {}))
 })
 
+hub.on(() => {
+  console.log('incoming!')
+  console.time(1)
+  if (typeof window !== void 0) {
+    window.requestAnimationFrame(function () {
+      console.timeEnd(1)
+    })
+  }
+})
+
+module.exports = app
