@@ -103,8 +103,14 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
         if (data.id) {
           console.log('show from json:'.blue, data.id, data.img)
 
+          // event ofc
+
           hub.shows.set({ [data.id]: data })
 
+          hub.shows[data.id].set({
+            currentEpisode: hub.shows[data.id].seasons[0].episodes[0],
+            currentSeason: hub.shows[data.id].seasons[0]
+          })
           // getImgBase64(hub.shows[data.id])
 
           count++
