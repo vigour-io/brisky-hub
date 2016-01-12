@@ -87,12 +87,12 @@ app.set({
 
 hub.on(() => {
   console.log('incoming!')
-  console.time(1)
-  if (typeof window !== void 0) {
-    window.requestAnimationFrame(function () {
-      console.timeEnd(1)
-    })
-  }
+  // console.time(1)
+  // if (typeof window !== void 0) {
+    // window.requestAnimationFrame(function () {
+      // console.timeEnd(1)
+    // })
+  // }
 })
 
 module.exports = app
