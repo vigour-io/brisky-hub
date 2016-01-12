@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+'use strict'
+
+console.log('---------- yeeeee hubbin it')
+
+var Config = require('vigour-config')
+var config = new Config()
+
+var files = []
+if (config.files) {
+  config.files.each(function (path) {
+    files.push(require(path.val))
+  })
+}
+
+var Hub = require('../lib/index')
+
+console.log('---------- inject dem stuff', files)
+
+var hub = new Hub({
+  inject: files
+})
+
+console.log('created new hub', hub instanceof Hub)
