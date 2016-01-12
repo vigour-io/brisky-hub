@@ -8,6 +8,11 @@ hub.set({
   adapter: {
     inject: require('../../lib/protocol/websocket'),
     websocket: 'ws://localhost:3031'
+  },
+  shows: {
+    // 977: {
+
+    // }
   }
 })
 
@@ -37,9 +42,9 @@ var A = new Element({
 }).Constructor
 
 var PAGE = new Element({
-  $: true,
+  $: 'shows', // so nested on collection listeners are rly fucked
   shows: {
-    $collection: 'shows',
+    $collection: true,
     ChildConstructor: new Element({
       css: 'show',
       text: { $: 'title' },
@@ -59,19 +64,19 @@ var PAGE = new Element({
             ChildConstructor: new Element({
               css: 'episode',
               text: { $: 'number' },
-              img: {
-                type: 'img',
-                src: {
-                  $: 'img',
-                  $transform (val) {
-                    if (typeof val === 'string') {
-                      var ret = `https://imgmtvplay-a.akamaihd.net/image/20/20?url=http://images.mtvnn.com/${val}/original`
-                      return ret
-                    }
-                    return
-                  }
-                }
-              }
+              // img: {
+              //   type: 'img',
+              //   src: {
+              //     $: 'img',
+              //     $transform (val) {
+              //       if (typeof val === 'string') {
+              //         var ret = `https://imgmtvplay-a.akamaihd.net/image/20/20?url=http://images.mtvnn.com/${val}/original`
+              //         return ret
+              //       }
+              //       return
+              //     }
+              //   }
+              // }
             })
           }
         })
@@ -82,7 +87,10 @@ var PAGE = new Element({
 
 app.set({
   c: new PAGE(hub),
-  b: new A(hub.get('blurf', {}))
+  // b: new A(hub.get('blurf', {})),
+  marcus: {
+    text: 'lalala'
+  }
 })
 
 hub.on(() => {
