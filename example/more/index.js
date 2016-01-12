@@ -7,7 +7,7 @@ require('./style.less')
 hub.set({
   adapter: {
     inject: require('../../lib/protocol/websocket'),
-    websocket: 'ws://localhost:3031'
+    websocket: 'ws://localhost:50500'
   },
   shows: {
     // 977: {
