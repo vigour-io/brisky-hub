@@ -20,27 +20,6 @@ var Element = require('vigour-element')
 var Prop = require('vigour-element/lib/property')
 var app = require('vigour-element/lib/app')
 
-var A = new Element({
-  $: true,
-  text: { $: 'title' },
-  button: {
-    type: 'button',
-    text: 'yo button',
-    on: {
-      click () {
-        if (hub.blurf.origin === hub.blarf) {
-          hub.blurf.val = false //.remove()
-        } else {
-          hub.set({'blarf': {
-            title: 'its a blurf!'
-          }})
-          hub.blurf.val = hub.blarf
-        }
-      }
-    }
-  }
-}).Constructor
-
 var PAGE = new Element({
   $: 'shows', // so nested on collection listeners are rly fucked
   shows: {
