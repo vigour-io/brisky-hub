@@ -1,6 +1,7 @@
-process.stdout.write('\033c') //eslint-disableore-line
-console.log('start!')
 'use strict'
+
+// process.stdout.write('\033c') //eslint-disableore-line
+console.log('start!')
 var Hub = require('../../lib')
 var fs = require('fs')
 var colors = require('colors-browserify')
@@ -104,12 +105,9 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
         if (data.id) {
           console.log('show from json:'.blue, data.id, data.img)
           // event ofc
-
           hub.shows.set({ [data.id.val]: data })
-
           // xxxxxx
           // var a = new Observable()
-
           hub.shows[data.id.val].set({
             // currentEpisode: hub.shows[data.id].seasons[0].episodes[0],
             // currentSeason: hub.shows[data.id].seasons[0]
@@ -118,6 +116,31 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
           hub.shows[data.id.val].seasons.each((p) => {
             p.episodes.each((p) => {
               p.set({ time: Math.random() })
+              // p.set({
+              //   video: p.video.
+              // })
+            })
+          })
+          var show = hub.shows[data.id.val]
+          show.seasons.each(function (season) {
+            let cnt = 1
+            if (!show.currentSeason) {
+              show.setKey('currentSeason', season)
+            }
+            season.episodes.each(function (episode) {
+              //101706_ed3db47fa8a8f621fc56e05a669523ae
+              //"dash": "https://s3-eu-west-1.amazonaws.com/sbs-storage-dev/output/101706_ed3db47fa8a8f621fc56e05a669523ae/101706.mpd"
+
+
+
+              if (!show.currentEpisode) {
+                show.setKey('currentEpisode', episode)
+              }
+              episode.set({
+                time: Math.random(),
+                number: cnt++,
+                video: episode.video ? episode.video.dash.val.replace('\.mpd$', '') : 'wtf kak'
+              })
             })
           })
           // getImgBase64(hub.shows[data.id])
