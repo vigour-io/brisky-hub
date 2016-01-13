@@ -134,10 +134,12 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
               if (!show.currentEpisode) {
                 show.setKey('currentEpisode', episode)
               }
+              // console.log(episode.video.dash.val.replace('\.mpd$', ''))
               episode.set({
                 time: Math.random(),
                 number: cnt++,
-                video: episode.video ? episode.video.dash.val.replace('\.mpd$', '') : 'wtf kak'
+                video: 'https://s3-eu-west-1.amazonaws.com/sbs-storage-dev/output/104698_62f9febd21d06444f05e3ae7c7589a6d/'
+                // video: episode.video ? episode.video.dash.val.replace('\.mpd$', '') : 'wtf kak'
               })
             })
           })
