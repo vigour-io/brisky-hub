@@ -131,8 +131,6 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
               //101706_ed3db47fa8a8f621fc56e05a669523ae
               //"dash": "https://s3-eu-west-1.amazonaws.com/sbs-storage-dev/output/101706_ed3db47fa8a8f621fc56e05a669523ae/101706.mpd"
 
-
-
               if (!show.currentEpisode) {
                 show.setKey('currentEpisode', episode)
               }
