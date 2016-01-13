@@ -21,7 +21,7 @@ var Observable = require('vigour-js/lib/observable')
   }
 })
 
-console.clear()
+// console.clear()
 a.text.val = 'xxxxx'
 // why not why not o why not!
 
@@ -192,9 +192,7 @@ var Page = new Element({
   // another:new Show()
 }).Constructor
 
-
-
-var show = global.show =  hub.get('shows.1', {
+var show = global.show =  hub.get('shows.977', {
   title: 'show',
   currentSeason: {},
   seasons: {
@@ -218,7 +216,7 @@ var show = global.show =  hub.get('shows.1', {
   }
 })
 
-var show2 = hub.get('shows.2', {
+var show2 = hub.get('shows.195', {
   title: 'show 2',
   currentSeason: {},
   meta: {
