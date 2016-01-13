@@ -3,7 +3,7 @@ console.log('start!')
 'use strict'
 var Hub = require('../../lib')
 var fs = require('fs')
-var colors = require('colors-browserify')
+// var colors = require('colors-browserify')
 var http = require('http')
 var JSONStream = require('JSONStream')
 var hub = new Hub({ //eslint-disable-line
@@ -73,7 +73,7 @@ function getImgBase64nest (show) {
 console.log('here!')
 if (!hub.datafromjson || hub.datafromjson.val !== true) {
   setTimeout(function () {
-    console.log('start loading!'.magenta)
+    console.log('start loading!')
 
     var count = 0
 
@@ -90,7 +90,7 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
       res.pipe(JSONStream.parse('mtvData.*.*.channels.*'))
       .on('data', function (data) {
         if (data.id) {
-          console.log('channel from json:'.green, data.id, data.img)
+          console.log('channel from json:', data.id, data.img)
           hub.channels.set({ [data.id]: data })
         } else {
           console.log('channel from json --> no id:'.red, data)
@@ -101,7 +101,7 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
       res.pipe(JSONStream.parse('mtvData.*.*.shows.*'))
       .on('data', function (data) {
         if (data.id) {
-          console.log('show from json:'.blue, data.id, data.img)
+          console.log('show from json:', data.id, data.img)
           // event ofc
 
           hub.shows.set({ [data.id]: data })
@@ -146,7 +146,7 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
         }
       })
       .on('end', function () {
-        console.log('LOADED!'.magenta)
+        console.log('LOADED!')
 
         hub.setKey('datafromjson', true)
 
