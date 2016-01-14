@@ -26,7 +26,7 @@ app.set({
       on: {
         click () {
           console.log('yo switch it')
-          this.parent.text.origin.val = hub.adapter.scope.val === 'jim' ? 'yuz' : 'jim'
+          this.parent.text.origin.val = hub.adapter.scope.val === 'james' ? 'yuz' : 'james'
         }
       }
     }

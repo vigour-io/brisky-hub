@@ -27,6 +27,7 @@ hub.adapter.websocket.set({
 
 repl.start('> ').context.hub = hub
 
+hub.inject(require('./mtv'))
 
 hub.define({
   tf: {
