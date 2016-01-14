@@ -16,6 +16,9 @@ var app = require('vigour-element/lib/app')
 
 app.set({
   yuzi: new Element({
+    id: {
+      text: hub.adapter.id
+    },
     text: { $prepend: 'scope: ', val: hub.adapter.scope },
     switcher: {
       type: 'button',
