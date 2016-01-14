@@ -9,15 +9,13 @@ var fs = require('fs')
 var hub = new Hub({ //eslint-disable-line
   adapter: {
     inject: require('../../lib/protocol/websocket'),
-    id: 'mtv',
+    // id: 'mtv',
     websocket: {}
   },
-  scopes () {
-    console.log('lulzzzz scope!', arguments)
-  },
-  afield: {
-    text: 'lulz'
-  }
+  // scopes () {
+  //   console.log('lulzzzz scope!', arguments)
+  // },
+  textfield: 'from non-scoped server'
 })
 
 hub.adapter.websocket.set({
