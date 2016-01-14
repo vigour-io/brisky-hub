@@ -4,7 +4,7 @@ var hub = global.hub = new Hub({ //eslint-disable-line
   adapter: {
     inject: require('../../lib/protocol/websocket'),
     // websocket: {}
-    textfield: {}
+    // textfield: {}
   }
 })
 
@@ -20,8 +20,8 @@ app.set({
   holder: {
     $: true,
     textfield: {
-      type: 'input',
-      value: { $: 'textfield' }
+      // type: 'input',
+      text: { $: 'textfield' }
     }
   }
 })
