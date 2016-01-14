@@ -15,7 +15,17 @@ var app = require('vigour-element/lib/app')
 
 app.set({
   yuzi: new Element({
-    text: { $prepend: 'scope: ', val: hub.adapter.scope }
+    text: { $prepend: 'scope: ', val: hub.adapter.scope },
+    switcher: {
+      type: 'button',
+      text: 'switch it',
+      on: {
+        click () {
+          console.log('yo switch it')
+          this.parent.text.origin.val = hub.adapter.scope.val === 'jim' ? 'yuz' : 'jim'
+        }
+      }
+    }
   }),
   holder: {
     $: true,
@@ -26,7 +36,6 @@ app.set({
       },
       on: {
         keyup (data, event) {
-          // dom event make it then we can do instanceof
           this.value.origin.val = this.node.value
         }
       }
@@ -35,6 +44,5 @@ app.set({
 })
 
 app.holder.val = hub
-
 // for the multi-upstreams multi-scope we do need to apply subscriptions to the original -- pretty annoying
 // other fix just add extension capability for this all subs on scopes also go to original: true
