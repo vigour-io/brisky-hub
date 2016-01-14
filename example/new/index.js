@@ -192,7 +192,7 @@ var Page = new Element({
   // another:new Show()
 }).Constructor
 
-var show = global.show =  hub.get('shows.977', {
+var show = global.show =  hub.get('shows.1', {
   title: 'show',
   currentSeason: {},
   seasons: {
@@ -216,7 +216,7 @@ var show = global.show =  hub.get('shows.977', {
   }
 })
 
-var show2 = hub.get('shows.195', {
+var show2 = hub.get('shows.2', {
   title: 'show 2',
   currentSeason: {},
   meta: {
