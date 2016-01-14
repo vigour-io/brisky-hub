@@ -4,7 +4,7 @@ var hub = global.hub = new Hub({ //eslint-disable-line
   adapter: {
     inject: require('../../lib/protocol/websocket'),
     // websocket: {}
-    // textfield: {}
+    textfield: 'nothing yet'
   }
 })
 
@@ -20,8 +20,16 @@ app.set({
   holder: {
     $: true,
     textfield: {
-      // type: 'input',
-      text: { $: 'textfield' }
+      type: 'input',
+      value: {
+        $: 'textfield'
+      },
+      on: {
+        keyup (data, event) {
+          // dom event make it then we can do instanceof
+          this.value.origin.val = this.node.value
+        }
+      }
     }
   }
 })
