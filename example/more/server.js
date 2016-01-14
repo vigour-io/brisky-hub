@@ -43,7 +43,7 @@ function getImgBase64 (show) {
 }
 
 function getImgBase64nest (show) {
-  console.log('lezzgo!', show.img && show.img.val)
+  // console.log('lezzgo!', show.img && show.img.val)
   if (!show.img|| !show.img.val) {
     return
   }
@@ -73,7 +73,7 @@ function getImgBase64nest (show) {
 console.log('here!')
 if (!hub.datafromjson || hub.datafromjson.val !== true) {
   setTimeout(function () {
-    console.log('start loading!')
+    // console.log('start loading!')
 
     var count = 0
 
@@ -90,11 +90,11 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
       res.pipe(JSONStream.parse('mtvData.*.*.channels.*'))
       .on('data', function (data) {
         if (data.id) {
-          console.log('channel from json:', data.id, data)
+          // console.log('channel from json:', data.id, data)
           hub.channels.set({ [data.id]: data })
           hub.channels[data.id].setKey('currentEpisode', hub.channels[data.id])
         } else {
-          console.log('channel from json --> no id:'.red, data)
+          // console.log('channel from json --> no id:'.red, data)
         }
       })
 
@@ -102,7 +102,7 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
       res.pipe(JSONStream.parse('mtvData.*.*.shows.*'))
       .on('data', function (data) {
         if (data.id) {
-          console.log('show from json:', data.id, data.img)
+          // console.log('show from json:', data.id, data.img)
           // event ofc
 
           hub.shows.set({ [data.id]: data })
@@ -116,6 +116,10 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
             p.episodes.each((p) => {
               p.set({ time: Math.random() })
               p.set({ video: p.mrss.val })
+              // if(p.mrss.val === 'c5cc5ef90b81d94e3fb0') {
+              //   console.log(p.title.val)
+              //   var MRSS = 
+              // }
             })
           })
           // getImgBase64(hub.shows[data.id])
@@ -143,7 +147,7 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
             })
           }
         } else {
-          console.log('show from json --> no id:', data)
+          // console.log('show from json --> no id:', data)
         }
       })
       .on('end', function () {
