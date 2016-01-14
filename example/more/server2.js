@@ -120,15 +120,17 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
 
               // hls:   https://s3-eu-west-1.amazonaws.com/sbs-storage-dev/output/104698_62f9febd21d06444f05e3ae7c7589a6d/m3u8s/104698.m3u8
               // mpd: https://s3-eu-west-1.amazonaws.com/sbs-storage-dev/output/104698_62f9febd21d06444f05e3ae7c7589a6d/mpds/104698.mpd
-              if (!show.currentEpisode) {
-                show.setKey('currentEpisode', episode)
-              }
               episode.set({
                 time: Math.random(),
+                duration: 2000,
                 number: cnt++,
                 video: 'https://s3-eu-west-1.amazonaws.com/sbs-storage-dev/output/104698_62f9febd21d06444f05e3ae7c7589a6d/{type}s/104698.{type}',
                 // img: data.img.val
               })
+              if (!show.currentEpisode) {
+                show.setKey('currentEpisode', episode)
+              }
+              console.log(episode.time.val)
               episodeCount++
             })
             show.set({

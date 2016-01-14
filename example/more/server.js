@@ -90,8 +90,9 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
       res.pipe(JSONStream.parse('mtvData.*.*.channels.*'))
       .on('data', function (data) {
         if (data.id) {
-          console.log('channel from json:', data.id, data.img)
+          console.log('channel from json:', data.id, data)
           hub.channels.set({ [data.id]: data })
+          hub.channels[data.id].setKey('currentEpisode', hub.channels[data.id])
         } else {
           console.log('channel from json --> no id:'.red, data)
         }
