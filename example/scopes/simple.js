@@ -19,13 +19,27 @@ app.set({
     $: true,
     textfield: {
       $: 'shows.977.currentSeason',
-      type: 'input',
-      value: {
-        $: 'number'
+      switch: {
+        type: 'button',
+        text: 'switch season',
+        on: {
+          click () {
+            var akward = hub.shows[977]
+            var cs = akward.currentSeason
+            cs.val = cs._input.key == 0 ? akward.seasons.get([1], {}) : akward.seasons[0]
+            console.log(cs._input, cs)
+          }
+        }
       },
-      on: {
-        keyup (data, event) {
-          this.value.origin.val = this.node.value
+      inputs: {
+        type: 'input',
+        value: {
+          $: 'number'
+        },
+        on: {
+          keyup (data, event) {
+            this.value.origin.val = this.node.value
+          }
         }
       }
     }
