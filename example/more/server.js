@@ -161,6 +161,20 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
           }
         })
         // load discover
+
+      res.pipe(JSONStream.parse('mtvData.*.*.discover_marquee_premium.list.*'))
+        .on('data', function (data) {
+          // show or channel etc
+          var link = data.link && data.link.split('.')
+          if (link) {
+            var length = link.length
+            var id = link[length - 1]
+            hub.discover.carousel.set({
+              [id]: hub.get(link.slice(3, length), {})
+            })
+          }
+        })
+
       res.pipe(JSONStream.parse('mtvData.*.*.discover_marquee_free.list.*'))
         .on('data', function (data) {
           // show or channel etc
