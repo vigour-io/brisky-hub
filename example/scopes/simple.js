@@ -18,9 +18,10 @@ app.set({
   holder: {
     $: true,
     textfield: {
+      $: 'shows.977.currentSeason',
       type: 'input',
       value: {
-        $: 'shows.977.currentSeason.number'
+        $: 'number'
       },
       on: {
         keyup (data, event) {
