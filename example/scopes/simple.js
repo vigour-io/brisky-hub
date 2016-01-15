@@ -7,10 +7,8 @@ var hub = global.hub = new Hub({ //eslint-disable-line
     // textfield: 'nothing yet'
   }
 })
-
 // hub.adapter.scope.val = 'anon'
 hub.adapter.set({ websocket: 'ws://localhost:3031' })
-
 var Element = require('vigour-element')
 var app = require('vigour-element/lib/app')
 
@@ -24,9 +22,11 @@ app.set({
         text: 'switch season',
         on: {
           click () {
+            console.clear()
+            console.log('how can this result in a godamn wrong event???')
             var akward = hub.shows[977]
             var cs = akward.currentSeason
-            cs.val = cs._input.key == 0 ? akward.seasons.get([1], {}) : akward.seasons[0]
+            cs.val = cs._input.key == 0 ? akward.seasons.get([1], {}) : akward.seasons.get([0], {})
             console.log(cs._input, cs)
           }
         }
