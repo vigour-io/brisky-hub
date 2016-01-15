@@ -102,7 +102,7 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
       res.pipe(JSONStream.parse('mtvData.*.*.shows.*'))
       .on('data', function (data) {
         if (data.id) {
-          // console.log('show from json:', data.id, data.img)
+          console.log('show from json:', data.id, data.img)
           // event ofc
 
           hub.shows.set({ [data.id]: data })
@@ -118,7 +118,7 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
               p.set({ video: p.mrss.val })
               // if(p.mrss.val === 'c5cc5ef90b81d94e3fb0') {
               //   console.log(p.title.val)
-              //   var MRSS = 
+              //   var MRSS =
               // }
             })
           })
