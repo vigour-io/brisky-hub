@@ -74,7 +74,6 @@ console.log('here!')
 if (!hub.datafromjson || hub.datafromjson.val !== true) {
   setTimeout(function () {
     // console.log('start loading!')
-
     var count = 0
 
     http.request({
@@ -163,3 +162,6 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
 } else {
   console.log('allready got data from the server')
 }
+
+var repl = require('repl')
+repl.start('> ').context.hub = hub
