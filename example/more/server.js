@@ -127,23 +127,23 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
           count++
           if (count <= 3) {
             hub.discover.carousel.set({
-              [data.id]: data
+              [data.id]: hub.shows[data.id]
             })
           } else if (count <= 10) {
             hub.discover.lists.free.set({
-              [data.id]: data
+              [data.id]: hub.shows[data.id]
             })
           } else if (count <= 15) {
             hub.discover.lists.recommended.set({
-              [data.id]: data
+              [data.id]: hub.shows[data.id]
             })
           } else if (count <= 20) {
             hub.discover.lists.popular.set({
-              [data.id]: data
+              [data.id]: hub.shows[data.id]
             })
           } else if (count <= 25) {
             hub.discover.lists.new.set({
-              [data.id]: data
+              [data.id]: hub.shows[data.id]
             })
           }
         } else {
