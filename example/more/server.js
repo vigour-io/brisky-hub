@@ -11,11 +11,40 @@ var hub = new Hub({ //eslint-disable-line
     inject: require('../../lib/protocol/websocket'),
     id: 'mtv',
     websocket: {
-
       // val: 'ws://youzi.local:3032'
     }
   },
-  shows: {},
+  shows: {
+    977: {
+      title: 'awkward',
+      // currentSeason:
+      seasons: {
+        0: {
+          number: 1,
+          episodes: {
+            0: {
+              title: 'haha 0.0'
+            },
+            1: {
+              title: 'haha 0.1'
+            }
+          }
+        },
+        1: {
+          number: 2,
+          episodes: {
+            0: {
+              title: 'haha 1.0'
+            },
+            1: {
+              title: 'haha 1.1'
+            }
+          }
+        }
+      },
+      img: 'yoyoy'
+    }
+  },
   discover: {
     carousel: {},
     lists: {
@@ -25,54 +54,23 @@ var hub = new Hub({ //eslint-disable-line
       new: {}
     }
   },
-  channels: {}
+  reffie: {
+    title: 'reffie'
+  },
+  channels: {},
   // leveldb: 'mtv',
-  // datafromjson: false
+  datafromjson: true
 })
 
-var https = require('https')
+hub.shows[977].set({
+  currentSeason: hub.shows[977].seasons[0],
+  currentEpisode: hub.shows[977].seasons[0].episodes[0]
+})
+  // hub.shows.set({
+    // 3: hub.reffie
+  // })
 
-function getImgBase64(show) {
-  getImgBase64nest(show)
-    // ff wat beter concurrency handlen
-    // show.seasons.each((p) => {
-    //   p.episodes.each(function (pr) {
-    //     getImgBase64nest(pr)
-    //   })
-    // })
-}
-
-function getImgBase64nest(show) {
-  // console.log('lezzgo!', show.img && show.img.val)
-  if (!show.img || !show.img.val) {
-    return
-  }
-  https.request({
-    host: 'imgmtvplay-a.akamaihd.net',
-    path: '/image/4/4?url=http://images.mtvnn.com/' + show.img.val + '/original',
-    port: 443,
-    method: 'get',
-    headers: {
-      accepts: '*/*'
-    }
-  }, function (res) {
-    var str = ''
-    res.on('data', function (data) {
-      str += data.toString('base64')
-        // console.log('yo lil data', arguments)
-    })
-    res.on('end', function (err, data) {
-      if (!err && str) {
-        show.set({
-          thumb: str
-        })
-      }
-    })
-  }).end()
-}
-
-//var ret = `https://imgmtvplay-a.akamaihd.net/image/20/20?url=http://images.mtvnn.com/${val}/original`
-console.log('here!')
+// var https = require('https')
 if (!hub.datafromjson || hub.datafromjson.val !== true) {
   setTimeout(function () {
     // console.log('start loading!')
@@ -238,6 +236,7 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
   }, 1000)
 } else {
   console.log('allready got data from the server')
+  hub.adapter.websocket.server.val = 3031
 }
 
 var repl = require('repl')
