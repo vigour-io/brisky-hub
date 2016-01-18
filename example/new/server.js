@@ -1,5 +1,10 @@
-require('colors-browserify')
+process.stdout.write('\033c') //eslint-disableore-line
+console.log('start!')
+'use strict'
 var Hub = require('../../lib')
+var fs = require('fs')
+var colors = require('colors-browserify')
+
 var http = require('http')
 var JSONStream = require('JSONStream')
 var hub = new Hub({ //eslint-disable-line
@@ -26,10 +31,7 @@ var hub = new Hub({ //eslint-disable-line
   // datafromjson: false
 })
 
-// lastupdate poller
-// abu dahbi whats updated?
-//  this field -- load -- and set on the hub
-
+console.log('here!')
 if (!hub.datafromjson || hub.datafromjson.val !== true) {
   console.log('start loading!'.magenta)
 
@@ -84,7 +86,7 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
           })
         }
       } else {
-        console.log('show from json --> no id:'.red, data)
+        console.log('show from json --> no id:', data)
       }
     })
     .on('end', function () {
@@ -95,4 +97,3 @@ if (!hub.datafromjson || hub.datafromjson.val !== true) {
 } else {
   console.log('allready got data from the server')
 }
-// })
