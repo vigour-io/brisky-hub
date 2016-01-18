@@ -37,7 +37,40 @@ var hub = new Hub({ //eslint-disable-line
 })
 
 hub.set({
-  shows: {},
+  shows: {
+    977: {
+      title: 'awkward',
+      description: 'xxxxx xxxx xxx',
+      seasons: {
+        0: {
+          number: 1,
+          episodes: {
+            0: {
+              title: 1,
+              number: 1
+            },
+            1: {
+              title: 2,
+              number: 2
+            }
+          }
+        }
+      },
+      1: {
+          number: 2,
+          episodes: {
+            0: {
+              title: 1.1,
+              number: 1
+            },
+            1: {
+              title: 1.2,
+              number: 2
+            }
+          }
+        }
+      }
+  },
   discover: {
     carousel: {},
     lists: {
@@ -49,8 +82,17 @@ hub.set({
   },
   codes: {},
   channels: {},
-  levelready: true
+  levelready: false
 }, false)
+
+hub.shows[977].set({
+  currentSeason: hub.shows[977].seasons[0],
+  currentEpisode: hub.shows[977].seasons[0].episodes[0]
+})
+
+hub.adapter.websocket.server.val = 3031
+
+
 
 hub.levelready.is(true, function () {
   // var https = require('https')
