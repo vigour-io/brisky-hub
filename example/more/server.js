@@ -3,18 +3,42 @@ console.log('start!')
 'use strict'
 var Hub = require('../../lib')
 var fs = require('fs')
-  // var colors = require('colors-browserify')
 var http = require('http')
+
+// need to put login here
+// require('mtv play?')
+
 var JSONStream = require('JSONStream')
 var hub = new Hub({ //eslint-disable-line
   adapter: {
     inject: require('../../lib/protocol/websocket'),
     id: 'mtv',
-    websocket: {
-      // val: 'ws://youzi.local:3032'
-    }
+    websocket: {}
   },
   autoRemoveScopes: false,
+  scope (scope, event, getScope) {
+    //this, scope, event, getScope
+    var init
+    if (!this._scopes || !this._scopes[scope]) {
+      init = true
+    }
+    var ret = getScope.apply(this, arguments)
+    if( init) {
+
+      //lets do the auth here
+
+      console.log('init!', scope)
+      ret.set({
+        user: {
+          name: scope
+        }
+      }, false)
+    }
+    return ret
+  }
+})
+
+hub.set({
   shows: {},
   discover: {
     carousel: {},
@@ -25,14 +49,11 @@ var hub = new Hub({ //eslint-disable-line
       new: {}
     }
   },
+  codes: {},
   channels: {},
   levelready: false
-})
-
-// hub.set({
-  // leveldb: 'mtvz'
-// })
-hub.levelready.val = true
+}, false)
+hub.adapter.websocket.server.val = 3031
 
 hub.levelready.is(true, function () {
   // var https = require('https')
@@ -57,19 +78,39 @@ hub.levelready.is(true, function () {
               hub.channels.set({
                 [data.id]: data
               })
-              hub.channels[data.id].setKey('currentEpisode', hub.channels[data.id])
+              hub.channels[data.id].set({
+                currentEpisode: hub.channels[data.id],
+                epg: {
+                  0: {
+                    title: 'Dumb people unite',
+                    subtitle: '20:00 - 21:00'
+                  },
+                  1: {
+                    title: 'Friendly people unite',
+                    subtitle: '21:00 - 22:00'
+                  },
+                  2: {
+                    title: 'Shine flame',
+                    subtitle: '21:00 - 22:00'
+                  }
+                }
+              })
+              if (!hub.channels.focus) {
+                hub.channels.setKey('focus', hub.channels.firstChild())
+              }
             } else {
               // console.log('channel from json --> no id:'.red, data)
             }
           })
 
         // load shows
+        var showCount = 0
         res.pipe(JSONStream.parse('mtvData.NL.en.shows.*'))
           .on('data', function (data) {
             if (data.id) {
               console.log('show from json:', data.id, data.img)
                 // event ofc
-
+              data.index = showCount++
               hub.shows.set({
                 [data.id]: data
               })
@@ -78,21 +119,19 @@ hub.levelready.is(true, function () {
                 currentEpisode: hub.shows[data.id].seasons[0].episodes[0],
                 currentSeason: hub.shows[data.id].seasons[0]
               })
-
-              hub.shows[data.id].seasons.each((p) => {
-                  p.episodes.each((p) => {
-                    p.set({
-                      time: Math.random()
-                    })
-                    p.set({
-                        video: p.mrss.val
-                      })
-                      // if(p.mrss.val === 'c5cc5ef90b81d94e3fb0') {
-                      //   console.log(p.title.val)
-                      //   var MRSS =
-                      // }
+              hub.shows[data.id].seasons.each((season) => {
+                season.episodes.each((episode) => {
+                  episode.set({
+                    time: Math.random(),
+                    video: episode.mrss.val
                   })
                 })
+
+                season.episodes.setKey('focus', season.episodes.firstChild())
+              })
+              if (!hub.shows.focus) {
+                hub.shows.setKey('focus', hub.shows.firstChild())
+              }
             } else {
               console.log('show from json --> no id:', data)
             }
@@ -108,6 +147,9 @@ hub.levelready.is(true, function () {
               hub.discover.carousel.set({
                 [id]: hub.get(link.slice(3, length), {})
               })
+              if (!hub.discover.carousel.focus) {
+                hub.discover.carousel.setKey('focus', hub.get(link.slice(3, length), {}))
+              }
             }
           })
 
@@ -121,6 +163,9 @@ hub.levelready.is(true, function () {
               hub.discover.lists.free.set({
                 [id]: hub.get(link.slice(3, length), {})
               })
+              if (!hub.discover.lists.free.focus) {
+                hub.discover.lists.free.setKey('focus', hub.get(link.slice(3, length), {}))
+              }
             }
           })
 
@@ -134,6 +179,9 @@ hub.levelready.is(true, function () {
               hub.discover.lists.popular.set({
                 [id]: hub.get(link.slice(3, length), {})
               })
+              if (!hub.discover.lists.popular.focus) {
+                hub.discover.lists.popular.setKey('focus', hub.get(link.slice(3, length), {}))
+              }
             }
           })
 
@@ -147,6 +195,9 @@ hub.levelready.is(true, function () {
               hub.discover.lists.recommended.set({
                 [id]: hub.get(link.slice(3, length), {})
               })
+              if (!hub.discover.lists.recommended.focus) {
+                hub.discover.lists.recommended.setKey('focus', hub.get(link.slice(3, length), {}))
+              }
             }
           })
 
@@ -160,6 +211,9 @@ hub.levelready.is(true, function () {
               hub.discover.lists.new.set({
                 [id]: hub.get(link.slice(3, length), {})
               })
+              if (!hub.discover.lists.new.focus) {
+                hub.discover.lists.new.setKey('focus', hub.get(link.slice(3, length), {}))
+              }
             }
           })
         .on('end', function () {
