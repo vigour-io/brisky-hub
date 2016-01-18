@@ -9,7 +9,7 @@ var hub = global.hub = new Hub({ //eslint-disable-line
   shows: {}
 })
 
-hub.adapter.scope.val = 'anon'
+// hub.adapter.scope.val = 'anon'
 hub.adapter.set({ websocket: 'ws://localhost:3031' })
 
 var Element = require('vigour-element')
