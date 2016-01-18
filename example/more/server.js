@@ -42,6 +42,7 @@ hub.set({
       new: {}
     }
   },
+  codes: {},
   channels: {},
   levelready: false
 }, false)
