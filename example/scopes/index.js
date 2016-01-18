@@ -6,7 +6,8 @@ var hub = global.hub = new Hub({ //eslint-disable-line
     // websocket: {}
   },
   textfield: 'nothing yet',
-  shows: {}
+  shows: {},
+  codes: {}
 })
 
 // hub.adapter.scope.val = 'anon'
@@ -16,6 +17,23 @@ var Element = require('vigour-element')
 var app = require('vigour-element/lib/app')
 
 app.set({
+  codesbtn: {
+    type: 'button',
+    text: 'add codes',
+    on: {
+      click () {
+        hub.set({
+          codes: {
+            //Math.random() * 9999
+            // Math.random() * 9999
+            [Math.round(Math.random()*999999)]: {
+              val: true
+            }
+          }
+        })
+      }
+    }
+  },
   yuzi: new Element({
     id: {
       text: hub.adapter.id
@@ -32,6 +50,12 @@ app.set({
       }
     }
   }),
+  codes: {
+    $collection: true,
+    ChildConstructor: new Element({
+      text: { $: true }
+    })
+  },
   holder: {
     $: true,
     textfield: {
@@ -53,26 +77,13 @@ app.set({
         $: 'title'
       }
     })
-  },
-  addthing: {
-    type: 'button',
-    text: 'add',
-    on: {
-      click () {
-        hub.set({
-          shows: {
-            [Math.random() * 9999]: {
-              title: 'yoyoyo'
-            }
-          }
-        })
-      }
-    }
   }
 })
 
 app.holder.val = hub
 app.col.val = hub.shows
+app.codes.val = hub.codes
+
 // setTimeout(function () {
 //   hub.set({
 //     shows: {
