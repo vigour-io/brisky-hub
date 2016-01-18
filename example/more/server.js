@@ -17,14 +17,20 @@ var hub = new Hub({ //eslint-disable-line
   },
   autoRemoveScopes: false,
   scope (scope, event, getScope) {
-    console.log('xxxxlulzzz', scope)
     //this, scope, event, getScope
+    var init
+    if (!this._scopes || !this._scopes[scope]) {
+      init = true
+    }
     var ret = getScope.apply(this, arguments)
-    ret.set({
-      user: {
-        name: scope
-      }
-    }, false)
+    if( init) {
+      console.log('init!', scope)
+      ret.set({
+        user: {
+          name: scope
+        }
+      }, false)
+    }
     return ret
   },
   shows: {},
@@ -45,6 +51,8 @@ var hub = new Hub({ //eslint-disable-line
   // leveldb: 'mtvz'
 // })
 hub.levelready.val = true
+
+hub.adapter.websocket.server.val = 3031
 
 hub.levelready.is(true, function () {
   // var https = require('https')
