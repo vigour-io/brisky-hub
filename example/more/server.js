@@ -32,7 +32,10 @@ var hub = new Hub({ //eslint-disable-line
       }, false)
     }
     return ret
-  },
+  }
+})
+
+hub.set({
   shows: {},
   discover: {
     carousel: {},
@@ -45,12 +48,7 @@ var hub = new Hub({ //eslint-disable-line
   },
   channels: {},
   levelready: false
-})
-
-// hub.set({
-  // leveldb: 'mtvz'
-// })
-hub.levelready.val = true
+}, false)
 
 hub.adapter.websocket.server.val = 3031
 
