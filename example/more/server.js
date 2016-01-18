@@ -39,6 +39,9 @@ hub.set({
   shows: {
     977: {
       title: 'homie'
+    },
+    blurf: {
+      title: 'gurk'
     }
   },
   discover: {
