@@ -16,11 +16,16 @@ var hub = new Hub({ //eslint-disable-line
     }
   },
   autoRemoveScopes: false,
-  scopes (scope, event, getScope) {
-    console.log('lulzzz')
+  scope (scope, event, getScope) {
+    console.log('xxxxlulzzz', scope)
     //this, scope, event, getScope
     var ret = getScope.apply(this, arguments)
-
+    ret.set({
+      user: {
+        name: scope
+      }
+    }, false)
+    return ret
   },
   shows: {},
   discover: {
