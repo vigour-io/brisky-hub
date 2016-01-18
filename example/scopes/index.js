@@ -4,8 +4,8 @@ var hub = global.hub = new Hub({ //eslint-disable-line
   adapter: {
     inject: require('../../lib/protocol/websocket'),
     // websocket: {}
-    textfield: 'nothing yet'
-  }
+  },
+  textfield: 'nothing yet'
 })
 
 hub.adapter.scope.val = 'anon'
