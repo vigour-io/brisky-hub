@@ -2,6 +2,7 @@ process.stdout.write('\033c') //eslint-disableore-line
 console.log('start!')
 'use strict'
 var Hub = require('../../lib')
+// var _sc
 var fs = require('fs')
   // var colors = require('colors-browserify')
 var http = require('http')
@@ -15,6 +16,10 @@ var hub = new Hub({ //eslint-disable-line
     }
   },
   autoRemoveScopes: false,
+  scopes () {
+    console.log('lulzzz')
+
+  },
   shows: {},
   discover: {
     carousel: {},
