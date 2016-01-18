@@ -2,18 +2,14 @@ process.stdout.write('\033c') //eslint-disableore-line
 console.log('start!')
 'use strict'
 var Hub = require('../../lib')
-// var _sc
 var fs = require('fs')
-  // var colors = require('colors-browserify')
 var http = require('http')
 var JSONStream = require('JSONStream')
 var hub = new Hub({ //eslint-disable-line
   adapter: {
     inject: require('../../lib/protocol/websocket'),
     id: 'mtv',
-    websocket: {
-      // val: 'ws://youzi.local:3032'
-    }
+    websocket: {}
   },
   autoRemoveScopes: false,
   scope (scope, event, getScope) {
@@ -36,14 +32,7 @@ var hub = new Hub({ //eslint-disable-line
 })
 
 hub.set({
-  shows: {
-    977: {
-      title: 'homie'
-    },
-    blurf: {
-      title: 'gurk'
-    }
-  },
+  shows: {},
   discover: {
     carousel: {},
     lists: {
@@ -56,8 +45,6 @@ hub.set({
   channels: {},
   levelready: true
 }, false)
-
-// hub.adapter.websocket.server.val = 3031
 
 hub.levelready.is(true, function () {
   // var https = require('https')
