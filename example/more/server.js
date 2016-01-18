@@ -36,7 +36,11 @@ var hub = new Hub({ //eslint-disable-line
 })
 
 hub.set({
-  shows: {},
+  shows: {
+    977: {
+      title: 'homie'
+    }
+  },
   discover: {
     carousel: {},
     lists: {
