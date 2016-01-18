@@ -2,10 +2,11 @@
 var Hub = require('../../lib')
 var hub = global.hub = new Hub({ //eslint-disable-line
   adapter: {
-    inject: require('../../lib/protocol/websocket'),
+    inject: require('../../lib/protocol/websocket')
     // websocket: {}
   },
-  textfield: 'nothing yet'
+  textfield: 'nothing yet',
+  shows: {}
 })
 
 hub.adapter.scope.val = 'anon'
@@ -44,9 +45,42 @@ app.set({
         }
       }
     }
+  },
+  col: {
+    $collection: true,
+    ChildConstructor: new Element({
+      text: {
+        $: 'title'
+      }
+    })
+  },
+  addthing: {
+    type: 'button',
+    text: 'add',
+    on: {
+      click () {
+        hub.set({
+          shows: {
+            [Math.random() * 9999]: {
+              title: 'yoyoyo'
+            }
+          }
+        })
+      }
+    }
   }
 })
 
 app.holder.val = hub
+app.col.val = hub.shows
+// setTimeout(function () {
+//   hub.set({
+//     shows: {
+//       [Math.random() * 9999]: {
+//         title: 'yoyoyo'
+//       }
+//     }
+//   })
+// }, 100)
 // for the multi-upstreams multi-scope we do need to apply subscriptions to the original -- pretty annoying
 // other fix just add extension capability for this all subs on scopes also go to original: true
