@@ -4,6 +4,10 @@ console.log('start!')
 var Hub = require('../../lib')
 var fs = require('fs')
 var http = require('http')
+
+// need to put login here
+// require('mtv play?')
+
 var JSONStream = require('JSONStream')
 var hub = new Hub({ //eslint-disable-line
   adapter: {
@@ -20,6 +24,9 @@ var hub = new Hub({ //eslint-disable-line
     }
     var ret = getScope.apply(this, arguments)
     if( init) {
+
+      //lets do the auth here
+
       console.log('init!', scope)
       ret.set({
         user: {
