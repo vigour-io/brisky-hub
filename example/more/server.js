@@ -43,8 +43,9 @@ hub.set({
     }
   },
   channels: {},
-  levelready: true
+  levelready: false
 }, false)
+hub.adapter.websocket.server.val = 3031
 
 hub.levelready.is(true, function () {
   // var https = require('https')
