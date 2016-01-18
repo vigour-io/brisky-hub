@@ -47,7 +47,7 @@ hub.set({
     }
   },
   channels: {},
-  levelready: true
+  levelready: false
 }, false)
 
 hub.adapter.websocket.server.val = 3031
