@@ -16,8 +16,10 @@ var hub = new Hub({ //eslint-disable-line
     }
   },
   autoRemoveScopes: false,
-  scopes () {
+  scopes (scope, event, getScope) {
     console.log('lulzzz')
+    //this, scope, event, getScope
+    var ret = getScope.apply(this, arguments)
 
   },
   shows: {},
