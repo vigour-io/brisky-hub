@@ -37,40 +37,7 @@ var hub = new Hub({ //eslint-disable-line
 })
 
 hub.set({
-  shows: {
-    977: {
-      title: 'awkward',
-      description: 'xxxxx xxxx xxx',
-      seasons: {
-        0: {
-          number: 1,
-          episodes: {
-            0: {
-              title: 1,
-              number: 1
-            },
-            1: {
-              title: 2,
-              number: 2
-            }
-          }
-        }
-      },
-      1: {
-          number: 2,
-          episodes: {
-            0: {
-              title: 1.1,
-              number: 1
-            },
-            1: {
-              title: 1.2,
-              number: 2
-            }
-          }
-        }
-      }
-  },
+  shows: {},
   discover: {
     carousel: {},
     lists: {
@@ -82,17 +49,8 @@ hub.set({
   },
   codes: {},
   channels: {},
-  levelready: false
+  levelready: true
 }, false)
-
-hub.shows[977].set({
-  currentSeason: hub.shows[977].seasons[0],
-  currentEpisode: hub.shows[977].seasons[0].episodes[0]
-})
-
-hub.adapter.websocket.server.val = 3031
-
-
 
 hub.levelready.is(true, function () {
   // var https = require('https')
@@ -100,54 +58,22 @@ hub.levelready.is(true, function () {
     setTimeout(function () {
       // console.log('start loading!')
       var count = 0
-      http.request({
-        host: '37.48.93.74',
-        path: '/new.json',
-        port: 51004,
-        method: 'get',
-        headers: {
-          accepts: '*/*'
-        }
-      }, function (res) {
-        // load channels
-        res.pipe(JSONStream.parse('mtvData.NL.en.channels.*'))
-          .on('data', function (data) {
-            if (data.id) {
-              // console.log('channel from json:', data.id, data)
-              hub.channels.set({
-                [data.id]: data
-              })
-              hub.channels[data.id].set({
-                currentEpisode: hub.channels[data.id],
-                epg: {
-                  0: {
-                    title: 'Dumb people unite',
-                    subtitle: '20:00 - 21:00'
-                  },
-                  1: {
-                    title: 'Friendly people unite',
-                    subtitle: '21:00 - 22:00'
-                  },
-                  2: {
-                    title: 'Shine flame',
-                    subtitle: '21:00 - 22:00'
-                  }
-                }
-              })
-              if (!hub.channels.focus) {
-                hub.channels.setKey('focus', hub.channels.firstChild())
-              }
-            } else {
-              // console.log('channel from json --> no id:'.red, data)
-            }
-          })
-
+      // http.request({
+      //   host: '37.48.93.74',
+      //   path: '/new.json',
+      //   port: 51004,
+      //   method: 'get',
+      //   headers: {
+      //     accepts: '*/*'
+      //   }
+      // }, function (res) {
+        var res = fs.createReadStream(__dirname + '/sbs-data.json')
         // load shows
         var showCount = 0
-        res.pipe(JSONStream.parse('mtvData.NL.en.shows.*'))
+        res.pipe(JSONStream.parse('sbsData.NL.nl.shows.*'))
           .on('data', function (data) {
             if (data.id) {
-              console.log('show from json:', data.id, data.img)
+              console.log('show from json:', data)
                 // event ofc
               data.index = showCount++
               hub.shows.set({
@@ -161,8 +87,7 @@ hub.levelready.is(true, function () {
               hub.shows[data.id].seasons.each((season) => {
                 season.episodes.each((episode) => {
                   episode.set({
-                    time: Math.random(),
-                    video: episode.mrss.val
+                    time: Math.random()
                   })
                 })
 
@@ -260,7 +185,7 @@ hub.levelready.is(true, function () {
           hub.set({ 'datafromjson': true })
           hub.adapter.websocket.server.val = 3031
         })
-      }).end()
+      // }).end()
     }, 1000)
   } else {
     console.log('allready got data from the server')
