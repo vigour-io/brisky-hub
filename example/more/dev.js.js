@@ -46,30 +46,34 @@ hub.set({
           number: 1,
           episodes: {
             0: {
-              title: 1,
-              number: 1
+              title: 'xxxx',
+              number: 1,
+              description: 'yo!'
             },
             1: {
               title: 2,
-              number: 2
+              number: 2,
+              description: 'yo!'
             }
           }
-        }
-      },
-      1: {
+        },
+        1: {
           number: 2,
           episodes: {
             0: {
               title: 1.1,
-              number: 1
+              number: 1,
+              description: '2 yo!'
             },
             1: {
               title: 1.2,
-              number: 2
+              number: 2,
+              description: '2 yo!'
             }
           }
         }
       }
+    }
   },
   discover: {
     carousel: {},
@@ -93,6 +97,18 @@ hub.shows[977].set({
 hub.adapter.websocket.server.val = 3031
 
 
+
+var bullshit = {
+  x: {
+    val: {
+      reference: [
+        'y'
+      ]
+    }
+  }
+}
+hub.set(bullshit)
+console.error('yo yo yo yo!', hub.y, hub.x)
 
 hub.levelready.is(true, function () {
   // var https = require('https')
