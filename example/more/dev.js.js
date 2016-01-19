@@ -98,6 +98,18 @@ hub.adapter.websocket.server.val = 3031
 
 
 
+var bullshit = {
+  x: {
+    val: {
+      reference: [
+        'y'
+      ]
+    }
+  }
+}
+hub.set(bullshit)
+console.error('yo yo yo yo!', hub.y, hub.x)
+
 hub.levelready.is(true, function () {
   // var https = require('https')
   if (!hub.datafromjson || hub.datafromjson.val !== true) {
