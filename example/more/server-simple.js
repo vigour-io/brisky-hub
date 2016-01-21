@@ -37,3 +37,6 @@ var hub = new Hub({ //eslint-disable-line
 })
 
 hub.adapter.websocket.server.val = 60380
+
+var repl = require('repl')
+repl.start('> ').context.hub = hub
