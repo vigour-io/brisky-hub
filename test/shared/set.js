@@ -134,61 +134,66 @@ module.exports = function (protocol, key) {
       server.set({ field: server.a })
     })
 
-    // it('server can send out of adapter scope references to receiver', function (done) {
-    //   receiver.$({ something: { val: true } })
-    //   receiver.once(function () {
-    //     expect(receiver).to.have.property('something')
-    //       .which.has.property('bla')
-    //       .which.has.property('_input').which.equals(true)
-    //     done()
-    //   })
-    //   server.set({ something: something })
-    // })
+    xit('server can send out of adapter scope references to receiver', function (done) {
+      receiver.$({ something: { val: true } })
+      receiver.once(function () {
+        expect(receiver).to.have.property('something')
+          .which.has.property('bla')
+          .which.has.property('_input').which.equals(true)
+        done()
+      })
+      server.set({ something: something })
+    })
 
-    // it('server can send out of adapter scope references to receiver, updates from the references value', function (done) {
-    //   receiver.something.once(function () {
-    //     expect(receiver.something).to.have.property('otherfield')
-    //     done()
-    //   })
-    //   something.set({ otherfield: true })
-    // })
+    xit('server can send out of adapter scope references to receiver, updates from the references value', function (done) {
+      receiver.something.once(function () {
+        expect(receiver.something).to.have.property('otherfield')
+        done()
+      })
+      something.set({ otherfield: true })
+    })
 
-    // it('receiver can send custom stamps over the server to another receiver', function (done) {
-    //   var receiver2 = new Hub({
-    //     adapter: {
-    //       id: 'set_reciever2',
-    //       inject: protocol
-    //     }
-    //   })
+    it('receiver can send custom stamps over the server to another receiver', function (done) {
+      var receiver2 = new Hub({
+        adapter: {
+          id: 'set_reciever2',
+          inject: protocol,
+          [key]: {}
+        }
+      })
 
-    //   receiver2.adapter.set({
-    //     [key]: mock ? 'set_server' : 'ws://localhost:6001'
-    //   })
+      receiver2.$({
+        danillo: { val: true }
+      })
 
-    //   receiver2.$({
-    //     danillo: { val: true }
-    //   })
+      console.log('???', key, receiver2.adapter[key])
 
-    //   receiver2.adapter[key].once('connect', function () {
-    //     var event = new Event(receiver, 'data', 'danillo')
-    //     receiver2.once(function (data, event) {
-    //       expect(event.stamp.split(seperator)[1]).equal('danillo')
-    //       expect(receiver2).to.have.property('danillo')
-    //       done()
-    //     })
-    //     receiver.set({
-    //       danillo: true
-    //     }, event)
-    //   })
-    // })
+      receiver2.adapter[key].once('connect', function () {
+        console.log('yo yo')
+        var event = new Event(receiver, 'data', 'danillo')
+        receiver2.get('danillo', {}).once(function (data, event) {
+          expect(event.stamp.split(seperator)[1]).equal('danillo')
+          expect(receiver2).to.have.property('danillo')
+          done()
+        })
+        console.clear()
+        receiver.set({
+          danillo: 'hello'
+        }, event)
+      })
 
-    // it('get should not get synced', function () {
-    //   function guard () {
-    //     throw new Error('gets should not fire!')
-    //   }
-    //   receiver.once(guard)
-    //   receiver.get('afield', true)
-    //   receiver.off(guard)
-    // })
+      receiver2.adapter.set({
+        [key]: mock ? 'set_server' : 'ws://localhost:6001'
+      })
+    })
+
+    it('get should not get synced', function () {
+      function guard () {
+        throw new Error('gets should not fire!')
+      }
+      receiver.once(guard)
+      receiver.get('afield', true)
+      receiver.off(guard)
+    })
   })
 }
