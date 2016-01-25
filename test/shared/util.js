@@ -26,11 +26,10 @@ exports.setup = function (params) {
   }
 
   if (log) {
-    var colors = require('colors-browserify') //eslint-disable-line
     line = console.line
     console.line = false
     console.log(
-    (indent + 'hub test setup').blue.bold,
+      indent + 'hub test setup',
       '\n' + indent + 'protocol:', key,
       '\n' + indent + 'receivers:', receivers,
       '\n' + indent + 'id:', id
@@ -72,7 +71,7 @@ function normalReceivers (connected, result, id, protocol, key, mock, receivers,
     if (log) {
       result[i].adapter[key].connected.is(true, function () {
         console.line = false
-        console.log((indent + 'connected').green.bold, this.parent.parent.parent.path.join('.'))
+        console.log((indent + 'connected'), this.parent.parent.parent.path.join('.'))
         console.line = line
       })
     }
