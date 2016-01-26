@@ -70,8 +70,8 @@ module.exports = function (protocol, key) {
     })
 
     it('it recieves data from a', function (done) {
-      receiver.a.subscribe({
-        somefield: true
+      receiver.a.$({
+        somefield: { val: true }
       })
       a.set({ somefield: true })
       receiver.a.once(() => {

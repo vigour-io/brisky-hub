@@ -12,8 +12,12 @@ module.exports = function (protocol, key) {
         define: {
           getScope (val, event) {
             var scope = getScope.apply(this, arguments)
+            console.log('create scope and connect!')
             scope.set({
               key: 'server_bSCOPE_' + val,
+              // double connection dont work obvisouly... have to do something about that
+              // this is the exact setup for users that nice
+              // make level load scopes and boom
               adapter: {
                 [key]: key === 'mock' ? 'scope_connection_server_a' : 'ws://localhost:6001',
                 scope: val
@@ -65,12 +69,19 @@ module.exports = function (protocol, key) {
         scope: 'a1',
         [key]: key === 'mock' ? 'scope_connection_server_b' : 'ws://localhost:6002'
       })
-      b.once('new', function (data) {
-        this.adapter[key].connected.once(function () {
+      global.r1 = receiverA1
+      global.a = a
+      global.b = b
+      setTimeout(function (data) {
+        b._scopes.a1.adapter[key].connected.is(true, function () {
+          console.log('yo')
           expect(receiverA1.adapter[key].connected.val).to.equal(true)
-          a.once('new', () => done())
+          setTimeout(() => {
+            expect(a._scopes.a1).to.be.ok
+            done()
+          }, 50)
         })
-      })
+      }, 50)
     })
 
     it('a1 has scope with correct clients object', function () {
@@ -81,22 +92,27 @@ module.exports = function (protocol, key) {
     })
 
     it('a set a field on scope a1', function (done) {
-      receiverA1.subscribe({
-        somefield: true
+      receiverA1.$({
+        somefield: { val: true }
       })
       a._scopes.a1.set({
-        somefield: true
+        somefield: { val: true }
       })
       receiverA1.get('somefield', {}).is(true).then(() => done())
     })
 
     it('receiverA2 can connect to b, b._scopes.A2 gets connected to a, shares connection', function (done) {
-      b.once('new', function (data) {
-        this.adapter[key].connected.once(function () {
+      setTimeout(function () {
+        expect(b._scopes).to.have.property('a2')
+        b._scopes.a2.adapter[key].connected.is(true, function () {
           expect(receiverA2.adapter[key].connected.val).to.equal(true)
+          setTimeout(function () {
+            expect(a._scopes).has.property('a2')
+            done()
+          }, 50)
           a.once('new', () => done())
         })
-      })
+      }, 50)
       receiverA2.adapter.set({
         scope: 'a2',
         [key]: key === 'mock' ? 'scope_connection_server_b' : 'ws://localhost:6002'
@@ -111,8 +127,8 @@ module.exports = function (protocol, key) {
     })
 
     it('a set a field on scope a2', function (done) {
-      receiverA2.subscribe({
-        anotherfield: true
+      receiverA2.$({
+        anotherfield: { val: true }
       })
       a._scopes.a2.set({ anotherfield: true })
       receiverA2.get('anotherfield', {}).is(true).then(() => {
@@ -122,3 +138,5 @@ module.exports = function (protocol, key) {
     })
   })
 }
+
+// now lets go for references!!!

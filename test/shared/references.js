@@ -45,18 +45,18 @@ module.exports = function (protocol, key) {
     })
 
     it('can set a reference on the server', function (done) {
-      receiver.subscribe({
+      receiver.$({
         list: {
           '0': {
-            time: true
+            time: { val: true }
           }
         }
       })
 
-      receiver2.subscribe({
+      receiver2.$({
         list: {
           '0': {
-            time: true
+            time: { val: true }
           }
         }
       })
