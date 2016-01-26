@@ -26,13 +26,13 @@ module.exports = function (protocol, key) {
     it('can use any subscriptions on the recievers', function (done) {
       var pattern = {
         shows: {
-          $any: {
-            title: true
+          '*': {
+            title: { val: true }
           }
         }
       }
-      receiver.subscribe(pattern)
-      receiver2.subscribe(pattern)
+      receiver.$(pattern)
+      receiver2.$(pattern)
 
       Promise.all([
         createPromises(receiver2),

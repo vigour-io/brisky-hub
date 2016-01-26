@@ -121,17 +121,21 @@ module.exports = function (protocol, key) {
     it('server can send referenced data to receiver, changing a reference', function (done) {
       console.clear()
       global.r = receiver
-      receiver.field.once('data', function () {
-        console.log('!!!!')
-        expect(this).to.have.property('_input')
-          .which.equals(receiver.a)
-        done()
-      })
+
       console.log('lets set')
       server.field.once(function () {
         console.log('-----> now go')
       })
+
+      console.log(server.a.path)
+      console.log('this results in wrong payload?')
       server.set({ field: server.a })
+      console.log('------------------')
+      receiver.field.once('data', function () {
+        expect(this).to.have.property('_input')
+          .which.equals(receiver.a)
+        done()
+      })
     })
 
     xit('server can send out of adapter scope references to receiver', function (done) {
@@ -154,36 +158,34 @@ module.exports = function (protocol, key) {
     })
 
     it('receiver can send custom stamps over the server to another receiver', function (done) {
+      console.clear()
       var receiver2 = new Hub({
         adapter: {
           id: 'set_reciever2',
           inject: protocol,
-          [key]: {}
+          [key]: {
+            val: mock ? 'set_server' : 'ws://localhost:6001'
+          }
         }
       })
+
+      global.rr = receiver2
 
       receiver2.$({
         danillo: { val: true }
       })
 
-      console.log('???', key, receiver2.adapter[key])
-
       receiver2.adapter[key].once('connect', function () {
-        console.log('yo yo')
-        var event = new Event(receiver, 'data', 'danillo')
+        var event = new Event('data', 'danillo')
         receiver2.get('danillo', {}).once(function (data, event) {
           expect(event.stamp.split(seperator)[1]).equal('danillo')
           expect(receiver2).to.have.property('danillo')
           done()
         })
-        console.clear()
         receiver.set({
-          danillo: 'hello'
+          danillo: 'hello!!!!'
         }, event)
-      })
-
-      receiver2.adapter.set({
-        [key]: mock ? 'set_server' : 'ws://localhost:6001'
+        event.trigger()
       })
     })
 

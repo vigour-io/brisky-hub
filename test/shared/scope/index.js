@@ -7,8 +7,8 @@ module.exports = function (protocol, key) {
     require('./multiple')(protocol, key)
     require('./connection')(protocol, key)
     require('./upstreams')(protocol, key)
-    require('./adapters')(protocol, key)
-    require('./clients')(protocol, key)
-    require('./subscription')(protocol, key)
+    // require('./adapters')(protocol, key)
+    // require('./clients')(protocol, key)
+    // require('./subscription')(protocol, key)
   })
 }
