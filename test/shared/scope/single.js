@@ -37,28 +37,21 @@ module.exports = function (protocol, key) {
       receiver.adapter.set({
         [key]: key === 'mock' ? 'single_server' : 'ws://localhost:6001'
       })
-      receiver.subscribe({
-        youri: true,
-        james: true,
-        bla: true,
-        randomfield: true
+      receiver.$({
+        youri: { val: true },
+        james: { val: true },
+        bla: { val: true },
+        randomfield: { val: true }
       })
-
       receiver.adapter.scope.val = 'myScope'
-
-      global.server = server
-      global.receiver = receiver
       receiver.adapter[key].once('connect', function () {
-        expect(server).to.not.have.property('clients')
-        server.once('new', function () {
-          setTimeout(() => {
-            expect(server).to.have.property('_scopes')
-              .which.has.property('myScope')
-            expect(server._scopes.myScope).to.have.property('clients')
-            expect(server._scopes.myScope).to.have.property('_scope')
-              .which.equals('myScope')
-            done()
-          })
+        setTimeout(() => {
+          expect(server).to.have.property('_scopes')
+            .which.has.property('myScope')
+          expect(server._scopes.myScope).to.have.property('clients')
+          expect(server._scopes.myScope).to.have.property('_scope')
+            .which.equals('myScope')
+          done()
         })
       })
     })
@@ -82,12 +75,10 @@ module.exports = function (protocol, key) {
     })
 
     it('can change scope dynamicly', function (done) {
-      console.clear()
-      console.log('-----> yo switch it up'.blue)
-      server.once('new', () => setTimeout(() => {
+      setTimeout(() => {
         expect(server._scopes).to.have.property('rick')
         done()
-      }))
+      }, 50) // dirty but good enough for now
       receiver.set({ adapter: { scope: 'rick' } })
     })
 
@@ -118,15 +109,13 @@ module.exports = function (protocol, key) {
       })
       receiver.adapter[key].once('connect', function () {
         // make scopes observable much nicer
-        server.once('new', () => {
-          setTimeout(() => {
-            expect(server._scopes).to.have.property('marcus')
-              .which.has.property('clients')
-              .which.has.property('single_receiver')
-            expect(server._scopes.rick).not.ok
-            done()
-          })
-        })
+        setTimeout(() => {
+          expect(server._scopes).to.have.property('marcus')
+            .which.has.property('clients')
+            .which.has.property('single_receiver')
+          expect(server._scopes.rick).not.ok
+          done()
+        }, 50)
       })
     })
 
@@ -167,13 +156,13 @@ module.exports = function (protocol, key) {
       reciever2.adapter[key].once('connect', function () {
         setTimeout(() => {
           expect(server.clients.single_receiver_2).to.ok
-          server.once('new', () => setTimeout(() => {
+          setTimeout(() => {
             expect(server.clients.single_receiver_2).to.not.ok
             expect(server._scopes).to.have.property('krystan')
               .which.has.property('clients')
               .which.has.property('single_receiver_2')
             done()
-          }))
+          }, 50)
           reciever2.adapter.set({ scope: 'krystan' })
         }, 100)
       })

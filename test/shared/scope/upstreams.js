@@ -106,14 +106,14 @@ module.exports = function (protocol, key) {
     })
 
     it('both receivers receive updates from a', function (done) {
-      receiver.subscribe({
-        hello: true,
-        bye: true
+      receiver.$({
+        hello: { val: true },
+        bye: { val: true }
       })
 
-      scopeReceiver.subscribe({
-        hello: true,
-        bye: true
+      scopeReceiver.$({
+        hello: { val: true },
+        bye: { val: true }
       })
 
       Promise.all([
