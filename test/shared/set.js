@@ -70,8 +70,8 @@ module.exports = function (protocol, key) {
     it('server can send data to receiver', function (done) {
       // subscribe
       // make a subscribe once
-      receiver.subscribe({
-        anotherfield: true
+      receiver.$({
+        anotherfield: { val: true }
       })
       receiver.once(function () {
         expect(receiver).to.have.property('anotherfield')
@@ -84,9 +84,9 @@ module.exports = function (protocol, key) {
     })
 
     it('server can send referenced data to receiver', function (done) {
-      receiver.subscribe({
-        a: true,
-        referenced: true
+      receiver.$({
+        a: { val: true },
+        referenced: { val: true }
       })
 
       Promise.all([
@@ -105,10 +105,11 @@ module.exports = function (protocol, key) {
     })
 
     it('receiver can send referenced data to server', function (done) {
-      receiver.subscribe({
-        field: true
+      receiver.$({
+        field: { val: true }
       })
-      server.once(function () {
+      server.get('field', {}).once('reference', function () {
+        console.log('hello')
         expect(server).to.have.property('field')
           .which.has.property('_input')
           .which.equals(server.referenced)
@@ -118,16 +119,27 @@ module.exports = function (protocol, key) {
     })
 
     it('server can send referenced data to receiver, changing a reference', function (done) {
-      receiver.field.once(function () {
+      console.clear()
+      global.r = receiver
+
+      console.log('lets set')
+      server.field.once(function () {
+        console.log('-----> now go')
+      })
+
+      console.log(server.a.path)
+      console.log('this results in wrong payload?')
+      server.set({ field: server.a })
+      console.log('------------------')
+      receiver.field.once('data', function () {
         expect(this).to.have.property('_input')
           .which.equals(receiver.a)
         done()
       })
-      server.set({ field: server.a })
     })
 
-    it('server can send out of adapter scope references to receiver', function (done) {
-      receiver.subscribe({ something: true })
+    xit('server can send out of adapter scope references to receiver', function (done) {
+      receiver.$({ something: { val: true } })
       receiver.once(function () {
         expect(receiver).to.have.property('something')
           .which.has.property('bla')
@@ -137,7 +149,7 @@ module.exports = function (protocol, key) {
       server.set({ something: something })
     })
 
-    it('server can send out of adapter scope references to receiver, updates from the references value', function (done) {
+    xit('server can send out of adapter scope references to receiver, updates from the references value', function (done) {
       receiver.something.once(function () {
         expect(receiver.something).to.have.property('otherfield')
         done()
@@ -146,31 +158,34 @@ module.exports = function (protocol, key) {
     })
 
     it('receiver can send custom stamps over the server to another receiver', function (done) {
+      console.clear()
       var receiver2 = new Hub({
         adapter: {
           id: 'set_reciever2',
-          inject: protocol
+          inject: protocol,
+          [key]: {
+            val: mock ? 'set_server' : 'ws://localhost:6001'
+          }
         }
       })
 
-      receiver2.adapter.set({
-        [key]: mock ? 'set_server' : 'ws://localhost:6001'
-      })
+      global.rr = receiver2
 
-      receiver2.subscribe({
-        danillo: true
+      receiver2.$({
+        danillo: { val: true }
       })
 
       receiver2.adapter[key].once('connect', function () {
-        var event = new Event(receiver, 'data', 'danillo')
-        receiver2.once(function (data, event) {
+        var event = new Event('data', 'danillo')
+        receiver2.get('danillo', {}).once(function (data, event) {
           expect(event.stamp.split(seperator)[1]).equal('danillo')
           expect(receiver2).to.have.property('danillo')
           done()
         })
         receiver.set({
-          danillo: true
+          danillo: 'hello!!!!'
         }, event)
+        event.trigger()
       })
     })
 
