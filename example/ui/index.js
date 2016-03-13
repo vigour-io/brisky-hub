@@ -49,5 +49,8 @@ app.scope.value.origin.val = 'jim'
 if (require('vigour-util/is/node')) {
   setTimeout(function () {
     app.scope.value.origin.val = 'jimA'
+    // console.log(app.scope.value.val)
   }, Math.random() * 2000)
 }
+
+console.log(app.scope.value)
