@@ -1,17 +1,9 @@
+# .travis.yml
 language: node_js
+
 node_js:
-  - "4.1.1"
-branches:
-  only:
-    - master
-    - develop
-    - staging
-before_install:
-  - npm install -g git+ssh://git@github.com:vigour-io/sentinel.git#develop
-script:
-  - sentinel
-after_failure:
-  - sentinel --notify-fail
-sudo: required
-services:
-  - docker
+  - '5.4'
+  - '4.4'
+
+notifications:
+  email: false
