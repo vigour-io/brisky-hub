@@ -2,7 +2,6 @@
 var e = require('vigour-element/e')
 var isNode = require('vigour-util/is/node')
 var Hub = require('../../')
-var app
 var hub = new Hub({
   adapter: {
     inject: require('../../lib/protocol/websocket'),
@@ -11,7 +10,7 @@ var hub = new Hub({
       connected: {
         on: {
           data () {
-            console.log(this, app.indicator.text.val)
+            console.log('connected', this.val)
           }
         }
       }
@@ -19,11 +18,36 @@ var hub = new Hub({
   }
 })
 
-app = e({
+var app = e({
   DOM: isNode ? {} : document.body,
-  indicator: {
-    text: hub.adapter.websocket.connected
+  components: {
+    input: {
+      type: 'input',
+      value: {},
+      on: {
+        keyup (e) {
+          this.value.origin.val = e.currentTarget.value
+        }
+      }
+    }
+  },
+  connected: {
+    text: hub.adapter.connected
+  },
+  scope: {
+    type: 'input',
+    value: hub.adapter.scope
+  },
+  randomvalue: {
+    type: 'input',
+    value: hub.get('randomvalue', 'randomvalue')
   }
 })
 
-console.log('lets go!')
+app.scope.value.origin.val = 'jim'
+
+if (require('vigour-util/is/node')) {
+  setTimeout(function () {
+    app.scope.value.origin.val = 'jimA'
+  }, Math.random() * 2000)
+}

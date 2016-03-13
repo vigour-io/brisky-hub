@@ -6,8 +6,18 @@ var hub = new Hub({
     websocket: {
       server: 3333
     }
+  },
+  // scope: function (scope, event, get) {
+  //   console.log('go for scope:', scope)
+  //   return get.apply(this, arguments)
+  // },
+  clients: {
+    on: {
+      // this is a bit shitty scope does not help us here
+      property (data) {
+        console.log(data)
+      }
+    }
   }
 })
-
-console.log('do we have a server hur?', hub)
-
+console.log('start hub', hub.adapter.id)
