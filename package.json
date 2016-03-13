@@ -7,7 +7,7 @@
   },
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node test",
     "start": "./bin/hub"
   },
   "repository": {
@@ -30,49 +30,18 @@
   "directories": {
     "lib": "./lib"
   },
-  "browser": {
-    "./lib/protocol/websocket/server/": "./lib/protocol/websocket/server/browser.js",
-    "./lib/level/db/": "./lib/level/db/browser.js"
-  },
   "dependencies": {
-    "JSONStream": "1.0.7",
-    "bluebird": "3.0.x",
-    "level-js": "2.2.3",
-    "leveldown": "1.4.3",
-    "levelup": "1.3.1",
-    "lodash": "3.10.x",
-    "vigour-config": "~0.0.7",
-    "vigour-js": "~0.3.8",
-    "vigour-ua": "^0.0.1",
-    "websocket": "1.0.x"
+    "vigour-config": "^1.0.0",
+    "vigour-observable": "^1.0.0",
+    "vigour-util": "^1.0.0",
+    "vigour-ua": "^1.0.1",
+    "websocket": "^1.0.0",
+    "vigour-event": "^1.0.0"
   },
   "devDependencies": {
-    "colors-browserify": "0.1.1",
-    "vigour-uikit": "~0.6.3"
+    "JSONStream": "^1.0.7",
+    "vigour-element": "^1.0.0",
+    "tape": "^4.4.0"
   },
-  "homepage": "https://github.com/vigour-io/hub#readme",
-  "vigour": {
-    "services": {
-      "sentinel": {
-        "branches": [],
-        "unignoreFolders": []
-      }
-    }
-  },
-  "standard": {
-    "globals": [
-      "describe",
-      "it",
-      "beforeEach",
-      "sinon",
-      "expect",
-      "xit"
-    ]
-  },
-  "gaston": {
-    "source-maps": false,
-    "less-options": {
-      "strictMath": true
-    }
-  }
+  "homepage": "https://github.com/vigour-io/hub#readme"
 }
