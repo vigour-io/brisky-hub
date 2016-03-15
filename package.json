@@ -27,8 +27,8 @@
   "bugs": {
     "url": "https://github.com/vigour-io/hub/issues"
   },
-  "directories": {
-    "lib": "./lib"
+  "browser": {
+    "./lib/protocol/websocket/server/index.js": "./lib/protocol/websocket/server/browser.js"
   },
   "dependencies": {
     "vigour-observable": "^1.0.0",
