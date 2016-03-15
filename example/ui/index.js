@@ -3,7 +3,9 @@ var e = require('vigour-element/e')
 var isNode = require('vigour-util/is/node')
 var Hub = require('../../')
 // state will get hubs as injectables or other way arround?
+
 var hub = new Hub({
+  // $: '*deep', // support something like this syncs all
   adapter: {
     websocket: {
       val: 'ws://localhost:3334',
@@ -25,8 +27,8 @@ var app = e({
       type: 'input',
       value: {},
       on: {
-        keyup (e) {
-          this.value.origin.val = e.currentTarget.value
+        keyup (e, ev) {
+          this.value.origin.set(e.currentTarget.value, ev)
         }
       }
     }
@@ -44,11 +46,12 @@ var app = e({
   }
 })
 
-app.scope.value.origin.val = 'jim'
+app.scope.value.origin.set('jim')
 
 if (require('vigour-util/is/node')) {
   setTimeout(function () {
-    app.scope.value.origin.val = 'jimA'
+    app.scope.value.origin.set('jimA')
+    hub.set({ field: Math.random() * 200 })
   }, Math.random() * 2000)
 }
 

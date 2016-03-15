@@ -6,6 +6,13 @@ var hub = new Hub({
       server: 3334
     }
   },
+  field: {
+    on: {
+      data (data, event) {
+        console.log('got some datax!', data, event)
+      }
+    }
+  },
   // scope: function (scope, event, get) {
   //   console.log('go for scope:', scope)
   //   return get.apply(this, arguments)
