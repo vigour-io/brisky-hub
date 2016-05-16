@@ -1,2 +1,2 @@
 'use strict'
-console.log('lets test')
+require('./basic')
