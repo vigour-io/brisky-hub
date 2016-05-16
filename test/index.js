@@ -1,1 +1,2 @@
-//  slets go!
+'use strict'
+console.log('lets test')
