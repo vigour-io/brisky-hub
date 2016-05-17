@@ -6,6 +6,7 @@ test('basic setup', function (t) {
   console.log('start')
   // find free port
   const server = new Hub({ port: 3030 }) //eslint-disable-line
+  // const server2 = new Hub({ port: 3031 }) //eslint-disable-line -- for switching it
   const client = new Hub({ url: 'ws://localhost:3030' })
   client.set({
     on: {
