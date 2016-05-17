@@ -23,5 +23,9 @@ test('basic setup', function (t) {
 
   console.log('set blurf')
   client.set({ blurf: true })
+
+  setTimeout(function () {
+    client.remove()
+  }, 3e3)
   t.end()
 })
