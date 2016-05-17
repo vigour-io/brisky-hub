@@ -31,16 +31,20 @@ test('basic setup', function (t) {
   setTimeout(function () {
     client.url.set('ws://localhost:3031')
     // client.remove()
-  }, 500)
+  }, 300)
 
   setTimeout(function () {
     // client.remove()
-    // server.port.set(3031)
-    server.remove()
+    server.port.set(3031)
+    // server.remove()
     setTimeout(() => {
       console.log('-----')
       client.url.remove()
-    }, 1000)
-  }, 1000)
+      setTimeout(() => {
+        console.log('REMOVE SERVER')
+        server.remove()
+      }, 300)
+    }, 500)
+  }, 500)
   t.end()
 })
