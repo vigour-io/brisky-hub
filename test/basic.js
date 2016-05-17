@@ -25,7 +25,12 @@ test('basic setup', function (t) {
   client.set({ blurf: true })
 
   setTimeout(function () {
+    client.url.set('ws://localhost:3031')
+    // client.remove()
+  }, 500)
+
+  setTimeout(function () {
     client.remove()
-  }, 3e3)
+  }, 1e3)
   t.end()
 })
