@@ -7,7 +7,11 @@ test('basic setup', function (t) {
   // find free port
   const server = new Hub({ port: 3030 }) //eslint-disable-line
   // const server2 = new Hub({ port: 3031 }) //eslint-disable-line -- for switching it
-  const client = new Hub({ url: 'ws://localhost:3030' })
+  const client = new Hub({
+    id: 'client-1',
+    url: 'ws://localhost:3030'
+  })
+
   client.set({
     on: {
       data: {
@@ -30,7 +34,13 @@ test('basic setup', function (t) {
   }, 500)
 
   setTimeout(function () {
-    client.remove()
-  }, 1e3)
+    // client.remove()
+    // server.port.set(3031)
+    server.remove()
+    setTimeout(() => {
+      console.log('-----')
+      client.url.remove()
+    }, 1000)
+  }, 1000)
   t.end()
 })
