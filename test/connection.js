@@ -26,7 +26,10 @@ function connection (t, port) {
   })
 
   client.subscribe(
-    { $any: { val: true } },
+    {
+      $any: { val: true },
+      clients: { $any: { val: true } }
+    },
     (state, type, stamp) => {
       stamp = vstamp.parse(stamp)
       clientUpdates.push({
@@ -44,7 +47,10 @@ function connection (t, port) {
   )
 
   server.subscribe(
-    { $any: { val: true } },
+    {
+      $any: { val: true },
+      clients: { $any: { val: true } }
+    },
     (state, type, stamp) => {
       serverUpdates.push({
         path: state.path().join('.'),
@@ -67,6 +73,12 @@ function connection (t, port) {
   serverUpdates = []
 
   t.same(clientUpdates, [
+    {
+      path: 'url',
+      type: 'new',
+      stamp: 2,
+      val: 'ws://localhost:' + port
+    },
     {
       path: 'connected',
       type: 'new',
@@ -142,8 +154,8 @@ function connection (t, port) {
     })
   })
 
-  server.once((val, stamp) => {
-    console.log('yo incoming in dat server', val, stamp)
+  server.on((val, stamp) => {
+    // console.log('yo incoming in dat server', stamp)
     // t.same(serverUpdates, [
     //   {
     //     path: 'field',
@@ -152,9 +164,10 @@ function connection (t, port) {
     //     val: true
     //   }
     // ], 'server.field fired (true)')
-    serverUpdates = []
-    remove()
+    // serverUpdates = []
   })
+
+  remove()
 
   // function changeClientPort () {
   //   freeport((err, port2) => {
