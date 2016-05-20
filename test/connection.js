@@ -64,6 +64,7 @@ function connection (t, port) {
       val: false
     }
   ], 'server.connected fired (false)')
+  serverUpdates = []
 
   t.same(clientUpdates, [
     {
@@ -75,13 +76,42 @@ function connection (t, port) {
   ], 'client.connected fired (false)')
   clientUpdates = []
 
-  client.set({ field: true })
+  client.set({
+    d: true
+  }, false)
+
+  client.set({
+    field: {
+      val: true,
+      a: {
+        b: {
+          c: 'hello'
+        },
+        d: client.d
+      }
+    }
+  })
+
+  client.set({ field: false })
+
   t.same(clientUpdates, [
+    {
+      path: 'd',
+      type: 'new',
+      stamp: vstamp.create(false, client.id, 3),
+      val: true
+    },
     {
       path: 'field',
       type: 'new',
       stamp: vstamp.create(false, client.id, 3),
       val: true
+    },
+    {
+      path: 'field',
+      type: 'update',
+      stamp: vstamp.create(false, client.id, 4),
+      val: false
     }
   ], 'client.field fired (true)')
   clientUpdates = []
@@ -92,20 +122,39 @@ function connection (t, port) {
         {
           path: 'connected',
           type: 'update',
-          stamp: vstamp.create('connect', false, 4),
+          stamp: vstamp.create('connect', false, 5),
           val: true
         }
       ], 'client.connected fired (true)')
+      clientUpdates = []
 
-      console.log('got 4 tests!')
-      server.remove()
-      client.remove()
-      console.log('remove should kill everything')
-      // want to get update from server make that now -- has to include the src ofcourse
+      client.set({
+        field: {
+          a: {
+            b: {
+              c: 'blargh'
+            },
+            d: null
+          }
+        }
+      })
       // changeClientPort()
     })
   })
-}
+
+  server.once((val, stamp) => {
+    console.log('yo incoming in dat server', val, stamp)
+    // t.same(serverUpdates, [
+    //   {
+    //     path: 'field',
+    //     type: 'new',
+    //     stamp: vstamp.create(false, client.id, 3),
+    //     val: true
+    //   }
+    // ], 'server.field fired (true)')
+    serverUpdates = []
+    remove()
+  })
 
   // function changeClientPort () {
   //   freeport((err, port2) => {
@@ -122,21 +171,21 @@ function connection (t, port) {
   //   server.set({ field: 'hello' })
   //   setTimeout(() => {
   //     server.port.set(port2)
-  //     removeClient()
+  //     remove()
   //   }, 300)
   // }
 
-  // function removeClient () {
-  //   setTimeout(() => {
-  //     client.url.remove()
-  //     removeServer()
-  //   }, 300)
-  // }
+  function remove () {
+    setTimeout(() => {
+      client.remove()
+      removeServer()
+    }, 300)
+  }
 
-  // function removeServer () {
-  //   setTimeout(() => {
-  //     server.remove()
-  //     t.end()
-  //   }, 300)
-  // }
-// }
+  function removeServer () {
+    setTimeout(() => {
+      server.remove()
+      t.end()
+    }, 300)
+  }
+}
