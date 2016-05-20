@@ -12,14 +12,16 @@ test('connection', function (t) {
 })
 
 function connection (t, port) {
-  t.plan(4)
+  t.plan(3)
   var clientUpdates = []
   var serverUpdates = []
   const seed = vstamp.cnt
+
   const server = new Hub({
     id: 'server',
     port: port
   })
+
   const client = new Hub({
     id: 'client-1',
     url: 'ws://localhost:' + port
@@ -31,46 +33,33 @@ function connection (t, port) {
       clients: { $any: { val: true } }
     },
     (state, type, stamp) => {
-      stamp = vstamp.parse(stamp)
+      stamp = state._lstamp !== 0 ? vstamp.parse(state._lstamp) : false
       clientUpdates.push({
         path: state.path().join('.'),
         type: type,
-        stamp: vstamp.create(
-          stamp.type,
-          stamp.src,
-          stamp.val - seed
-        ),
+        stamp: stamp && vstamp.create(stamp.type, stamp.src, stamp.val - seed),
         val: state.compute()
       })
-      // console.log('client times', clientUpdates[clientUpdates.length - 1])
+      console.log('🔸 ', clientUpdates[clientUpdates.length - 1].path, type)
     }
   )
 
   server.subscribe(
     {
-      $any: { val: true },
+      $any: { val: 1 },
       clients: { $any: { val: true } }
     },
     (state, type, stamp) => {
+      stamp = vstamp.parse(stamp)
       serverUpdates.push({
         path: state.path().join('.'),
         type: type,
-        stamp: stamp,
+        stamp: vstamp.create(stamp.type, stamp.src, stamp.val - seed),
         val: state.compute()
       })
-      console.log('server times', serverUpdates[serverUpdates.length - 1])
+      console.log('🔹 ', serverUpdates[serverUpdates.length - 1].path, type)
     }
   )
-
-  t.same(serverUpdates, [
-    {
-      path: 'connected',
-      type: 'new',
-      stamp: 1,
-      val: false
-    }
-  ], 'server.connected fired (false)')
-  serverUpdates = []
 
   t.same(clientUpdates, [
     {
@@ -85,12 +74,12 @@ function connection (t, port) {
       stamp: 2,
       val: false
     }
-  ], 'client.connected fired (false)')
+  ], 'client.connected (false)')
   clientUpdates = []
 
   client.set({
     d: true
-  }, false)
+  }, false) // false will not create a stamp
 
   client.set({
     field: {
@@ -110,7 +99,7 @@ function connection (t, port) {
     {
       path: 'd',
       type: 'new',
-      stamp: vstamp.create(false, client.id, 3),
+      stamp: false,
       val: true
     },
     {
@@ -125,7 +114,7 @@ function connection (t, port) {
       stamp: vstamp.create(false, client.id, 4),
       val: false
     }
-  ], 'client.field fired (true)')
+  ], 'client.field (deep)')
   clientUpdates = []
 
   client.connected.once(() => {
@@ -137,7 +126,7 @@ function connection (t, port) {
           stamp: vstamp.create('connect', false, 5),
           val: true
         }
-      ], 'client.connected fired (true)')
+      ], 'client.connected (true)')
       clientUpdates = []
 
       client.set({
@@ -190,6 +179,7 @@ function connection (t, port) {
 
   function remove () {
     setTimeout(() => {
+      console.log(' REMOVE CLIENT')
       client.remove()
       removeServer()
     }, 300)
@@ -197,6 +187,7 @@ function connection (t, port) {
 
   function removeServer () {
     setTimeout(() => {
+      console.log(' REMOVE SERVER')
       server.remove()
       t.end()
     }, 300)
