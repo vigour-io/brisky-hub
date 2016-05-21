@@ -24,21 +24,24 @@ function connection (t, port) {
 
   const client = new Hub({
     id: 'client-1',
-    url: 'ws://localhost:' + port
+    url: 'ws://localhost:' + port,
+    client: {
+      infos: 'its a client!'
+    }
   })
+
+  console.log(client.client.origin())
 
   client.subscribe(
     {
-      $any: { val: true },
-      clients: { $any: { val: true } }
+      $any: { val: true }
     },
     (state, type, stamp) => {
       stamp = state._lstamp !== 0 ? vstamp.parse(state._lstamp) : false
       clientUpdates.push({
         path: state.path().join('.'),
         type: type,
-        stamp: stamp && vstamp.create(stamp.type, stamp.src, stamp.val - seed),
-        val: state.compute()
+        stamp: stamp && vstamp.create(stamp.type, stamp.src, stamp.val - seed)
       })
       console.log('🔸 ', clientUpdates[clientUpdates.length - 1].path, type)
     }
@@ -65,16 +68,24 @@ function connection (t, port) {
     {
       path: 'url',
       type: 'new',
-      stamp: 2,
-      val: 'ws://localhost:' + port
+      stamp: 2
     },
     {
       path: 'connected',
       type: 'new',
-      stamp: 2,
-      val: false
+      stamp: 2
+    },
+    {
+      path: 'clients',
+      type: 'new',
+      stamp: vstamp.create(false, client.id, 2)
+    },
+    {
+      path: 'client',
+      type: 'new',
+      stamp: vstamp.create(false, client.id, 2)
     }
-  ], 'client.connected (false)')
+  ], 'intial client subscription')
   clientUpdates = []
 
   client.set({
@@ -99,23 +110,34 @@ function connection (t, port) {
     {
       path: 'd',
       type: 'new',
-      stamp: false,
-      val: true
+      stamp: false
     },
     {
       path: 'field',
       type: 'new',
-      stamp: vstamp.create(false, client.id, 3),
-      val: true
+      stamp: vstamp.create(false, client.id, 3)
     },
     {
       path: 'field',
       type: 'update',
-      stamp: vstamp.create(false, client.id, 4),
-      val: false
+      stamp: vstamp.create(false, client.id, 4)
     }
   ], 'client.field (deep)')
   clientUpdates = []
+
+  // get /w false lets do that by default!
+  server.get('clients', {}, false).once((val, stamp) => {
+    // console.log('yo incoming in dat server', stamp)
+    // t.same(serverUpdates, [
+    //   {
+    //     path: 'field',
+    //     type: 'new',
+    //     stamp: vstamp.create(false, client.id, 3),
+    //     val: true
+    //   }
+    // ], 'server.field fired (true)')
+    // serverUpdates = []
+  })
 
   client.connected.once(() => {
     process.nextTick(() => {
@@ -123,8 +145,7 @@ function connection (t, port) {
         {
           path: 'connected',
           type: 'update',
-          stamp: vstamp.create('connect', false, 5),
-          val: true
+          stamp: vstamp.create('connect', false, 5)
         }
       ], 'client.connected (true)')
       clientUpdates = []
@@ -141,19 +162,6 @@ function connection (t, port) {
       })
       // changeClientPort()
     })
-  })
-
-  server.on((val, stamp) => {
-    // console.log('yo incoming in dat server', stamp)
-    // t.same(serverUpdates, [
-    //   {
-    //     path: 'field',
-    //     type: 'new',
-    //     stamp: vstamp.create(false, client.id, 3),
-    //     val: true
-    //   }
-    // ], 'server.field fired (true)')
-    // serverUpdates = []
   })
 
   remove()
