@@ -34,6 +34,7 @@
     "url": "https://github.com/vigour-io/hub/issues"
   },
   "dependencies": {
+    "lodash.merge": "^4.0.0",
     "lodash.set": "^4.0.0",
     "websocket": "^1.0.0",
     "vigour-stamp": "^1.1.0",
