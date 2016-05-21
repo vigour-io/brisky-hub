@@ -14,12 +14,13 @@ test('connection', function (t) {
 function connection (t, port) {
   t.plan(4)
   var clientUpdates = []
-  var serverUpdates = []
+  // var serverUpdates = []
   const seed = vstamp.cnt
 
   const server = new Hub({
     id: 'server',
-    port: port
+    port: port,
+    itsMyServerField: 'hell yeah'
   })
 
   const client = new Hub({
