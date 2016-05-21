@@ -25,6 +25,7 @@ function connection (t, port) {
 
   const client = new Hub({
     id: 'client-1',
+    context: 'special',
     url: 'ws://localhost:' + port,
     client: {
       infos: 'its a client!'
@@ -144,7 +145,7 @@ function connection (t, port) {
   client.connected.once(() => {
     process.nextTick(() => {
       setTimeout(() => {
-        console.log('????', server._i)
+        console.log('SERVER HAS INSTANCES', server._i && server._i.length)
       }, 50)
 
       t.same(clientUpdates, [
