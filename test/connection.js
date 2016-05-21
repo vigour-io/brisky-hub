@@ -35,7 +35,13 @@ function connection (t, port) {
 
   client.subscribe(
     {
-      $any: { val: true }
+      $any: { val: true },
+      // this is a problem -- either sync everything on client or make a system for this
+
+      // not really a problem to map this...
+      client: {
+        ip: { val: true }
+      }
     },
     (state, type, stamp) => {
       stamp = state._lstamp !== 0 ? vstamp.parse(state._lstamp) : false
