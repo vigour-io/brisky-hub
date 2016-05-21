@@ -12,7 +12,7 @@ test('connection', function (t) {
 })
 
 function connection (t, port) {
-  t.plan(3)
+  t.plan(4)
   var clientUpdates = []
   var serverUpdates = []
   const seed = vstamp.cnt
@@ -126,17 +126,10 @@ function connection (t, port) {
   clientUpdates = []
 
   // get /w false lets do that by default!
-  server.get('clients', {}, false).once((val, stamp) => {
-    // console.log('yo incoming in dat server', stamp)
-    // t.same(serverUpdates, [
-    //   {
-    //     path: 'field',
-    //     type: 'new',
-    //     stamp: vstamp.create(false, client.id, 3),
-    //     val: true
-    //   }
-    // ], 'server.field fired (true)')
-    // serverUpdates = []
+  server.get('clients', {}).once((val, stamp) => {
+    server.clients['client-1'].once((val) => {
+      t.same(val, { infos: 'its a client!' }, 'synced client info to server')
+    })
   })
 
   client.connected.once(() => {
