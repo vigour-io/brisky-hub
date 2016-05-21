@@ -37,7 +37,7 @@
     "lodash.set": "^4.0.0",
     "websocket": "^1.0.0",
     "vigour-stamp": "^1.1.0",
-    "vigour-state": "^2.0.0",
+    "vigour-state": "^2.0.1",
     "vigour-util": "^2.0.10"
   },
   "devDependencies": {
