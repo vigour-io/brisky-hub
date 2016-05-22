@@ -12,7 +12,7 @@ test('connection', function (t) {
 })
 
 function connection (t, port) {
-  t.plan(4)
+  t.plan(3)
   var clientUpdates = []
   // var serverUpdates = []
   const seed = vstamp.cnt
@@ -45,7 +45,7 @@ function connection (t, port) {
       }
     },
     (state, type, stamp) => {
-      stamp = state._lstamp !== 0 ? vstamp.parse(state._lstamp) : false
+      stamp = state.stamp !== 0 ? vstamp.parse(state.stamp) : false
       clientUpdates.push({
         path: state.path().join('.'),
         type: type,
@@ -74,6 +74,11 @@ function connection (t, port) {
   // )
 
   t.same(clientUpdates, [
+    {
+      path: 'context',
+      type: 'new',
+      stamp: 2
+    },
     {
       path: 'url',
       type: 'new',
