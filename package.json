@@ -1,6 +1,6 @@
 {
   "name": "vigour-hub",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Vigour.io Hub",
   "engines": {
     "node": "^4.1.1"
