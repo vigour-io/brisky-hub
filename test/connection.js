@@ -12,9 +12,10 @@ test('connection', function (t) {
 })
 
 function connection (t, port) {
+  console.log('yo')
   t.plan(3)
   var clientUpdates = []
-  // var serverUpdates = []
+  var serverUpdates = []
   const seed = vstamp.cnt
 
   const server = new Hub({
@@ -32,14 +33,9 @@ function connection (t, port) {
     }
   })
 
-  console.log(client.client.origin())
-
   client.subscribe(
     {
       $any: { val: true },
-      // this is a problem -- either sync everything on client or make a system for this
-
-      // not really a problem to map this...
       client: {
         ip: { val: true }
       }
@@ -55,111 +51,113 @@ function connection (t, port) {
     }
   )
 
-  // does not work on context unfortunately
-  // server.subscribe(
+  server.subscribe(
+    {
+      $any: { val: 1 },
+      clients: { $any: { val: true } }
+    },
+    (state, type, stamp) => {
+      stamp = vstamp.parse(stamp)
+      serverUpdates.push({
+        path: state.path().join('.'),
+        type: type,
+        stamp: vstamp.create(stamp.type, stamp.src, stamp.val - seed),
+        val: state.compute()
+      })
+      console.log('🔹 ', serverUpdates[serverUpdates.length - 1].path, type)
+    }
+  )
+
+  // t.same(clientUpdates, [
   //   {
-  //     $any: { val: 1 },
-  //     clients: { $any: { val: true } }
+  //     path: 'context',
+  //     type: 'new',
+  //     stamp: 2
   //   },
-  //   (state, type, stamp) => {
-  //     stamp = vstamp.parse(stamp)
-  //     serverUpdates.push({
-  //       path: state.path().join('.'),
-  //       type: type,
-  //       stamp: vstamp.create(stamp.type, stamp.src, stamp.val - seed),
-  //       val: state.compute()
-  //     })
-  //     console.log('🔹 ', serverUpdates[serverUpdates.length - 1].path, type)
+  //   {
+  //     path: 'url',
+  //     type: 'new',
+  //     stamp: 2
+  //   },
+  //   {
+  //     path: 'connected',
+  //     type: 'new',
+  //     stamp: 2
+  //   },
+  //   {
+  //     path: 'clients',
+  //     type: 'new',
+  //     stamp: vstamp.create(false, client.id, 2)
+  //   },
+  //   {
+  //     path: 'client',
+  //     type: 'new',
+  //     stamp: vstamp.create(false, client.id, 2)
   //   }
-  // )
+  // ], 'intial client subscription')
+  // clientUpdates = []
 
-  t.same(clientUpdates, [
-    {
-      path: 'context',
-      type: 'new',
-      stamp: 2
-    },
-    {
-      path: 'url',
-      type: 'new',
-      stamp: 2
-    },
-    {
-      path: 'connected',
-      type: 'new',
-      stamp: 2
-    },
-    {
-      path: 'clients',
-      type: 'new',
-      stamp: vstamp.create(false, client.id, 2)
-    },
-    {
-      path: 'client',
-      type: 'new',
-      stamp: vstamp.create(false, client.id, 2)
-    }
-  ], 'intial client subscription')
-  clientUpdates = []
+  // client.set({
+  //   d: true
+  // }, false) // false will not create a stamp
 
-  client.set({
-    d: true
-  }, false) // false will not create a stamp
+  // client.set({
+  //   field: {
+  //     val: true,
+  //     a: {
+  //       b: {
+  //         c: 'hello'
+  //       },
+  //       d: client.d
+  //     }
+  //   }
+  // })
 
-  client.set({
-    field: {
-      val: true,
-      a: {
-        b: {
-          c: 'hello'
-        },
-        d: client.d
-      }
-    }
-  })
+  // client.set({ field: false })
 
-  client.set({ field: false })
-
-  t.same(clientUpdates, [
-    {
-      path: 'd',
-      type: 'new',
-      stamp: false
-    },
-    {
-      path: 'field',
-      type: 'new',
-      stamp: vstamp.create(false, client.id, 3)
-    },
-    {
-      path: 'field',
-      type: 'update',
-      stamp: vstamp.create(false, client.id, 4)
-    }
-  ], 'client.field (deep)')
-  clientUpdates = []
+  // t.same(clientUpdates, [
+  //   {
+  //     path: 'd',
+  //     type: 'new',
+  //     stamp: false
+  //   },
+  //   {
+  //     path: 'field',
+  //     type: 'new',
+  //     stamp: vstamp.create(false, client.id, 3)
+  //   },
+  //   {
+  //     path: 'field',
+  //     type: 'update',
+  //     stamp: vstamp.create(false, client.id, 4)
+  //   }
+  // ], 'client.field (deep)')
+  // clientUpdates = []
 
   // get /w false lets do that by default!
 
-  // server.get('clients', {}).once((val, stamp) => {
-  //   // server.clients['client-1'].once((val) => {
-  //   //   t.same(val, { infos: 'its a client!' }, 'synced client info to server')
-  //   // })
-  // })
+  server.get('clients', {}).once((val, stamp) => {
+    // server.clients['client-1'].once((val) => {
+    //   t.same(val, { infos: 'its a client!' }, 'synced client info to server')
+    // })
+  })
 
+  // once is ofc pretty borken
+
+  // fix once better
   client.connected.once(() => {
     process.nextTick(() => {
       setTimeout(() => {
-        console.log('SERVER HAS INSTANCES', server._i && server._i.length)
+        console.log('SERVER HAS INSTANCES', server.instances && server.instances.length)
       }, 50)
 
-      t.same(clientUpdates, [
-        {
-          path: 'connected',
-          type: 'update',
-          stamp: vstamp.create('connect', false, 5)
-        }
-      ], 'client.connected (true)')
+      // t.same(clientUpdates, [
+      //   {
+      //     path: 'connected',
+      //     type: 'update',
+      //     stamp: vstamp.create('connect', false, 5)
+      //   }
+      // ], 'client.connected (true)')
       clientUpdates = []
 
       client.set({
@@ -176,7 +174,7 @@ function connection (t, port) {
     })
   })
 
-  remove()
+  // remove()
 
   // function changeClientPort () {
   //   freeport((err, port2) => {
