@@ -36,8 +36,6 @@ test('queue', function (t) {
     isConnected(false, disconnect)
   })
 
-  // c: { val: 2, stamp: '2|1469550822245' } } 1
-
   function disconnect () {
     t.ok(true, 'disconnected clients')
     client1.a.set(-1)
@@ -54,8 +52,8 @@ test('queue', function (t) {
         console.log(' \n go reconnect!')
         server.port.set(6000)
         isConnected(true, reconnect)
-      }, 1000)
-    }, 1000)
+      }, 50)
+    }, 50)
   }
 
   function reconnect () {
