@@ -8,17 +8,19 @@ test('queue', function (t) {
     field: { title: 'server' }
   })
 
-  server.field.once((val) => {
-    console.log('field somethign is happening', val)
-  })
-
   const client1 = new Hub({
+    context: 'blurf',
+    id: 1,
     url: 'ws://localhost:6000'
   })
 
   const client2 = new Hub({
     url: 'ws://localhost:6000',
-    field: {}
+    context: 'blurf',
+    id: 2,
+    field: {
+      lulz: true
+    }
   })
 
   client1.set({
@@ -27,10 +29,25 @@ test('queue', function (t) {
     }
   })
 
-  client1.field.remove()
+  client1.set({
+    field: {
+      title: 'client-1!'
+    }
+  })
 
-  // allready need timestamp here in order to test this correctly
+  client2.set({
+    field: {
+      title: 'client-2!'
+    }
+  })
+
   console.log(client1.queue)
+  console.log(client2.queue)
+
+  setTimeout(() => {
+    console.log(server)
+    console.log(server.instances)
+  }, 500)
 
   client1.connected.once(() => {
     console.log('connected! client1')
