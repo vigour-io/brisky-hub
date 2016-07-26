@@ -1,6 +1,7 @@
 'use strict'
 const test = require('tape')
 const Hub = require('../')
+const vstamp = require('vigour-stamp')
 
 test('queue', function (t) {
   const server = new Hub({
@@ -45,8 +46,14 @@ test('queue', function (t) {
   console.log(client2.queue)
 
   setTimeout(() => {
-    console.log(server)
+    // console.log(server)
     console.log(server.instances)
+    server.getContext('blurf').clients.on('data', (val, stamp) => {
+      vstamp.done(stamp, () => {
+        console.log('clients--->', server.getContext('blurf').clients)
+      })
+    })
+    client2.url.set('ws://bla.com')
   }, 500)
 
   client1.connected.once(() => {
