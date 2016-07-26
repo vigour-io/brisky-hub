@@ -46,6 +46,7 @@ test('queue', function (t) {
       setTimeout(() => {
         client1.a.set('a')
         client1.c.remove()
+        console.log(' \n go reconnect!')
         server.port.set(6000)
         isConnected(true, reconnect)
       }, 1)
