@@ -1,7 +1,7 @@
 'use strict'
 const test = require('tape')
 const Hub = require('../')
-// const vstamp = require('vigour-stamp')
+const vstamp = require('vigour-stamp')
 
 test('queue', function (t) {
   const server = new Hub({
@@ -36,6 +36,8 @@ test('queue', function (t) {
     isConnected(false, disconnect)
   })
 
+  // c: { val: 2, stamp: '2|1469550822245' } } 1
+
   function disconnect () {
     t.ok(true, 'disconnected clients')
     client1.a.set(-1)
@@ -45,12 +47,15 @@ test('queue', function (t) {
       client2.b.set(-2)
       setTimeout(() => {
         client1.a.set('a')
+        let s = vstamp.create('SPESH')
         client1.c.remove()
+        // console.log(s)
+        vstamp.close(s)
         console.log(' \n go reconnect!')
         server.port.set(6000)
         isConnected(true, reconnect)
-      }, 1)
-    }, 1)
+      }, 1000)
+    }, 1000)
   }
 
   function reconnect () {
