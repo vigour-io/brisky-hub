@@ -9,7 +9,10 @@ test('queue', function (t) {
     clients: { $any: { val: true } }
   }
 
-  const server = new Hub({ port: 6000 })
+  const server = new Hub({
+    port: 6000,
+    clients: { sort: 'key' } // for testing
+  })
 
   const client1 = new Hub({
     id: 1,
@@ -26,7 +29,6 @@ test('queue', function (t) {
   })
 
   client2.subscribe(subs)
-
   client1.set({ a: 1, b: 1, c: 1 })
   client2.set({ a: 2, b: 2, c: 2 })
 
@@ -65,6 +67,9 @@ test('queue', function (t) {
   function reconnect () {
     const context = server.getContext('blurf')
     t.ok(true, 'reconnected clients')
+    t.same(context.clients.keys(), [ '1', '2' ], 'server has clients')
+    t.same(client1.clients.keys(), [ '1', '2' ], 'client1 has clients')
+    t.same(client2.clients.keys(), [ '2', '1' ], 'client2 has clients')
     client1.c.remove()
     Promise.all([
       context.c.is(null),
