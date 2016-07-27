@@ -76,7 +76,6 @@ test('queue', function (t) {
   function reconnect () {
     const context = server.getContext('blurf')
     t.ok(true, 'reconnected clients')
-    console.log(context.reference.val)
     t.equal(context.reference.val, context.a, 'server has reference')
     t.same(context.clients.keys(), [ '1', '2' ], 'server has clients')
     t.same(client1.clients.keys(), [ '1', '2' ], 'client1 has clients')
