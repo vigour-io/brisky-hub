@@ -1,13 +1,13 @@
 'use strict'
 const test = require('tape')
 const Hub = require('../')
-// const vstamp = require('vigour-stamp')
+const vstamp = require('vigour-stamp')
 
 test('queue', function (t) {
   const subs = {
     $any: { val: true },
-    bla: {
-      ref: { val: true }
+    special: {
+      reference: { val: true }
     },
     clients: { $any: { val: true } }
   }
@@ -54,6 +54,11 @@ test('queue', function (t) {
     client1.a.set(-1)
     client1.b.set(-1)
     client1.set({ reference: client1.a })
+    client2.set({
+      special: {
+        reference: '$root.special.a'
+      }
+    })
     t.same(client1.clients.keys(), [ '1' ], 'client1 does not have client2')
     t.same(client2.clients.keys(), [ '2' ], 'client2 does not have client1')
     setTimeout(() => {
@@ -76,7 +81,11 @@ test('queue', function (t) {
     t.same(context.clients.keys(), [ '1', '2' ], 'server has clients')
     t.same(client1.clients.keys(), [ '1', '2' ], 'client1 has clients')
     t.same(client2.clients.keys(), [ '2', '1' ], 'client2 has clients')
-    client1.c.remove()
+    t.equal(client1.special.reference.val, client1.special.a, 'client1 has "special.reference"')
+    const stamp = vstamp.create('special-type-of-stamp')
+    client1.c.remove(stamp)
+    client1.special.a.set('a', stamp)
+    vstamp.close(stamp)
     Promise.all([
       context.c.is(null),
       client2.c.is(null)
@@ -90,30 +99,18 @@ test('queue', function (t) {
       t.equal(client2.a.val, 'a', 'client2 - got "a" from client1')
       t.equal(client2.b.val, -2, 'client2 - got "b" from client2')
       t.equal(client2.c, null, 'client2 - "c" is removed')
-
       t.equal(client1.reference.val, client1.a, 'client1 has reference')
-
-      console.log(client2.reference, client1.reference.val)
       t.equal(client2.reference.val, client2.a, 'client2 has reference')
-
-      console.log('go go go go')
-      client2.set({
-        bla: {
-          ref: '$root.bla.gurken'
-        }
-      })
-
-      setTimeout(() => {
-        console.log('???', 'go go go')
-        client1.bla.gurken.set('a')
-        setTimeout(() => {
-          console.log(client2.bla)
-        }, 100)
-      }, 100)
-      // server.remove()
-      // client1.remove()
-      // client2.remove()
-      // t.end()
+      t.equal(client2.special.a.val, 'a', 'client2 recieved update on a')
+      const parsed = vstamp.parse(stamp)
+      console.log(parsed.type, parsed.val)
+      const result = vstamp.create(parsed.type, 1, parsed.val)
+      console.log(result)
+      t.equal(client2.special.a.stamp, result, 'client2 recieved correct stamp on a')
+      server.remove()
+      client1.remove()
+      client2.remove()
+      t.end()
     })
   }
 
