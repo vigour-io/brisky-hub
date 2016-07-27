@@ -34,7 +34,7 @@
     "url": "https://github.com/vigour-io/hub/issues"
   },
   "browser": {
-    "./lib/downstream/server/index.js": "./lib/downstream/server/browser.js"
+    "./lib/downstream/server/create/index.js": "./lib/downstream/server/create/browser.js"
   },
   "dependencies": {
     "clocksy": "^1.1.0",
