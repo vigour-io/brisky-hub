@@ -1,17 +1,22 @@
 'use strict'
 const test = require('tape')
 const Hub = require('../')
-const vstamp = require('vigour-stamp')
+// const vstamp = require('vigour-stamp')
 
 test('queue', function (t) {
   const subs = {
     $any: { val: true },
+    bla: {
+      ref: { val: true }
+    },
     clients: { $any: { val: true } }
   }
 
   const server = new Hub({
+    id: 'server',
+    context: false,
     port: 6000,
-    clients: { sort: 'key' } // for testing
+    clients: { sort: 'key' }
   })
 
   const client1 = new Hub({
@@ -48,6 +53,7 @@ test('queue', function (t) {
     t.ok(true, 'disconnected clients')
     client1.a.set(-1)
     client1.b.set(-1)
+    client1.set({ reference: client1.a })
     t.same(client1.clients.keys(), [ '1' ], 'client1 does not have client2')
     t.same(client2.clients.keys(), [ '2' ], 'client2 does not have client1')
     setTimeout(() => {
@@ -55,11 +61,9 @@ test('queue', function (t) {
       client2.b.set(-2)
       setTimeout(() => {
         client1.a.set('a')
-        let s = vstamp.create('SPESH')
-        // client1.c.remove()
-        vstamp.close(s)
-        server.port.set(6000)
         isConnected(true, reconnect)
+        // client1.c.remove() -- not supported yet need tombstones
+        server.port.set(6000)
       }, 50)
     }, 50)
   }
@@ -67,6 +71,8 @@ test('queue', function (t) {
   function reconnect () {
     const context = server.getContext('blurf')
     t.ok(true, 'reconnected clients')
+    console.log(context.reference.val)
+    t.equal(context.reference.val, context.a, 'server has reference')
     t.same(context.clients.keys(), [ '1', '2' ], 'server has clients')
     t.same(client1.clients.keys(), [ '1', '2' ], 'client1 has clients')
     t.same(client2.clients.keys(), [ '2', '1' ], 'client2 has clients')
@@ -84,10 +90,30 @@ test('queue', function (t) {
       t.equal(client2.a.val, 'a', 'client2 - got "a" from client1')
       t.equal(client2.b.val, -2, 'client2 - got "b" from client2')
       t.equal(client2.c, null, 'client2 - "c" is removed')
-      server.remove()
-      client1.remove()
-      client2.remove()
-      t.end()
+
+      t.equal(client1.reference.val, client1.a, 'client1 has reference')
+
+      console.log(client2.reference, client1.reference.val)
+      t.equal(client2.reference.val, client2.a, 'client2 has reference')
+
+      console.log('go go go go')
+      client2.set({
+        bla: {
+          ref: '$root.bla.gurken'
+        }
+      })
+
+      setTimeout(() => {
+        console.log('???', 'go go go')
+        client1.bla.gurken.set('a')
+        setTimeout(() => {
+          console.log(client2.bla)
+        }, 100)
+      }, 100)
+      // server.remove()
+      // client1.remove()
+      // client2.remove()
+      // t.end()
     })
   }
 
