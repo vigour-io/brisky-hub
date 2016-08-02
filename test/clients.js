@@ -43,10 +43,7 @@ test('clients', function (t) {
     client.connected.is(true),
     hybrid.connected.is(true),
     server.get('clients', {}).is(
-      (val, data, stamp, clients) => {
-        console.log(stamp)
-        return clients.keys().length > 1
-      }
+      (val, data, stamp, clients) => clients.keys().length > 1
     )
   ]).then(() => {
     console.log('got all clients! :D')
