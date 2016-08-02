@@ -5,7 +5,8 @@ const Hub = require('../')
 
 test('clients', function (t) {
   const subs = {
-    clients: { $any: { val: true } }
+    clients: { $any: { val: true } },
+    $amy: { val: true }
   }
 
   const server = new Hub({
@@ -27,30 +28,20 @@ test('clients', function (t) {
     x: true
   })
 
-  // client.subscribe(subs)
-  // has to be auto soon -- also unsubscribe
   hybrid.subscribe(subs)
 
-  server.get('x', {}).is(true).then(() => {
-    console.log('server :)')
-  })
+  client.connected.is(true)
+    .then(() => t.ok(true, 'client connected to hybrid'))
 
-  hybrid.get('x', {}).is(true).then(() => {
-    console.log('hybrid :)')
-  })
+  hybrid.connected.is(true)
+    .then(() => t.ok(true, 'hybrid connected to server'))
 
-  Promise.all([
-    client.connected.is(true),
-    hybrid.connected.is(true),
-    server.get('clients', {}).is(
-      (val, data, stamp, clients) => clients.keys().length > 1
-    )
-  ]).then(() => {
-    console.log('got all clients! :D')
-    console.log(server.clients.keys())
-    // console.log(server.clients.client)
-    // console.log('x', server.clients)
-  })
+  server.get('clients', {}).is(() => server.clients.keys().length > 1)
+    .then(() => {
+      t.ok(true, 'server gots all clients')
+      server.get('x', {}).is(true)
+      .then(() => t.ok(true, 'server got x from client'))
+    })
 
   t.end()
 })
