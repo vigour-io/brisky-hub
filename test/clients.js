@@ -11,6 +11,7 @@ test('clients', function (t) {
 
   const server = new Hub({
     id: 'server',
+    clients: { sort: 'key' },
     port: 6000
   })
 
@@ -38,7 +39,7 @@ test('clients', function (t) {
 
   server.get('clients', {}).is(() => server.clients.keys().length > 1)
     .then(() => {
-      t.ok(true, 'server gots all clients')
+      t.same(server.clients.keys(), [ 'client', 'hybrid' ], 'server got all clients')
       server.get('x', {}).is(true)
       .then(() => t.ok(true, 'server got x from client'))
     })
