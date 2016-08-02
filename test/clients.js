@@ -1,9 +1,9 @@
 'use strict'
 const test = require('tape')
 const Hub = require('../')
-// const vstamp = require('vigour-stamp')
 
 test('clients', function (t) {
+  t.plan(4)
   const subs = {
     clients: { $any: { val: true } },
     $amy: { val: true }
@@ -40,9 +40,15 @@ test('clients', function (t) {
   server.get('clients', {}).is(() => server.clients.keys().length > 1)
     .then(() => {
       t.same(server.clients.keys(), [ 'client', 'hybrid' ], 'server got all clients')
-      server.get('x', {}).is(true)
-      .then(() => t.ok(true, 'server got x from client'))
+      server.get('x', {}).is(true).then(() => {
+        t.ok(true, 'server got x from client')
+        disconnect()
+      })
     })
 
-  t.end()
+  function disconnect () {
+    // same error! -- need to fix this
+    console.log(client.instances)
+    client.set({ url: null })
+  }
 })
