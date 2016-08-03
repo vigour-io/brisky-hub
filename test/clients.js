@@ -52,5 +52,14 @@ test('clients', function (t) {
     // same error! -- need to fix this
     console.log(client.instances)
     client.set({ url: null })
+    console.log('?')
+    // done()
+  }
+
+  function done () {
+    server.remove()
+    hybrid.remove()
+    client.remove()
+    t.end()
   }
 })
