@@ -1,7 +1,6 @@
 'use strict'
 const test = require('tape')
 const Hub = require('../')
-// add client subs as well
 
 test('clients', function (t) {
   t.plan(7)
@@ -51,14 +50,17 @@ test('clients', function (t) {
   hybrid.connected.is(true)
     .then(() => t.ok(true, 'hybrid connected to server'))
 
-  server.get('clients', {}).is(() => server.clients.keys().length > 1)
-    .then(() => {
-      t.same(server.clients.keys(), [ 'client', 'hybrid' ], 'server got all clients')
-      server.get('x', {}).is(true).then(() => {
-        t.ok(true, 'server got x from client')
-        disconnect()
-      })
+  Promise.all([
+    server.get('clients', {}).is(() => server.clients.keys().length > 1),
+    client.client.origin().get('upstream', {}),
+    client.client.origin().get('ip', {})
+  ]).then(() => {
+    t.same(server.clients.keys(), [ 'client', 'hybrid' ], 'server got all clients')
+    server.get('x', {}).is(true).then(() => {
+      t.ok(true, 'server got x from client')
+      disconnect()
     })
+  })
 
   function disconnect () {
     client.set({ url: null })
