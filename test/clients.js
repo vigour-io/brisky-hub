@@ -49,11 +49,8 @@ test('clients', function (t) {
     })
 
   function disconnect () {
-    // same error! -- need to fix this
-    // console.log(client.instances)
-    // client.set({ url: null })
-    // console.log('?')
-    done()
+    client.set({ url: null })
+    server.get('clients.client').is(null).then(done)
   }
 
   function done () {
