@@ -2,6 +2,8 @@
 const test = require('tape')
 const Hub = require('../')
 
+// add client subs as well
+
 test('clients', function (t) {
   t.plan(4)
   const subs = {
