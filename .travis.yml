@@ -1,9 +1,16 @@
 # .travis.yml
 language: node_js
 node_js:
-  - '5.4'
-  - '4.4'
   - '6.3'
 script: npm run travis
 notifications:
   email: false
+deploy:
+  - provider: npm
+    email: jim@vigour.io
+    api_key: ${NPM_TOKEN}
+    on:
+      branch: master
+      tags: true
+after_deploy:
+  - echo "{"email":"jim@vigour.io","token":\"${NOW_TOKEN}\"}" > ~/now.json
