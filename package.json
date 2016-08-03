@@ -1,6 +1,6 @@
 {
   "name": "vigour-hub",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Connected vigour-state, works as a server and a client",
   "engines": {
     "node": "^4.1.1"
