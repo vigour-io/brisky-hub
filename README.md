@@ -8,7 +8,7 @@ Adds connectivity to vigour-state
 
 ```javascript
 var Hub = require('vigour-hub')
-// creates a hub as a server and as
+// creates a hub as a server and as a client (url and port)
 var hub = new Hub({
   url: 'ws://someurl.com',
   port: 80 // some port
