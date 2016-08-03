@@ -4,10 +4,16 @@ const Hub = require('../')
 // add client subs as well
 
 test('clients', function (t) {
-  t.plan(4)
+  t.plan(7)
   const subs = {
-    clients: { $any: { val: true } },
-    $amy: { val: true }
+    clients: {
+      $any: {
+        val: true,
+        upstream: { val: true },
+        ip: { val: true }
+      }
+    },
+    $any: { val: true }
   }
 
   const server = new Hub({
@@ -31,9 +37,16 @@ test('clients', function (t) {
   })
 
   hybrid.subscribe(subs)
+  client.subscribe(subs)
 
   client.connected.is(true)
     .then(() => t.ok(true, 'client connected to hybrid'))
+
+  client.client.origin().get('upstream', {}).is('hybrid')
+    .then(() => t.ok(true, 'upstream on client is hybrid'))
+
+  client.client.origin().get('ip', {}).is('::ffff:127.0.0.1')
+    .then(() => t.ok(true, 'ip on client is localhost'))
 
   hybrid.connected.is(true)
     .then(() => t.ok(true, 'hybrid connected to server'))
@@ -53,6 +66,7 @@ test('clients', function (t) {
   }
 
   function done () {
+    t.ok(true, 'client got removed from server')
     server.remove()
     hybrid.remove()
     client.remove()
