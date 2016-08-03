@@ -1,7 +1,6 @@
 'use strict'
 const test = require('tape')
 const Hub = require('../')
-
 // add client subs as well
 
 test('clients', function (t) {
