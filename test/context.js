@@ -3,30 +3,29 @@ const test = require('tape')
 const Hub = require('../')
 
 test('context', function (t) {
-  // const subs = {
-  //   clients: {
-  //     $any: {
-  //       val: true,
-  //       upstream: { val: true },
-  //       ip: { val: true }
-  //     }
-  //   },
-  //   $any: { val: true }
-  // }
+  const subs = {
+    $any: { val: true }
+  }
 
-  // const server = new Hub({
-  //   id: 'server',
-  //   clients: { sort: 'key' },
-  //   port: 6000
-  // })
+  const server = new Hub({
+    id: 'server',
+    port: 6000
+  })
 
-  const client = new Hub({ // eslint-disable-line
+  const client = new Hub({
     id: 'client',
     context: false,
-    url: 'ws://localhost:6001',
+    url: 'ws://localhost:6000',
     x: true
   })
 
-  client.remove()
-  t.end()
+  server.get('x', false).is(true).then(() => {
+    console.log('got "x: true" lets change context')
+    client.set({
+      context: 'someuser',
+      hello: true
+    })
+  })
+
+  // t.end()
 })
