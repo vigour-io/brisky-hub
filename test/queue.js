@@ -85,32 +85,46 @@ test('queue', function (t) {
 
     const stamp = vstamp.create('special-type-of-stamp')
     client1.c.remove(stamp)
-    // client1.special.a.set('a', stamp)
+    client1.special.a.set('a', stamp)
     vstamp.close(stamp)
-    // Promise.all([
-    //   context.c.is(null),
-    //   client2.c.is(null)
-    // ]).then(() => {
-    //   t.equal(context.a.val, 'a', 'server - "a" is set to client1')
-    //   t.equal(context.b.val, -2, 'server - "b" is set to client2')
-    //   t.equal(context.c, null, 'server - "c" is removed')
-    //   t.equal(client1.a.val, 'a', 'client1 - got "a" from client1')
-    //   t.equal(client1.b.val, -2, 'client1 - got "b" from client2')
-    //   t.equal(client1.c, null, 'client1 - "c" is removed')
-    //   t.equal(client2.a.val, 'a', 'client2 - got "a" from client1')
-    //   t.equal(client2.b.val, -2, 'client2 - got "b" from client2')
-    //   t.equal(client2.c, null, 'client2 - "c" is removed')
-    //   t.equal(client1.reference.val, client1.a, 'client1 has reference')
-    //   t.equal(client2.reference.val, client2.a, 'client2 has reference')
-    //   t.equal(client2.special.a.val, 'a', 'client2 recieved update on a')
-    //   const parsed = vstamp.parse(stamp)
-    //   const result = vstamp.create(parsed.type, 1, parsed.val)
-    //   t.equal(client2.special.a.stamp, result, 'client2 recieved correct stamp on a')
-    //   server.remove()
-    //   client1.remove()
-    //   client2.remove()
-    //   t.end()
-    // })
+    Promise.all([
+      context.c.is(null),
+      client2.c.is(null)
+    ]).then(() => {
+      console.log('fuck waht?')
+
+      t.equal(context.a.val, 'a', 'server - "a" is set to client1')
+      t.equal(context.b.val, -2, 'server - "b" is set to client2')
+      t.equal(context.c, null, 'server - "c" is removed')
+      t.equal(client1.a.val, 'a', 'client1 - got "a" from client1')
+      t.equal(client1.b.val, -2, 'client1 - got "b" from client2')
+      t.equal(client1.c, null, 'client1 - "c" is removed')
+      t.equal(client2.a.val, 'a', 'client2 - got "a" from client1')
+      t.equal(client2.b.val, -2, 'client2 - got "b" from client2')
+      t.equal(client2.c, null, 'client2 - "c" is removed')
+      t.equal(client1.reference.val, client1.a, 'client1 has reference')
+      t.equal(client2.reference.val, client2.a, 'client2 has reference')
+
+      // --- fuck!!!
+      console.log(client2.special.a)
+      t.equal(context.special.a.val, 'a', 'server recieved update on a')
+      t.equal(client2.special.a.val, 'a', 'client2 recieved update on a')
+      const parsed = vstamp.parse(stamp)
+      const result = vstamp.create(parsed.type, 1, parsed.val)
+      t.equal(context.special.a.stamp, result, 'server recieved correct stamp on a')
+      // --- wrong
+      t.equal(client2.special.a.stamp, result, 'client2 recieved correct stamp on a')
+      console.log('XXXXXXXXX')
+      server.remove()
+
+      console.log('remove dat clients')
+      client2.remove()
+      console.log('next')
+      client1.remove()
+      t.end()
+    }).catch((err) => {
+      console.log(err)
+    })
   }
 
   function isConnected (val, cb) {
