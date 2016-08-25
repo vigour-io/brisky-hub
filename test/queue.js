@@ -5,7 +5,10 @@ const vstamp = require('vigour-stamp')
 
 test('queue', function (t) {
   const subs = {
-    $any: { val: true },
+    a: { val: true },
+    b: { val: true },
+    c: { val: true },
+    reference: { val: true },
     special: {
       reference: { val: true }
     },

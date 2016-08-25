@@ -3,25 +3,24 @@ const test = require('tape')
 const Hub = require('../')
 
 test('clients', { timeout: 2e3 }, (t) => {
-  t.plan(11)
+  t.plan(12)
 
   const subs = {
     clients: {
       $any: {
-        val: true,
         upstream: { val: true },
         ip: { val: true },
         device: { val: true },
         platform: { val: true }
       }
-    },
-    $any: { val: true }
+    }
   }
 
   const server = new Hub({
     id: 'server',
     clients: { sort: 'key' },
-    port: 6000
+    port: 6000,
+    field: { nested: 'suc6' }
   })
 
   const hybrid = new Hub({
@@ -38,7 +37,7 @@ test('clients', { timeout: 2e3 }, (t) => {
     x: true
   })
 
-  hybrid.subscribe(subs)
+  hybrid.subscribe({ val: true }) // subscribe to all
   client.subscribe(subs)
 
   const clientIsConnected = client.connected.is(true)
@@ -55,9 +54,11 @@ test('clients', { timeout: 2e3 }, (t) => {
 
   const hasClients = server.get('clients', {}).is(() => server.clients.keys().length > 1)
 
-  // console.log(hybrid.connected.compute())
+  const hybridHasServerFields = hybrid.get('field.nested', {}).is('suc6')
+    .then(() => t.ok(true, 'hybrid recieves all fields'))
+
   Promise.all([
-    clientIsConnected, hasUpstream, hasIp, hybridIsConnected, hasClients
+    clientIsConnected, hasUpstream, hasIp, hybridIsConnected, hasClients, hybridHasServerFields
   ]).then(() => {
     t.same(server.clients.keys(), [ 'client', 'hybrid' ], 'server got all clients')
     t.equal(client.client.origin().device.compute(), 'server', 'client receives correct device type')
