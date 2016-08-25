@@ -79,21 +79,15 @@ test('context', function (t) {
       client4.get('hello', false).is('bye').then(() => {
         t.ok(true, 'client4 recieves update from client3')
         process.nextTick(() => {
-          t.ok(client.hello.compute(), 'client does not get update for hello')
-          t.ok(client2.hello.compute(), 'client2 does not get update for hello')
-
-          console.log(' \n-------------------------------------------------------')
+          console.log(client.hello.compute())
+          t.equal(client.hello.compute(), true, 'client does not get update for hello')
+          t.equal(client2.hello.compute(), true, 'client2 does not get update for hello')
           client3.hello.remove()
-          console.log(client3.hello === null)
-          client4.hello.once('data', (val) => {
-            // bitccch
-            console.log('client4', val)
-            console.log('XXXX')
+          client4.hello.once('remove', (val) => {
+            t.ok(true, 'removed client4.hello')
           })
-          client.hello.once('data', (val) => {
-            // bitccch
-            console.log('client', val)
-            console.log('XXXX')
+          client.hello.once('remove', (val) => {
+            t.ok(true, 'removed client.hello')
           })
         })
       })
