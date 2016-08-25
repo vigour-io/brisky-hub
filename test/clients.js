@@ -5,9 +5,6 @@ const Hub = require('../')
 test('clients', { timeout: 2e3 }, (t) => {
   t.plan(11)
 
-  // make need a way to not sync clients upstream super important for the scraper setup (else it gets ALL clients)
-  // at the other hand it will work with contexts so its pretty ok
-
   const subs = {
     clients: {
       $any: {
@@ -37,29 +34,30 @@ test('clients', { timeout: 2e3 }, (t) => {
   const client = new Hub({
     id: 'client',
     context: false,
-    url: 'ws://localhost:6001', // upstream has to be scoped to one context -- default is false -- we dont need upstreams for context atm
+    url: 'ws://localhost:6001',
     x: true
   })
 
   hybrid.subscribe(subs)
   client.subscribe(subs)
 
-  client.connected.is(true)
+  const clientIsConnected = client.connected.is(true)
     .then(() => t.ok(true, 'client connected to hybrid'))
 
-  client.client.origin().get('upstream', {}).is('hybrid')
+  const hasUpstream = client.client.origin().get('upstream', {}).is('hybrid')
     .then(() => t.ok(true, 'upstream on client is hybrid'))
 
-  client.client.origin().get('ip', {}).is('::ffff:127.0.0.1')
+  const hasIp = client.client.origin().get('ip', {}).is('::ffff:127.0.0.1')
     .then(() => t.ok(true, 'ip on client is localhost'))
 
-  hybrid.connected.is(true)
+  const hybridIsConnected = hybrid.connected.is(true)
     .then(() => t.ok(true, 'hybrid connected to server'))
 
+  const hasClients = server.get('clients', {}).is(() => server.clients.keys().length > 1)
+
+  // console.log(hybrid.connected.compute())
   Promise.all([
-    server.get('clients', {}).is(() => server.clients.keys().length > 1),
-    client.client.origin().get('upstream', {}),
-    client.client.origin().get('ip', {})
+    clientIsConnected, hasUpstream, hasIp, hybridIsConnected, hasClients
   ]).then(() => {
     t.same(server.clients.keys(), [ 'client', 'hybrid' ], 'server got all clients')
     t.equal(client.client.origin().device.compute(), 'server', 'client receives correct device type')
