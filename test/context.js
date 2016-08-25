@@ -32,7 +32,7 @@ test('context', function (t) {
   client2.subscribe(subs)
 
   server.get('x', false).is(true).then(() => {
-    console.log('got "x: true" lets change context')
+    console.log(' \ngot "x: true" lets change context')
     // what do we do when you change context?
     // clear current context prob?
     client.set({
@@ -40,29 +40,43 @@ test('context', function (t) {
       hello: true
     })
     // console.log(server.clients)
-    console.log(server.clients.keys())
-
+    // console.log(server.clients.keys())
+    // console.log(server.instances.length)
     setTimeout(() => {
-      console.log(server.clients.keys())
-      console.log(server.instances[0].clients.keys())
-      console.log(client2.clients.keys())
-      console.log(client.clients.keys())
-    }, 2e3)
 
+      // console.log(server.clients.keys())
+      // console.log(server.instances[0].clients.keys())
+      // console.log(client2.clients.keys())
+      // console.log(client.clients.keys())
+    }, 1e3)
+
+    server.on(function context (val, stamp) {
+      if (val.context) {
+        t.equal(this.context.compute(), 'someuser', 'server received context')
+        t.equal(server.instances.length, 1, 'server has an extra instance')
+        t.ok(server.instances[0].clients !== server.clients, 'created new clients object for instance')
+
+        console.log(server.instances[0].clients.keys())
+        // so lets start doing these fucking clients
+        console.log(server.instances[0].clients === server.clients)
+
+        vstamp.done(stamp, () => this.off(context))
+      }
+    })
+
+    // server.
     client2.clients.on(function (val, stamp) {
       vstamp.done(stamp, () => {
-        console.log('client2 --->', this.keys())
+        // console.log('client2 --->', this.keys())
       })
     })
 
     client.clients.on(function (val, stamp) {
       vstamp.done(stamp, () => {
-        console.log('client1 --->', this.keys())
+        // console.log('client1 --->', this.keys())
       })
     })
 
     t.end()
   })
-
-  // t.end()
 })
