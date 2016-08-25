@@ -70,6 +70,14 @@ test('context', function (t) {
             client.get('originfield', false).is(true)
           ]).then(() => {
             t.ok(true, 'got orgiin field on context clients')
+            client3.set({ hello: 'bye' })
+            client4.get('hello', false).is('bye').then(() => {
+              t.ok(true, 'client4 recieves update from client3')
+              process.nextTick(() => {
+                t.ok(client.hello.compute(), 'client does not get update for hello')
+                t.ok(client2.hello.compute(), 'client2 does not get update for hello')
+              })
+            })
           })
           // then somefield should not be recived by anything else when setting hello
         })
