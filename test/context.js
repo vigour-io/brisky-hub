@@ -11,7 +11,8 @@ test('context', function (t) {
 
   const server = new Hub({
     id: 'server',
-    port: 6000
+    port: 6000,
+    clients: { sort: 'key' }
   })
 
   const client = new Hub({
@@ -31,15 +32,24 @@ test('context', function (t) {
 
   client2.subscribe(subs)
 
-  server.get('x', false).is(true).then(() => {
-    console.log(' \ngot "x: true" lets change context')
-    // what do we do when you change context?
-    // clear current context prob?
-    client.set({
-      context: 'someuser',
-      hello: true
-    })
+  const client3 = new Hub({
+    id: 'client3',
+    context: false,
+    url: 'ws://localhost:6000'
+  })
 
+  client3.subscribe(subs)
+
+  const client4 = new Hub({
+    id: 'client4',
+    context: false,
+    url: 'ws://localhost:6000'
+  })
+
+  client4.subscribe(subs)
+
+  server.get('x', false).is(true).then(() => {
+    client.set({ context: 'someuser', hello: true })
     server.on(function context (val, stamp) {
       if (val.context) {
         t.equal(this.context.compute(), 'someuser', 'server received context')
@@ -47,11 +57,27 @@ test('context', function (t) {
         const instance = server.instances[0]
         t.ok(instance.clients !== server.clients, 'created new clients object for instance')
         t.same(instance.clients.keys(), [ 'client1' ], 'instance has client1')
-        t.same(instance.clients.keys(), [ 'client2' ], 'server only has client2')
+        t.same(server.clients.keys(), [ 'client2', 'client3', 'client4' ], 'client1 removed from server clients')
         vstamp.done(stamp, () => this.off(context))
+        t.ok(!('hello' in client2), 'does not recieve hello in client2')
+        client2.set({ context: 'someuser' })
+        client2.get('hello', false).is(true).then(() => {
+          t.ok('received context on client2 after switching to someuser')
+          t.ok(!('hello' in client3), 'does not recieve hello in client3')
+          client3.set({ originfield: true })
+          Promise.all([
+            client2.get('originfield', false).is(true),
+            client.get('originfield', false).is(true)
+          ]).then(() => {
+            t.ok(true, 'got orgiin field on context clients')
+          })
+          // then somefield should not be recived by anything else when setting hello
+        })
         // t.end()
       }
     })
+
+    // need to receive these 2 clients as well
 
     // client2.clients.on(function (val, stamp) {
     //   vstamp.done(stamp, () => {
