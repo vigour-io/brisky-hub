@@ -39,44 +39,29 @@ test('context', function (t) {
       context: 'someuser',
       hello: true
     })
-    // console.log(server.clients)
-    // console.log(server.clients.keys())
-    // console.log(server.instances.length)
-    setTimeout(() => {
-
-      // console.log(server.clients.keys())
-      // console.log(server.instances[0].clients.keys())
-      // console.log(client2.clients.keys())
-      // console.log(client.clients.keys())
-    }, 1e3)
 
     server.on(function context (val, stamp) {
       if (val.context) {
         t.equal(this.context.compute(), 'someuser', 'server received context')
         t.equal(server.instances.length, 1, 'server has an extra instance')
-        t.ok(server.instances[0].clients !== server.clients, 'created new clients object for instance')
-
-        console.log(server.instances[0].clients.keys())
-        // so lets start doing these fucking clients
-        console.log(server.instances[0].clients === server.clients)
-
+        const instance = server.instances[0]
+        t.ok(instance.clients !== server.clients, 'created new clients object for instance')
+        t.same(instance.clients.keys(), [ 'client1' ], 'instance has client1')
+        t.same(instance.clients.keys(), [ 'client2' ], 'server only has client2')
         vstamp.done(stamp, () => this.off(context))
+        // t.end()
       }
     })
 
-    // server.
-    client2.clients.on(function (val, stamp) {
-      vstamp.done(stamp, () => {
-        // console.log('client2 --->', this.keys())
-      })
-    })
-
-    client.clients.on(function (val, stamp) {
-      vstamp.done(stamp, () => {
-        // console.log('client1 --->', this.keys())
-      })
-    })
-
-    t.end()
+    // client2.clients.on(function (val, stamp) {
+    //   vstamp.done(stamp, () => {
+    //     // console.log('client2 --->', this.keys())
+    //   })
+    // })
+    // client.clients.on(function (val, stamp) {
+    //   vstamp.done(stamp, () => {
+    //     // console.log('client1 --->', this.keys())
+    //   })
+    // })
   })
 })
