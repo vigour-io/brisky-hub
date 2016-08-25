@@ -68,25 +68,38 @@ test('context', function (t) {
           Promise.all([
             client2.get('originfield', false).is(true),
             client.get('originfield', false).is(true)
-          ]).then(() => {
-            t.ok(true, 'got orgiin field on context clients')
-            client3.set({ hello: 'bye' })
-            client4.get('hello', false).is('bye').then(() => {
-              t.ok(true, 'client4 recieves update from client3')
-              process.nextTick(() => {
-                t.ok(client.hello.compute(), 'client does not get update for hello')
-                t.ok(client2.hello.compute(), 'client2 does not get update for hello')
-              })
-            })
-          })
-          // then somefield should not be recived by anything else when setting hello
+          ]).then(orginUpdate)
         })
-        // t.end()
       }
     })
 
-    // need to receive these 2 clients as well
+    function orginUpdate () {
+      t.ok(true, 'got orgiin field on context clients')
+      client3.set({ hello: 'bye' })
+      client4.get('hello', false).is('bye').then(() => {
+        t.ok(true, 'client4 recieves update from client3')
+        process.nextTick(() => {
+          t.ok(client.hello.compute(), 'client does not get update for hello')
+          t.ok(client2.hello.compute(), 'client2 does not get update for hello')
 
+          console.log(' \n-------------------------------------------------------')
+          client3.hello.remove()
+          console.log(client3.hello === null)
+          client4.hello.once('data', (val) => {
+            // bitccch
+            console.log('client4', val)
+            console.log('XXXX')
+          })
+          client.hello.once('data', (val) => {
+            // bitccch
+            console.log('client', val)
+            console.log('XXXX')
+          })
+        })
+      })
+    }
+
+    // need to receive these 2 clients as well
     // client2.clients.on(function (val, stamp) {
     //   vstamp.done(stamp, () => {
     //     // console.log('client2 --->', this.keys())
