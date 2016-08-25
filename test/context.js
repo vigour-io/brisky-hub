@@ -33,17 +33,13 @@ test('context', function (t) {
 
   server.get('x', false).is(true).then(() => {
     console.log('got "x: true" lets change context')
-
     // what do we do when you change context?
     // clear current context prob?
-
     client.set({
       context: 'someuser',
       hello: true
     })
-
     // console.log(server.clients)
-
     console.log(server.clients.keys())
 
     setTimeout(() => {
