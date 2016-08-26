@@ -19,6 +19,7 @@ test('context', function (t) {
     id: 'client1',
     context: false,
     url: 'ws://localhost:6000',
+    clients: { sort: 'key' },
     x: true
   })
 
@@ -27,7 +28,8 @@ test('context', function (t) {
   const client2 = new Hub({
     id: 'client2',
     context: false,
-    url: 'ws://localhost:6000'
+    url: 'ws://localhost:6000',
+    clients: { sort: 'key' }
   })
 
   client2.subscribe(subs)
@@ -35,7 +37,8 @@ test('context', function (t) {
   const client3 = new Hub({
     id: 'client3',
     context: false,
-    url: 'ws://localhost:6000'
+    url: 'ws://localhost:6000',
+    clients: { sort: 'key' }
   })
 
   client3.subscribe(subs)
@@ -43,7 +46,8 @@ test('context', function (t) {
   const client4 = new Hub({
     id: 'client4',
     context: false,
-    url: 'ws://localhost:6000'
+    url: 'ws://localhost:6000',
+    clients: { sort: 'key' }
   })
 
   client4.subscribe(subs)
@@ -58,6 +62,11 @@ test('context', function (t) {
           const instance = server.instances[0]
           t.ok(instance.clients !== server.clients, 'created new clients object for instance')
           t.same(instance.clients.keys(), [ 'client1' ], 'instance has client1')
+
+          t.same(client.clients.keys(), [ 'client1' ], 'client1 has correct clients')
+          t.same(client2.clients.keys(), [ 'client2', 'client3', 'client4' ], 'client2 has correct clients')
+          t.same(client3.clients.keys(), [ 'client2', 'client3', 'client4' ], 'client3 has correct clients')
+          t.same(client4.clients.keys(), [ 'client2', 'client3', 'client4' ], 'client4 has correct clients')
 
           console.log(server.clients, instance.clients)
           t.same(server.clients.keys(), [ 'client2', 'client3', 'client4' ], 'client1 removed from server clients')
@@ -84,7 +93,6 @@ test('context', function (t) {
       client4.get('hello', false).is('bye').then(() => {
         t.ok(true, 'client4 recieves update from client3')
         process.nextTick(() => {
-          // console.log(client.hello.compute())
           t.equal(client.hello.compute(), true, 'client does not get update for hello')
           t.equal(client2.hello.compute(), true, 'client2 does not get update for hello')
           client3.hello.remove()
@@ -97,17 +105,5 @@ test('context', function (t) {
         })
       })
     }
-
-    // need to receive these 2 clients as well
-    // client2.clients.on(function (val, stamp) {
-    //   vstamp.done(stamp, () => {
-    //     // console.log('client2 --->', this.keys())
-    //   })
-    // })
-    // client.clients.on(function (val, stamp) {
-    //   vstamp.done(stamp, () => {
-    //     // console.log('client1 --->', this.keys())
-    //   })
-    // })
   })
 })
