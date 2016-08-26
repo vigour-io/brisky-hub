@@ -52,6 +52,7 @@ test('context', function (t) {
   client4.subscribe(subs)
 
   server.get('x', false).is(true).then(() => {
+    // may need context as well for each client else it just weird
     client.set({ context: 'someuser', hello: true })
     server.on(function context (val, stamp) {
       if (val.context) {
@@ -78,7 +79,7 @@ test('context', function (t) {
               client.get('originfield', false).is(true)
             ]).then(orginUpdate)
           })
-        }, 300)
+        }, 100)
       }
     })
 
@@ -91,14 +92,50 @@ test('context', function (t) {
           t.equal(client.hello.compute(), true, 'client does not get update for hello')
           t.equal(client2.hello.compute(), true, 'client2 does not get update for hello')
           client3.hello.remove()
-          client4.hello.once('remove', (val) => {
+          client4.hello.is(null).then((val) => {
             t.ok(true, 'removed client4.hello')
+            switchContext()
           })
-          client.hello.once('remove', (val) => {
-            t.ok(true, 'removed client.hello')
-          })
+          // need to fix this with remove instance branch of base
+          // client.hello.is(null).then((val) => {
+          //   t.ok(true, 'removed client.hello')
+          // })
+          // client2.hello.is(null).then((val) => {
+          //   t.ok(true, 'removed client2.hello')
+          // })
         })
       })
+    }
+
+    function switchContext () {
+      client.set({
+        context: 'somethingelse'
+      })
+      client4.set({
+        context: 'somethingelse'
+      })
+      server.on(function context (val, stamp) {
+        if (val.context) {
+          setTimeout(() => {
+            t.equal(server.instances.length, 2, 'server has an extra instance')
+            const someuser = server.instances[0]
+            const somethingelse = server.instances[1]
+            t.same(someuser.clients.keys(), [ 'client2' ], 'someuser has client2')
+            t.same(somethingelse.clients.keys(), [ 'client1', 'client4' ], 'somethingelse has client2')
+            this.off(context)
+            end()
+          }, 100)
+        }
+      })
+    }
+
+    function end () {
+      server.remove()
+      client.remove()
+      client2.remove()
+      client3.remove()
+      client4.remove()
+      t.end()
     }
   })
 })
