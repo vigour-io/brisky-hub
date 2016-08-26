@@ -45,7 +45,7 @@ test('queue', function (t) {
     t.equal(context.a.val, 2, '"a" is set by "client2"')
     t.equal(context.b.val, 2, '"b" is set by "client2"')
     t.equal(context.c.val, 2, '"c" is set by "client2"')
-    t.same(context.clients.keys(), [ '1', '2' ], 'server has clients')
+    t.same(context.clients.keys(), [ '1', '2' ], 'server-context has clients')
     t.same(client1.clients.keys(), [ '1', '2' ], 'client1 has clients')
     t.same(client2.clients.keys(), [ '2', '1' ], 'client2 has clients')
     server.port.set(false)

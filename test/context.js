@@ -1,7 +1,6 @@
 'use strict'
 const test = require('tape')
 const Hub = require('../')
-const vstamp = require('vigour-stamp')
 
 test('context', function (t) {
   const subs = {
@@ -62,13 +61,10 @@ test('context', function (t) {
           const instance = server.instances[0]
           t.ok(instance.clients !== server.clients, 'created new clients object for instance')
           t.same(instance.clients.keys(), [ 'client1' ], 'instance has client1')
-
           t.same(client.clients.keys(), [ 'client1' ], 'client1 has correct clients')
           t.same(client2.clients.keys(), [ 'client2', 'client3', 'client4' ], 'client2 has correct clients')
           t.same(client3.clients.keys(), [ 'client2', 'client3', 'client4' ], 'client3 has correct clients')
           t.same(client4.clients.keys(), [ 'client2', 'client3', 'client4' ], 'client4 has correct clients')
-
-          console.log(server.clients, instance.clients)
           t.same(server.clients.keys(), [ 'client2', 'client3', 'client4' ], 'client1 removed from server clients')
           this.off(context)
           t.ok(!('hello' in client2), 'does not recieve hello in client2')
@@ -82,13 +78,12 @@ test('context', function (t) {
               client.get('originfield', false).is(true)
             ]).then(orginUpdate)
           })
-        }, 500)
+        }, 300)
       }
     })
 
     function orginUpdate () {
       t.ok(true, 'got origin field on context clients')
-      console.log(' \n go go go')
       client3.set({ hello: 'bye' })
       client4.get('hello', false).is('bye').then(() => {
         t.ok(true, 'client4 recieves update from client3')
