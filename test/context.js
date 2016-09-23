@@ -9,9 +9,10 @@ test('context', function (t) {
     yuzi: { val: true },
     originfield: { val: true },
     hello: { val: true },
-    dog: {
+    animal: {
       $test: {
         exec: (state) => {
+          console.log(state.root.id, state.root.keys(), state.val)
           return state && state.compute() === 'dog'
         },
         $pass: {
@@ -20,7 +21,7 @@ test('context', function (t) {
       }
     },
     deeper: {
-      things: {
+      animal: {
         $test: {
           exec (state) {
             return state && state.compute() === 'doge'
@@ -57,7 +58,7 @@ test('context', function (t) {
 
   const clients = []
 
-  for (let i = 0; i < 25; i++) {
+  for (let i = 0; i < 6; i++) {
     clients.push(new Hub({
       id: 'client' + i,
       context: false,
@@ -191,6 +192,28 @@ test('context', function (t) {
         return getAll('james', 'hello')
       }).then(() => {
         t.ok(true, 'set origin field "james" to "hello" updates all')
+
+        console.log('send to server')
+        server.set({
+          animal: {
+            val: 'james',
+            diet: 'coffee'
+          }
+        })
+
+        setTimeout(() => {
+          t.same(clients.map(client => client.animal), clients.map(() => undefined), 'does not send animal "james"')
+          // server.set({
+          //   animal: {
+          //     val: 'dog',
+          //     diet: 'coffee'
+          //   }
+          // })
+
+          // getAll('animal.diet', 'coffee').then(() => {
+          //   console.log('yo')
+          // })
+        }, 500)
       })
       .then(end).catch(err => console.log(err))
       // make more complex subs after this one
