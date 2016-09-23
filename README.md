@@ -7,7 +7,7 @@
 Adds connectivity to vigour-state
 
 ```javascript
-var Hub = require('vigour-hub')
+var Hub = require('brisky-hub')
 // creates a hub as a server and as a client (url and port)
 var hub = new Hub({
   url: 'ws://someurl.com',
