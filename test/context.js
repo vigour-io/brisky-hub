@@ -51,19 +51,29 @@ test('context', function (t) {
     clients[0].set({ context: 'someuser', hello: true })
     server.on(function context (val, stamp) {
       if (val.context) {
-        setTimeout(() => {
-          t.equal(this.context.compute(), 'someuser', 'server received context')
+        this.off(context)
+        const originClients = clients.map(client => client.id).filter(id => id !== 'client0')
+        const arr = clients.filter(
+          client => client.id !== 'client0')
+          .map(client => client.clients.is(
+            () => {
+              const result = client.clients.keys()[0] !== 'client0' && client.clients.keys().length === originClients.length
+              if (result) {
+                t.same(client.clients.keys(), originClients, 'correct clients for ' + client.id)
+                return result
+              }
+            }
+          )
+        )
+        arr.push(this.context.is('someuser'))
+        Promise.all(arr).then(() => {
+          t.ok(true, 'server received context')
           t.equal(server.instances.length, 1, 'server has an extra instance')
+          t.same(server.clients.keys(), originClients, 'client0 removed from server clients')
           const instance = server.instances[0]
-          const originClients = clients.map(client => client.id).filter(id => id !== 'client0')
           t.ok(instance.clients !== server.clients, 'created new clients object for instance')
           t.same(instance.clients.keys(), [ 'client0' ], 'instance has client0')
           t.same(clients[0].clients.keys(), [ 'client0' ], 'client0 has correct clients')
-          t.same(clients[1].clients.keys(), originClients, 'client1 has correct clients')
-          t.same(clients[2].clients.keys(), originClients, 'client2 has correct clients')
-          t.same(clients[3].clients.keys(), originClients, 'client3 has correct clients')
-          t.same(server.clients.keys(), originClients, 'client0 removed from server clients')
-          this.off(context)
           t.ok(!('hello' in clients[1]), 'does not recieve hello in client1')
           clients[1].set({ context: 'someuser' })
           clients[1].get('hello', false).is(true).then(() => {
@@ -75,7 +85,7 @@ test('context', function (t) {
               clients[0].get('originfield', false).is(true)
             ]).then(orginUpdate)
           })
-        }, 1000)
+        })
       }
     })
 
@@ -109,6 +119,7 @@ test('context', function (t) {
       server.on(function context (val, stamp) {
         if (val.context) {
           setTimeout(() => {
+
             t.equal(server.instances.length, 2, 'server has an extra instance')
             const someuser = server.instances[0]
             const somethingelse = server.instances[1]
@@ -116,6 +127,7 @@ test('context', function (t) {
             t.same(somethingelse.clients.keys(), [ 'client0', 'client3' ], 'somethingelse has client0')
             this.off(context)
             updates()
+
           }, 1000)
         }
       })
