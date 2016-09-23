@@ -10,6 +10,7 @@
     "test": "(ducktape; node test) | tap-difflet && standard",
     "watch": "nodemon test | tap-difflet",
     "watch-perf": "nodemon --prof test/performance/index.js | tap-difflet",
+    "profile": "node --prof-process $(ls isolate-*) > processed.txt",
     "cover": "istanbul cover --report none --print detail test/index.js",
     "travis": "npm run cover -s && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0) && standard"
   },
