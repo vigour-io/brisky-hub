@@ -60,12 +60,22 @@ test('context', function (t) {
 
   client5.subscribe(subs)
 
+  const client6 = new Hub({
+    id: 'client6',
+    context: false,
+    url: 'ws://localhost:6000',
+    clients: { sort: 'key' }
+  })
+
+  client6.subscribe(subs)
+
   const clients = {
     client1: client,
     client2,
     client3,
     client4,
-    client5
+    client5,
+    client6
   }
 
   server.get('x', false).is(true).then(() => {
@@ -80,10 +90,10 @@ test('context', function (t) {
           t.ok(instance.clients !== server.clients, 'created new clients object for instance')
           t.same(instance.clients.keys(), [ 'client1' ], 'instance has client1')
           t.same(client.clients.keys(), [ 'client1' ], 'client1 has correct clients')
-          t.same(client2.clients.keys(), [ 'client2', 'client3', 'client4', 'client5' ], 'client2 has correct clients')
-          t.same(client3.clients.keys(), [ 'client2', 'client3', 'client4', 'client5' ], 'client3 has correct clients')
-          t.same(client4.clients.keys(), [ 'client2', 'client3', 'client4', 'client5' ], 'client4 has correct clients')
-          t.same(server.clients.keys(), [ 'client2', 'client3', 'client4', 'client5' ], 'client1 removed from server clients')
+          t.same(client2.clients.keys(), [ 'client2', 'client3', 'client4', 'client5', 'client6' ], 'client2 has correct clients')
+          t.same(client3.clients.keys(), [ 'client2', 'client3', 'client4', 'client5', 'client6' ], 'client3 has correct clients')
+          t.same(client4.clients.keys(), [ 'client2', 'client3', 'client4', 'client5', 'client6' ], 'client4 has correct clients')
+          t.same(server.clients.keys(), [ 'client2', 'client3', 'client4', 'client5', 'client6' ], 'client1 removed from server clients')
           this.off(context)
           t.ok(!('hello' in client2), 'does not recieve hello in client2')
           client2.set({ context: 'someuser' })
@@ -147,24 +157,33 @@ test('context', function (t) {
     }
 
     function updates () {
-      t.same(client3.clients.keys(), [ 'client3', 'client5' ], 'correct clients on non-context')
+      t.same(client3.clients.keys(), [ 'client3', 'client5', 'client6' ], 'correct clients on non-context')
       client3.set({ yuzi: 'hello' })
       getAll('yuzi', 'hello').then(() => {
-        t.ok(true, 'update origin all clients get updated')
+        t.ok(true, 'update origin field "yuzi" all clients get updated')
         client5.yuzi.set('glurf')
         return getAll('yuzi', 'glurf')
       }).then(() => {
-        t.ok(true, 'update origin again all clients get updated')
+        t.ok(true, 'update origin field "yuzi" again all clients get updated')
         client3.context.set('someuser')
         return client2.clients.is((val, data, stamp, target) => target.keys().length > 1)
       }).then(() => {
-        t.ok(true, 'change context of client3 to someuser')
+        t.ok(true, 'change context of "client3" to "someuser"')
         client3.yuzi.set('sucker')
         return getContext('someuser', 'yuzi', 'sucker')
       }).then(() => {
-        t.ok(true, 'update yuzi on context someuser')
-
-        return
+        t.ok(true, 'update "yuzi" on context "someuser"')
+        return getAll('yuzi', 'glurf', 'someuser')
+      }).then(() => {
+        t.ok(true, 'did not update other contexts')
+        client5.yuzi.set('flurp')
+        return getAll('yuzi', 'flurp', 'someuser')
+      }).then(() => {
+        t.ok(true, 'set origin field "yuzi" to "flurp", did not update other contexts')
+        client5.set({ james: 'hello' })
+        return getAll('james', 'hello')
+      }).then(() => {
+        t.ok(true, 'set origin field "james" to "hello" updates all')
       })
       .then(end).catch(err => console.log(err))
       // make more complex subs after this one
@@ -172,22 +191,21 @@ test('context', function (t) {
 
     function end () {
       server.remove()
-      client.remove()
-      client2.remove()
-      client3.remove()
-      client4.remove()
+      for (let client in clients) {
+        clients[client].remove()
+      }
       t.end()
     }
   })
 
-  function getAll (field, val) {
-    return Promise.all([
-      client.get(field, {}).is(val),
-      client2.get(field, {}).is(val),
-      client3.get(field, {}).is(val),
-      client4.get(field, {}).is(val),
-      client5.get(field, {}).is(val)
-    ])
+  function getAll (field, val, exclude) {
+    const arr = []
+    for (let client in clients) {
+      if (!exclude || clients[client].context.compute() !== exclude) {
+        arr.push(clients[client].get(field, {}).is(val))
+      }
+    }
+    return Promise.all(arr)
   }
 
   function getContext (context, field, val) {
