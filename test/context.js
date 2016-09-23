@@ -51,6 +51,15 @@ test('context', function (t) {
 
   client4.subscribe(subs)
 
+  const client5 = new Hub({
+    id: 'client5',
+    context: false,
+    url: 'ws://localhost:6000',
+    clients: { sort: 'key' }
+  })
+
+  client5.subscribe(subs)
+
   server.get('x', false).is(true).then(() => {
     // may need context as well for each client else it just weird
     client.set({ context: 'someuser', hello: true })
@@ -63,10 +72,10 @@ test('context', function (t) {
           t.ok(instance.clients !== server.clients, 'created new clients object for instance')
           t.same(instance.clients.keys(), [ 'client1' ], 'instance has client1')
           t.same(client.clients.keys(), [ 'client1' ], 'client1 has correct clients')
-          t.same(client2.clients.keys(), [ 'client2', 'client3', 'client4' ], 'client2 has correct clients')
-          t.same(client3.clients.keys(), [ 'client2', 'client3', 'client4' ], 'client3 has correct clients')
-          t.same(client4.clients.keys(), [ 'client2', 'client3', 'client4' ], 'client4 has correct clients')
-          t.same(server.clients.keys(), [ 'client2', 'client3', 'client4' ], 'client1 removed from server clients')
+          t.same(client2.clients.keys(), [ 'client2', 'client3', 'client4', 'client5' ], 'client2 has correct clients')
+          t.same(client3.clients.keys(), [ 'client2', 'client3', 'client4', 'client5' ], 'client3 has correct clients')
+          t.same(client4.clients.keys(), [ 'client2', 'client3', 'client4', 'client5' ], 'client4 has correct clients')
+          t.same(server.clients.keys(), [ 'client2', 'client3', 'client4', 'client5' ], 'client1 removed from server clients')
           this.off(context)
           t.ok(!('hello' in client2), 'does not recieve hello in client2')
           client2.set({ context: 'someuser' })
@@ -123,10 +132,23 @@ test('context', function (t) {
             t.same(someuser.clients.keys(), [ 'client2' ], 'someuser has client2')
             t.same(somethingelse.clients.keys(), [ 'client1', 'client4' ], 'somethingelse has client2')
             this.off(context)
-            end()
+            updates()
           }, 100)
         }
       })
+    }
+
+    function updates () {
+      logClients(server)
+      t.same(client3.clients.keys(), [ 'client3', 'client5' ], 'correct clients on non-context')
+      client3.set({ yuzi: 'hello' })
+      client2.get('yuzi', {}).is('hello', () => {
+        console.log('hello! gots it SOMEUSER')
+      })
+      client.get('yuzi', {}).is('hello', () => {
+        console.log('hello! gots it SOMETHINGELSE')
+      })
+      // make more complex subs after this one
     }
 
     function end () {
@@ -139,3 +161,10 @@ test('context', function (t) {
     }
   })
 })
+
+function logClients (server) {
+  console.log('no-context: ' + server.clients.keys().join(', '))
+  server.instances.forEach(val =>
+    console.log(val.context.compute() + ': ' + val.clients.keys().join(', '))
+  )
+}
