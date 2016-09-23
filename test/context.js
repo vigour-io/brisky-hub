@@ -60,6 +60,14 @@ test('context', function (t) {
 
   client5.subscribe(subs)
 
+  const clients = {
+    client1: client,
+    client2,
+    client3,
+    client4,
+    client5
+  }
+
   server.get('x', false).is(true).then(() => {
     // may need context as well for each client else it just weird
     client.set({ context: 'someuser', hello: true })
@@ -139,15 +147,26 @@ test('context', function (t) {
     }
 
     function updates () {
-      logClients(server)
       t.same(client3.clients.keys(), [ 'client3', 'client5' ], 'correct clients on non-context')
       client3.set({ yuzi: 'hello' })
       getAll('yuzi', 'hello').then(() => {
+        t.ok(true, 'update origin all clients get updated')
         client5.yuzi.set('glurf')
-        getAll('yuzi', 'glurf').then(() => {
-          console.log('more')
-        })
+        return getAll('yuzi', 'glurf')
+      }).then(() => {
+        t.ok(true, 'update origin again all clients get updated')
+        client3.context.set('someuser')
+        return client2.clients.is((val, data, stamp, target) => target.keys().length > 1)
+      }).then(() => {
+        t.ok(true, 'change context of client3 to someuser')
+        client3.yuzi.set('sucker')
+        return getContext('someuser', 'yuzi', 'sucker')
+      }).then(() => {
+        t.ok(true, 'update yuzi on context someuser')
+
+        return
       })
+      .then(end).catch(err => console.log(err))
       // make more complex subs after this one
     }
 
@@ -170,11 +189,14 @@ test('context', function (t) {
       client5.get(field, {}).is(val)
     ])
   }
+
+  function getContext (context, field, val) {
+    return Promise.all(
+      server.getContext(context).clients.keys()
+      .map(key => clients[key].get(field, {}).is(val))
+    )
+  }
 })
-
-
-
-
 
 function logClients (server) {
   console.log('no-context: ' + server.clients.keys().join(', '))
