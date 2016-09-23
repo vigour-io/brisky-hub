@@ -29,7 +29,7 @@ test('context', function (t) {
 
   const clients = []
 
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 25; i++) {
     clients.push(new Hub({
       id: 'client' + i,
       context: false,
@@ -118,17 +118,19 @@ test('context', function (t) {
       clients[3].set({ context: 'somethingelse' })
       server.on(function context (val, stamp) {
         if (val.context) {
-          setTimeout(() => {
-
+          this.off(context)
+          Promise.all([
+            clients[3].clients.is(() => {
+              return clients[3].clients.keys().length === 2
+            })
+          ]).then(() => {
             t.equal(server.instances.length, 2, 'server has an extra instance')
             const someuser = server.instances[0]
             const somethingelse = server.instances[1]
             t.same(someuser.clients.keys(), [ 'client1' ], 'someuser has client1')
             t.same(somethingelse.clients.keys(), [ 'client0', 'client3' ], 'somethingelse has client0')
-            this.off(context)
             updates()
-
-          }, 1000)
+          })
         }
       })
     }
@@ -190,10 +192,3 @@ test('context', function (t) {
     )
   }
 })
-
-function logClients (server) {
-  console.log('no-context: ' + server.clients.keys().join(', '))
-  server.instances.forEach(val =>
-    console.log(val.context.compute() + ': ' + val.clients.keys().join(', '))
-  )
-}
