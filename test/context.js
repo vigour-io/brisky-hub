@@ -12,7 +12,6 @@ test('context', function (t) {
     animal: {
       $test: {
         exec: (state) => {
-          console.log(state.root.id, state.root.context, state.val)
           return state && state.compute() === 'dog'
         },
         $pass: {
@@ -193,7 +192,6 @@ test('context', function (t) {
       }).then(() => {
         t.ok(true, 'set origin field "james" to "hello" updates all')
 
-        console.log('send to server')
         server.set({
           animal: {
             val: 'james',
@@ -201,19 +199,21 @@ test('context', function (t) {
           }
         })
 
-        setTimeout(() => {
-          t.same(clients.map(client => client.animal), clients.map(() => undefined), 'does not send animal "james"')
-          // server.set({
-          //   animal: {
-          //     val: 'dog',
-          //     diet: 'coffee'
-          //   }
-          // })
-
-          // getAll('animal.diet', 'coffee').then(() => {
-          //   console.log('yo')
-          // })
-        }, 500)
+        return new Promise(resolve => {
+          setTimeout(() => {
+            t.same(clients.map(client => client.animal), clients.map(() => undefined), 'does not send animal "james"')
+            server.set({
+              animal: {
+                val: 'dog',
+                diet: 'coffee'
+              }
+            })
+            getAll('animal.diet', 'coffee').then(() => {
+              t.ok(true, 'send animal when its a dog')
+              resolve()
+            })
+          }, 500)
+        })
       })
       .then(end).catch(err => console.log(err))
       // make more complex subs after this one
