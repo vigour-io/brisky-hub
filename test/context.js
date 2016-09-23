@@ -8,20 +8,38 @@ test('context', function (t) {
     clients: { $any: { val: true } }
   }
 
+  const sort = (a, b) => {
+    a = Number(a.slice(6))
+    b = Number(b.slice(6))
+    return a > b ? 1 : -1
+  }
+
+  const clientssort = {
+    sort: {
+      val: 'key',
+      exec: sort
+    }
+  }
+
   const server = new Hub({
     id: 'server',
     port: 6000,
-    clients: { sort: 'key' }
+    clients: clientssort
   })
 
   const clients = []
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 20; i++) {
     clients.push(new Hub({
       id: 'client' + i,
       context: false,
       url: 'ws://localhost:6000',
-      clients: { sort: 'key' }
+      clients: {
+        sort: {
+          val: 'key',
+          exec: sort
+        }
+      }
     }))
     clients[i].subscribe(subs)
   }
@@ -37,7 +55,7 @@ test('context', function (t) {
           t.equal(this.context.compute(), 'someuser', 'server received context')
           t.equal(server.instances.length, 1, 'server has an extra instance')
           const instance = server.instances[0]
-          const originClients = [ 'client1', 'client2', 'client3', 'client4', 'client5' ]
+          const originClients = clients.map(client => client.id).filter(id => id !== 'client0')
           t.ok(instance.clients !== server.clients, 'created new clients object for instance')
           t.same(instance.clients.keys(), [ 'client0' ], 'instance has client0')
           t.same(clients[0].clients.keys(), [ 'client0' ], 'client0 has correct clients')
@@ -57,7 +75,7 @@ test('context', function (t) {
               clients[0].get('originfield', false).is(true)
             ]).then(orginUpdate)
           })
-        }, 100)
+        }, 1000)
       }
     })
 
@@ -98,13 +116,13 @@ test('context', function (t) {
             t.same(somethingelse.clients.keys(), [ 'client0', 'client3' ], 'somethingelse has client0')
             this.off(context)
             updates()
-          }, 100)
+          }, 1000)
         }
       })
     }
 
     function updates () {
-      t.same(clients[2].clients.keys(), [ 'client2', 'client4', 'client5' ], 'correct clients on non-context')
+      t.same(clients[2].clients.keys(), server.clients.keys(), 'correct clients on non-context')
       clients[2].set({ yuzi: 'hello' })
       getAll('yuzi', 'hello').then(() => {
         t.ok(true, 'update origin field "yuzi" all clients get updated')
