@@ -7,43 +7,39 @@ const server = new Hub({
 })
 
 const subs = {
-  val: true
+  blurf: {
+    $any: {
+      $test: {
+        exec (val) {
+          return val > 1
+        },
+        $pass: { val: true }
+      }
+    }
+  },
+  field: {
+    something: {
+      $test: {
+        exec (val) {
+          return val > 5
+        },
+        $pass: { val: true }
+      }
+    }
+  }
 }
 
-const client = new Hub({
-  id: 'client1',
-  url: 'ws://localhost:6666',
-  context: false
-})
-
-client.subscribe(subs)
-
-const client2 = new Hub({
-  id: 'client2',
-  url: 'ws://localhost:6666',
-  context: false
-})
-
-client2.subscribe(subs)
-
-const client3 = new Hub({
-  id: 'client3',
-  url: 'ws://localhost:6666',
-  context: false
-})
-
-client3.subscribe(subs)
-
-const client4 = new Hub({
-  id: 'client4',
-  url: 'ws://localhost:6666',
-  context: false
-})
-
-client4.subscribe(subs)
+var clients = []
+for (var i = 0; i < 3; i++) {
+  clients.push(new Hub({
+    id: 'client' + i,
+    url: 'ws://localhost:6666',
+    context: false
+  }))
+  clients[clients.length - 1].subscribe(subs)
+}
 
 var total = 0
-
 var cnt = 0
 
 function doSomething () {
@@ -62,7 +58,7 @@ function doSomething () {
     }
   })
   total += (Date.now() - t)
-  if (cnt < 10) {
+  if (cnt < 3) {
     setTimeout(doSomething, 100)
   } else {
     console.log(total + 'ms')
