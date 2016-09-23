@@ -12,7 +12,7 @@ test('context', function (t) {
     animal: {
       $test: {
         exec: (state) => {
-          console.log(state.root.id, state.root.keys(), state.val)
+          console.log(state.root.id, state.root.context, state.val)
           return state && state.compute() === 'dog'
         },
         $pass: {
