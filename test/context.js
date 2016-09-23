@@ -4,8 +4,36 @@ const Hub = require('../')
 
 test('context', function (t) {
   const subs = {
-    $any: { val: true },
-    clients: { $any: { val: true } }
+    x: { val: true },
+    james: { val: true },
+    yuzi: { val: true },
+    originfield: { val: true },
+    hello: { val: true },
+    dog: {
+      $test: {
+        exec: (state) => {
+          return state && state.compute() === 'dog'
+        },
+        $pass: {
+          diet: { val: true }
+        }
+      }
+    },
+    deeper: {
+      things: {
+        $test: {
+          exec (state) {
+            return state && state.compute() === 'doge'
+          },
+          $pass: {
+            diet: { val: true }
+          }
+        }
+      }
+    },
+
+    // why does any not work???
+    clients: { val: true }  // $any: { val: true } -- does not work as expected!
   }
 
   const sort = (a, b) => {
