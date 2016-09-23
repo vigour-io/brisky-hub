@@ -30,3 +30,5 @@ mocha.css
 test-runner.html
 .tern-project
 resultlog.txt
+
+isolate-*
