@@ -9,6 +9,7 @@
   "scripts": {
     "test": "(ducktape; node test) | tap-difflet && standard",
     "watch": "nodemon test | tap-difflet",
+    "watch-perf": "nodemon test/performance/index.js | tap-difflet",
     "cover": "istanbul cover --report none --print detail test/index.js",
     "travis": "npm run cover -s && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0) && standard"
   },
@@ -35,6 +36,7 @@
     "./lib/downstream/server/create/index.js": "./lib/downstream/server/create/browser.js"
   },
   "dependencies": {
+    "quick-hash": "^1.0.1",
     "clocksy": "^1.1.0",
     "lodash.merge": "^4.0.0",
     "lodash.set": "^4.0.0",
