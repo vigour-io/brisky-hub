@@ -142,11 +142,11 @@ test('context', function (t) {
       logClients(server)
       t.same(client3.clients.keys(), [ 'client3', 'client5' ], 'correct clients on non-context')
       client3.set({ yuzi: 'hello' })
-      client2.get('yuzi', {}).is('hello', () => {
-        console.log('hello! gots it SOMEUSER')
-      })
-      client.get('yuzi', {}).is('hello', () => {
-        console.log('hello! gots it SOMETHINGELSE')
+      getAll('yuzi', 'hello').then(() => {
+        client5.yuzi.set('glurf')
+        getAll('yuzi', 'glurf').then(() => {
+          console.log('more')
+        })
       })
       // make more complex subs after this one
     }
@@ -160,7 +160,21 @@ test('context', function (t) {
       t.end()
     }
   })
+
+  function getAll (field, val) {
+    return Promise.all([
+      client.get(field, {}).is(val),
+      client2.get(field, {}).is(val),
+      client3.get(field, {}).is(val),
+      client4.get(field, {}).is(val),
+      client5.get(field, {}).is(val)
+    ])
+  }
 })
+
+
+
+
 
 function logClients (server) {
   console.log('no-context: ' + server.clients.keys().join(', '))
