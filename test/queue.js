@@ -5,7 +5,10 @@ const vstamp = require('vigour-stamp')
 
 test('queue', function (t) {
   const subs = {
-    $any: { val: true },
+    a: { val: true },
+    b: { val: true },
+    c: { val: true },
+    reference: { val: true },
     special: {
       reference: { val: true }
     },
@@ -42,7 +45,7 @@ test('queue', function (t) {
     t.equal(context.a.val, 2, '"a" is set by "client2"')
     t.equal(context.b.val, 2, '"b" is set by "client2"')
     t.equal(context.c.val, 2, '"c" is set by "client2"')
-    t.same(context.clients.keys(), [ '1', '2' ], 'server has clients')
+    t.same(context.clients.keys(), [ '1', '2' ], 'server-context has clients')
     t.same(client1.clients.keys(), [ '1', '2' ], 'client1 has clients')
     t.same(client2.clients.keys(), [ '2', '1' ], 'client2 has clients')
     server.port.set(false)
@@ -67,7 +70,6 @@ test('queue', function (t) {
       setTimeout(() => {
         client1.a.set('a')
         isConnected(true, reconnect)
-        // client1.c.remove() -- not supported yet need tombstones
         server.port.set(6000)
       }, 50)
     }, 50)
@@ -81,6 +83,7 @@ test('queue', function (t) {
     t.same(client1.clients.keys(), [ '1', '2' ], 'client1 has clients')
     t.same(client2.clients.keys(), [ '2', '1' ], 'client2 has clients')
     t.equal(client1.special.reference.val, client1.special.a, 'client1 has "special.reference"')
+
     const stamp = vstamp.create('special-type-of-stamp')
     client1.c.remove(stamp)
     client1.special.a.set('a', stamp)
@@ -100,14 +103,18 @@ test('queue', function (t) {
       t.equal(client2.c, null, 'client2 - "c" is removed')
       t.equal(client1.reference.val, client1.a, 'client1 has reference')
       t.equal(client2.reference.val, client2.a, 'client2 has reference')
+      t.equal(context.special.a.val, 'a', 'server recieved update on a')
       t.equal(client2.special.a.val, 'a', 'client2 recieved update on a')
       const parsed = vstamp.parse(stamp)
       const result = vstamp.create(parsed.type, 1, parsed.val)
+      t.equal(context.special.a.stamp, result, 'server recieved correct stamp on a')
       t.equal(client2.special.a.stamp, result, 'client2 recieved correct stamp on a')
       server.remove()
-      client1.remove()
       client2.remove()
+      client1.remove()
       t.end()
+    }).catch((err) => {
+      console.log(err)
     })
   }
 
