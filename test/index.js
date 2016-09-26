@@ -1,7 +1,7 @@
 'use strict'
 require('./queue')
-require('./clients')
-require('./context')
+// require('./clients')
+// require('./context')
 
 /*
   context needs lots and lots of work
