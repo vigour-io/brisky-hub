@@ -1,7 +1,6 @@
 'use strict'
 const test = require('tape')
 const Hub = require('../')
-const vstamp = require('vigour-stamp')
 
 test('sync', function (t) {
   const subs = {
@@ -17,8 +16,7 @@ test('sync', function (t) {
     clients: { sort: 'key' },
     something: {
       sync (state) {
-        console.log('w00t?')
-        return state.keys().length > 10
+        return state && state.keys().length > 10
       }
     }
   })
@@ -47,5 +45,6 @@ test('sync', function (t) {
 
   client1.set({ something: [ 1, 2, 3, 4, 5 ] })
 
-  // client1.set({ something: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] })
+  console.log('gaurd')
+  client1.set({ something: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] })
 })
