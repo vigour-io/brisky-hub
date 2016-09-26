@@ -51,12 +51,13 @@ test('sync', function (t) {
 
   client1.set({ something: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] })
 
-  client2.get('something.10', {}).on((val, stamp) => {
+  client2.get('something.10', {}).once((val, stamp) => {
     vstamp.done(stamp, () => {
       t.equal(cnt, 1, 'something fired once')
       server.remove()
       client1.remove()
       client2.remove()
+      t.end()
     })
   })
 })
