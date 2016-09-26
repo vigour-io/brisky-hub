@@ -7,10 +7,13 @@
 Adds connectivity to vigour-state
 
 ```javascript
-var Hub = require('vigour-hub')
+var Hub = require('brisky-hub')
 // creates a hub as a server and as a client (url and port)
 var hub = new Hub({
   url: 'ws://someurl.com',
   port: 80 // some port
 })
 ```
+
+temp solution for now add this
+` "now-build": "cp uws_musl_hack/uws_linux* ./node_modules/uws"` to your pkg.json
