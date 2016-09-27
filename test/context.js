@@ -57,7 +57,7 @@ test('context', function (t) {
 
   const clients = []
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 25; i++) {
     clients.push(new Hub({
       id: 'client' + i,
       context: false,
