@@ -85,7 +85,8 @@ test('context', function (t) {
           client => client.id !== 'client0')
           .map(client => client.clients.is(
             () => {
-              const result = client.clients.keys()[0] !== 'client0' && client.clients.keys().length === originClients.length
+              const result = client.clients.keys()[0] !== 'client0' &&
+                client.clients.keys().length === originClients.length
               if (result) {
                 t.same(client.clients.keys(), originClients, 'correct clients for ' + client.id)
                 return result
