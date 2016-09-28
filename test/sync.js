@@ -4,11 +4,13 @@ const Hub = require('../')
 const vstamp = require('vigour-stamp')
 
 test('sync', function (t) {
-  const subs = {
-    something: {
-      $any: { val: true }
-    }
-  }
+  // @NOTE: changed subs to val: true
+  const subs = { val: true }
+  // const subs = {
+  //   something: {
+  //     $any: { val: true }
+  //   }
+  // }
 
   const server = new Hub({
     id: 'server',
@@ -19,6 +21,9 @@ test('sync', function (t) {
       sync (state) {
         return state && state.keys().length > 10
       }
+    },
+    somethingElse: {
+      sync: false
     }
   })
 
@@ -45,7 +50,7 @@ test('sync', function (t) {
     cnt++
   })
 
-  client1.set({ something: [ 1, 2, 3, 4, 5 ] })
+  client1.set({ something: [ 1, 2, 3, 4, 5 ], somethingElse: 'someValue' })
 
   client2.set({ bla: true })
 
@@ -57,6 +62,11 @@ test('sync', function (t) {
       t.equal(cnt, 1, 'something fired once')
       setTimeout(() => {
         t.ok(!server.bla, 'client2 does not syncUp')
+        t.notEqual(
+          client2.get('somethingElse.compute'),
+          'someValue',
+          'did not sync somethingElse'
+        )
         server.remove()
         client1.remove()
         client2.remove()
