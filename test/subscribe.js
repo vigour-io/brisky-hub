@@ -6,8 +6,7 @@ test('subscribe - exec function gaurds', function (t) {
   const server = new Hub({ port: 6000 })
   const client = new Hub({
     id: 1,
-    context: false,
-    client: '$root.clients.1'
+    context: false
   })
 
   client.subscribe({
