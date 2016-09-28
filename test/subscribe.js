@@ -6,9 +6,10 @@ test('subscribe - exec function gaurds', function (t) {
   const server = new Hub({ port: 6000 })
   const client = new Hub({
     id: 1,
-    url: 'ws://localhost:6000',
-    context: false
+    context: false,
+    client: '$root.clients.1'
   })
+
   client.subscribe({
     bla: {
       $test: {
@@ -20,20 +21,23 @@ test('subscribe - exec function gaurds', function (t) {
       }
     }
   })
+
+  process.nextTick(() => client.set({ url: 'ws://localhost:6000' }))
+
   server.once('error', (err) => {
-    t.equal(err.message.indexOf('cannot run function $test.exec'), 0, 'throws run error for false exec')
+    t.equal(err.message.indexOf('cannot run function $test.exec'), 0, 'emits run error for false exec')
     const subsHash = Object.keys(client.subscriptions)[0]
     const subsId = client.id + subsHash
     process.nextTick(() => {
-      t.same(server.emitters.subscription.attach.keys(), [ subsId ], 'correct subscription listeners')
+      t.same(server.emitters.subscription.attach.keys(), [ subsId ], 'correct subscription listeners on server')
       client.client.origin().sendMeta()
     })
     setTimeout(() => {
-      t.same(server.emitters.subscription.attach.keys(), [ subsId ], 'correct subscription listeners after resending subscriptions')
+      t.same(server.emitters.subscription.attach.keys(), [ subsId ], 'correct subscription listeners after resending subscriptions on server')
       client.subscriptions[subsHash].bla.$test['$fn|exec'] = 'im trolling'
       client.client.origin().sendMeta()
       server.once('error', (err) => {
-        t.equal(err.message.indexOf('cannot parse function $test.exec'), 0, 'throws parse error for illegal function')
+        t.equal(err.message.indexOf('cannot parse function $test.exec'), 0, 'emits parse error for illegal function')
         client.remove()
         server.remove()
         t.end()
