@@ -5,11 +5,11 @@ const vstamp = require('vigour-stamp')
 
 test('subscribe - exec function gaurds', function (t) {
   const server = new Hub({ port: 6000 })
+
   const client = new Hub({
     id: 1,
     context: false
   })
-
   client.subscribe({
     bla: {
       $test: {
@@ -63,10 +63,56 @@ test('subscribe - exec function gaurds', function (t) {
               'correct subscriptions listeners on server after removing client'
             )
             server.remove()
+            t.end()
           })
         })
-        t.end()
       })
     }, 500)
   })
+})
+
+test('subscribe - switch', function (t) {
+  const server = new Hub({
+    id: 'server',
+    port: 6000,
+    field: '$root.a',
+    a: { title: 'it\'s a' },
+    b: { title: 'it\'s b' }
+  })
+
+  const client = new Hub({
+    id: 1,
+    context: false,
+    url: 'ws://localhost:6000'
+  })
+
+  client.subscribe({
+    field: {
+      val: 1, // this should not be nessecary -- add val: 1 or somethign when switch or listen to switch
+      $switch: {
+        exec (state) {
+          return state.key
+        },
+        a: {
+          title: { val: true }
+        },
+        b: {
+          title: { val: true }
+        }
+      }
+    }
+  })
+
+  client.get('field', {}).once((val, stamp) => vstamp.done(stamp, () => {
+    t.same(client.field.val, client.a, 'client receives reference on "field"')
+    t.same(client.a.title.val, 'it\'s a', 'client receives "a.title"')
+    client.set({ field: '$root.b' })
+    client.field.once((val, stamp) => vstamp.done(stamp, () => {
+      t.same(client.field.val, client.b, 'client receives reference on "field"')
+      t.same(client.b.title.val, 'it\'s b', 'client receives "b.title"')
+      client.remove()
+      server.remove()
+      t.end()
+    }))
+  }))
 })
