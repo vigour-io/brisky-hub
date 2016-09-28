@@ -13,6 +13,8 @@ test('sync', function (t) {
   const server = new Hub({
     id: 'server',
     context: false,
+    syncUp: false,
+    user: { token: { sync: false } },
     port: 6000,
     clients: { sort: 'key' },
     something: {
@@ -37,6 +39,12 @@ test('sync', function (t) {
     context: false
   })
 
+  client1.set({
+    user: {
+      token: 'hello'
+    }
+  })
+
   client2.subscribe(subs)
 
   var cnt = 0
@@ -49,6 +57,10 @@ test('sync', function (t) {
 
   client2.set({ bla: true })
 
+  server.user.token.is('hello').then(() => {
+    t.ok(true, 'received "user.token" on the server')
+  })
+
   server.get('something.1', {})
     .once(() => client1.set({ something: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] }))
 
@@ -56,6 +68,7 @@ test('sync', function (t) {
     vstamp.done(stamp, () => {
       t.equal(cnt, 1, 'something fired once')
       setTimeout(() => {
+        t.ok(!client2.user, 'client2 did not recieve token')
         t.ok(!server.bla, 'client2 does not syncUp')
         server.remove()
         client1.remove()
