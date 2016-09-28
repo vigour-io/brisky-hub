@@ -86,7 +86,13 @@ test('subscribe - switch', function (t) {
     url: 'ws://localhost:6000'
   })
 
-  client.subscribe({
+  const client2 = new Hub({
+    id: 2,
+    context: false,
+    url: 'ws://localhost:6000'
+  })
+
+  const subs = {
     field: {
       $remove: true,
       val: 1, // this should not be nessecary -- add val: 1 or somethign when switch or listen to switch
@@ -99,18 +105,30 @@ test('subscribe - switch', function (t) {
         b: { val: 1, $remove: true, title: { val: true } }
       }
     }
-  })
+  }
+
+  client.subscribe(subs)
+  client2.subscribe(subs)
 
   client.get('field', {}).once((val, stamp) => vstamp.done(stamp, () => {
     t.same(client.field.val, client.a, 'client receives reference on "field"')
     t.same(client.a.title.val, 'it\'s a', 'client receives "a.title"')
     client.set({ field: '$root.b' })
-    client.field.once((val, stamp) => vstamp.done(stamp, () => {
-      t.same(client.field.val, client.b, 'client receives reference on "field"')
-      t.same(client.b.title.val, 'it\'s b', 'client receives "b.title"')
-      client.remove()
-      server.remove()
-      t.end()
-    }))
+
+    client2.get('b.title', {}).is('it\'s b').then(() => {
+      console.log('x?')
+    })
+
+    client.get('b.title', {}).is('it\'s b').then(() => {
+      console.log('yx?')
+    })
+
+    // client.field.once((val, stamp) => vstamp.done(stamp, () => {
+    //   t.same(client.field.val, client.b, 'client receives reference on "field"')
+    //   t.same(client.b.title.val, 'it\'s b', 'client receives "b.title"')
+    //   client.remove()
+    //   server.remove()
+    //   t.end()
+    // }))
   }))
 })
