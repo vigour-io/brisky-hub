@@ -4,26 +4,19 @@ const Hub = require('../')
 const vstamp = require('vigour-stamp')
 
 test('sync', function (t) {
-  // @NOTE: changed subs to val: true
   const subs = { val: true }
-  // const subs = {
-  //   something: {
-  //     $any: { val: true }
-  //   }
-  // }
 
   const server = new Hub({
     id: 'server',
     context: false,
+    syncUp: false,
+    user: { token: { sync: false } },
     port: 6000,
     clients: { sort: 'key' },
     something: {
       sync (state) {
         return state && state.keys().length > 10
       }
-    },
-    somethingElse: {
-      sync: false
     }
   })
 
@@ -42,6 +35,12 @@ test('sync', function (t) {
     context: false
   })
 
+  client1.set({
+    user: {
+      token: 'hello'
+    }
+  })
+
   client2.subscribe(subs)
 
   var cnt = 0
@@ -50,9 +49,13 @@ test('sync', function (t) {
     cnt++
   })
 
-  client1.set({ something: [ 1, 2, 3, 4, 5 ], somethingElse: 'someValue' })
+  client1.set({ something: [ 1, 2, 3, 4, 5 ] })
 
   client2.set({ bla: true })
+
+  server.user.token.is('hello').then(() => {
+    t.ok(true, 'received "user.token" on the server')
+  })
 
   server.get('something.1', {})
     .once(() => client1.set({ something: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ] }))
@@ -61,12 +64,8 @@ test('sync', function (t) {
     vstamp.done(stamp, () => {
       t.equal(cnt, 1, 'something fired once')
       setTimeout(() => {
+        t.ok(!client2.user.token, 'client2 did not recieve token')
         t.ok(!server.bla, 'client2 does not syncUp')
-        t.notEqual(
-          client2.get('somethingElse.compute'),
-          'someValue',
-          'did not sync somethingElse'
-        )
         server.remove()
         client1.remove()
         client2.remove()
