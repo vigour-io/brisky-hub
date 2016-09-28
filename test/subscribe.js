@@ -3,7 +3,7 @@ const test = require('tape')
 const Hub = require('../')
 const vstamp = require('vigour-stamp')
 
-// test('subscribe - exec function gaurds', function (t) {
+// test('subscribe - exec function gaurds', (t) => {
 //   const server = new Hub({ port: 6000 })
 
 //   const client = new Hub({
@@ -71,7 +71,7 @@ const vstamp = require('vigour-stamp')
 //   })
 // })
 
-test('subscribe - switch', function (t) {
+test('subscribe - switch', { timeout: 1e3 }, (t) => {
   const server = new Hub({
     id: 'server',
     port: 6000,
@@ -94,9 +94,9 @@ test('subscribe - switch', function (t) {
 
   const subs = {
     field: {
-      $remove: true,
       val: 1, // this should not be nessecary -- add val: 1 or somethign when switch or listen to switch
       $switch: {
+        val: true, // support this
         $remove: true,
         exec (state) {
           return state.key
@@ -116,10 +116,14 @@ test('subscribe - switch', function (t) {
     client.set({ field: '$root.b' })
     Promise.all([
       client2.get('b.title', {}).is('it\'s b'),
-      client.get('b.title', {}).is('it\'s b')
+      client.get('b.title', {}).is('it\'s b'),
+      client2.get('field', {}).is(client2.b),
+      client.get('field', {}).is(client.b)
     ]).then(() => {
       t.ok(true, 'client2 received "b.title"')
       t.ok(true, 'client received "b.title"')
+      t.ok(true, 'client2 received "field"')
+      t.ok(true, 'client received "field"')
       client.remove()
       client2.remove()
       server.remove()
