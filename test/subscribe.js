@@ -121,7 +121,7 @@ test('subscribe - switch', function (t) {
       t.ok(true, 'client2 received "b.title"')
       t.ok(true, 'client received "b.title"')
       client.remove()
-      client1.remove()
+      client2.remove()
       server.remove()
       t.end()
     })
