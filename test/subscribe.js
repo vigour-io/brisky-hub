@@ -93,12 +93,8 @@ test('subscribe - switch', function (t) {
         exec (state) {
           return state.key
         },
-        a: {
-          title: { val: true }
-        },
-        b: {
-          title: { val: true }
-        }
+        a: { title: { val: true } },
+        b: { title: { val: true } }
       }
     }
   })
