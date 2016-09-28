@@ -31,7 +31,6 @@ test('subscribe - exec function gaurds', function (t) {
     t.equal(err.message.indexOf('cannot run function $test.exec'), 0, 'throws run error for false exec')
     const subsHash = Object.keys(client.subscriptions)[0]
     const subsId = client.id + subsHash
-    // make a guard for reparsing
     process.nextTick(() => {
       t.same(server.emitters.subscription.attach.keys(), [ subsId ], 'correct subscription listeners')
       client.client.origin().sendMeta()
