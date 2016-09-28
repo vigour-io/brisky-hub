@@ -114,21 +114,16 @@ test('subscribe - switch', function (t) {
     t.same(client.field.val, client.a, 'client receives reference on "field"')
     t.same(client.a.title.val, 'it\'s a', 'client receives "a.title"')
     client.set({ field: '$root.b' })
-
-    client2.get('b.title', {}).is('it\'s b').then(() => {
-      console.log('x?')
+    Promise.all([
+      client2.get('b.title', {}).is('it\'s b'),
+      client.get('b.title', {}).is('it\'s b')
+    ]).then(() => {
+      t.ok(true, 'client2 received "b.title"')
+      t.ok(true, 'client received "b.title"')
+      client.remove()
+      client1.remove()
+      server.remove()
+      t.end()
     })
-
-    client.get('b.title', {}).is('it\'s b').then(() => {
-      console.log('yx?')
-    })
-
-    // client.field.once((val, stamp) => vstamp.done(stamp, () => {
-    //   t.same(client.field.val, client.b, 'client receives reference on "field"')
-    //   t.same(client.b.title.val, 'it\'s b', 'client receives "b.title"')
-    //   client.remove()
-    //   server.remove()
-    //   t.end()
-    // }))
   }))
 })
