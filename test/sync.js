@@ -4,11 +4,7 @@ const Hub = require('../')
 const vstamp = require('vigour-stamp')
 
 test('sync', function (t) {
-  const subs = {
-    something: {
-      $any: { val: true }
-    }
-  }
+  const subs = { val: true }
 
   const server = new Hub({
     id: 'server',
@@ -68,7 +64,7 @@ test('sync', function (t) {
     vstamp.done(stamp, () => {
       t.equal(cnt, 1, 'something fired once')
       setTimeout(() => {
-        t.ok(!client2.user, 'client2 did not recieve token')
+        t.ok(!client2.user.token, 'client2 did not recieve token')
         t.ok(!server.bla, 'client2 does not syncUp')
         server.remove()
         client1.remove()
