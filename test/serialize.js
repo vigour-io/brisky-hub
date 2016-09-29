@@ -27,6 +27,8 @@ test('serialize', function (t) {
   client.subscribe({ val: true })
 
   setTimeout(() => {
+    client.remove()
+    server.remove()
     t.pass('did not crash on circular references')
     t.end()
   }, 100)
