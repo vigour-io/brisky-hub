@@ -8,15 +8,13 @@ test('app-state-scraper', (t) => {
   const lolValue = 'FFFUUUU'
 
   const scraper = new Hub({
-    context: false,
+    // context: false,
     id: 'scraper',
     port: 6000
   })
 
   const state = new Hub({
-    context: false,
-    url: 'ws://localhost:6000',
-    port: 6001,
+    // context: false,
     loldata: {
       on: {
         data (val) {
@@ -24,13 +22,13 @@ test('app-state-scraper', (t) => {
           updates++
         }
       }
-    }
+    },
+    url: 'ws://localhost:6000',
+    port: 6001
   })
   state.subscribe({ val: true })
 
   const app = new Hub({
-    context: false,
-    url: 'ws://localhost:6001',
     loldata: {
       on: {
         data (val) {
@@ -38,7 +36,9 @@ test('app-state-scraper', (t) => {
           updates++
         }
       }
-    }
+    },
+    // context: false,
+    url: 'ws://localhost:6001'
   })
   app.subscribe({ val: true })
 
@@ -62,6 +62,6 @@ test('app-state-scraper', (t) => {
       state.remove()
       scraper.remove()
       t.end()
-    }, 500)
-  }, 500)
+    }, 100)
+  }, 100)
 })
