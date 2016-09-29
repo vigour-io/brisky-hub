@@ -11,7 +11,12 @@ test('serialize', function (t) {
     port: 6000,
     clients: { sort: 'key' },
     obj1: {},
-    obj2: {}
+    obj2: {
+      bla: {
+        x: true,
+        y: '$root.obj1'
+      }
+    }
   })
   server.set({
     obj1: { ref: server.obj2 },
@@ -27,9 +32,9 @@ test('serialize', function (t) {
   client.subscribe({ val: true })
 
   setTimeout(() => {
+    t.pass('did not crash on circular references')
     client.remove()
     server.remove()
-    t.pass('did not crash on circular references')
     t.end()
   }, 100)
 })

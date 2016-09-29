@@ -54,6 +54,7 @@
     ]
   },
   "devDependencies": {
+    "deep-diff": "^1.0.0",
     "ducktape": "^1.0.0",
     "tape": "^4.4.0",
     "tap-difflet": "0.6.0",
