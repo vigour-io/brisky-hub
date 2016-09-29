@@ -5,7 +5,8 @@ require('./context')
 require('./sync')
 require('./subscribe')
 require('./references')
-require('./app-state-scraper')
+require('./id')
+require('./remove')
 /*
   context needs lots and lots of work
 */
