@@ -8,17 +8,15 @@ test('app-state-scraper', (t) => {
   const lolValue = 'FFFUUUU'
 
   const scraper = new Hub({
-    // context: false,
     id: 'scraper',
     port: 6000
   })
 
   const state = new Hub({
-    // context: false,
+    id: 'state',
     loldata: {
       on: {
         data (val) {
-          // console.log('STATE LOLDATA', val)
           updates++
         }
       }
@@ -29,15 +27,14 @@ test('app-state-scraper', (t) => {
   state.subscribe({ val: true })
 
   const app = new Hub({
+    id: 'app',
     loldata: {
       on: {
         data (val) {
-          // console.log('APP LOLDATA', val)
           updates++
         }
       }
     },
-    // context: false,
     url: 'ws://localhost:6001'
   })
   app.subscribe({ val: true })
@@ -50,14 +47,10 @@ test('app-state-scraper', (t) => {
       stateToApp: true
     })
     setTimeout(() => {
-      t.equals(updates, 2, 'scraper update arrived in both state and app')
+      t.equals(updates, 2, 'scraper update fired handlers in both state and app')
       t.equals(state.get('loldata.compute'), lolValue, 'state has loldata')
       t.equals(app.get('loldata.compute'), lolValue, 'app has loldata')
       t.ok(app.get('stateToApp.compute'), 'app got update from set on state')
-      // console.log('app has', app.loldata)
-      // console.log('SCRAPER', scraper.inspect())
-      // console.log('STATE', state.inspect())
-      // console.log('APP', app.inspect())
       app.remove()
       state.remove()
       scraper.remove()
