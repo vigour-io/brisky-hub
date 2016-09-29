@@ -6,11 +6,13 @@ const Hub = require('../')
 test('app-state-scraper', (t) => {
   var updates = 0
   const lolValue = 'FFFUUUU'
+
   const scraper = new Hub({
     context: false,
     id: 'scraper',
     port: 6000
   })
+
   const state = new Hub({
     context: false,
     url: 'ws://localhost:6000',
@@ -44,10 +46,15 @@ test('app-state-scraper', (t) => {
     scraper.set({
       loldata: lolValue
     })
+    state.set({
+      stateToApp: true
+    })
     setTimeout(() => {
       t.equals(updates, 2, 'scraper update arrived in both state and app')
       t.equals(state.get('loldata.compute'), lolValue, 'state has loldata')
       t.equals(app.get('loldata.compute'), lolValue, 'app has loldata')
+      t.ok(app.get('stateToApp.compute'), 'app got update from set on state')
+      console.log('???', app.stateToApp)
       // console.log('app has', app.loldata)
       // console.log('SCRAPER', scraper.inspect())
       // console.log('STATE', state.inspect())
