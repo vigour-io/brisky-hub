@@ -57,7 +57,7 @@ test('context', function (t) {
 
   const clients = []
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 25; i++) {
     clients.push(new Hub({
       id: 'client' + i,
       context: false,
@@ -77,22 +77,27 @@ test('context', function (t) {
   server.get('x', false).is(true).then(() => {
     // may need context as well for each client else it just weird
     clients[0].set({ context: 'someuser', hello: true })
+
+    const originClients = clients
+        .map(client => client.id)
+        .filter(id => id !== 'client0')
+
+    const arr = clients.filter(client => client.id !== 'client0')
+      .map(client => client.clients.is(
+        () => {
+          const result = client.clients.keys()[0] !== 'client0' &&
+            client.clients.keys().length === originClients.length
+          if (result) {
+            t.same(client.clients.keys(), originClients, 'correct clients for ' + client.id)
+            return result
+          }
+        }
+      )
+    )
+
     server.on(function context (val, stamp) {
       if (val.context) {
         this.off(context)
-        const originClients = clients.map(client => client.id).filter(id => id !== 'client0')
-        const arr = clients.filter(
-          client => client.id !== 'client0')
-          .map(client => client.clients.is(
-            () => {
-              const result = client.clients.keys()[0] !== 'client0' && client.clients.keys().length === originClients.length
-              if (result) {
-                t.same(client.clients.keys(), originClients, 'correct clients for ' + client.id)
-                return result
-              }
-            }
-          )
-        )
         arr.push(this.context.is('someuser'))
         Promise.all(arr).then(() => {
           t.ok(true, 'server received context')
