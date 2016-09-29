@@ -54,7 +54,6 @@ test('app-state-scraper', (t) => {
       t.equals(state.get('loldata.compute'), lolValue, 'state has loldata')
       t.equals(app.get('loldata.compute'), lolValue, 'app has loldata')
       t.ok(app.get('stateToApp.compute'), 'app got update from set on state')
-      console.log('???', app.stateToApp)
       // console.log('app has', app.loldata)
       // console.log('SCRAPER', scraper.inspect())
       // console.log('STATE', state.inspect())
