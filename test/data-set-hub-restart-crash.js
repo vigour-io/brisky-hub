@@ -4,12 +4,20 @@ const test = require('tape')
 const Hub = require('../')
 
 function hubDataSetAndRemove (amount, timeout) {
-  timeout = timeout || 500
+  timeout = timeout || 1000
   var clearedAmount = 0
+  var scraperUpdates = 0
   test(`app hub restart & scraper data set - ${amount} times`, (t) => {
     const scraper = new Hub({
       id: 'scraper',
-      port: 6000
+      port: 6000,
+      loldata: {
+        on: {
+          data (val) {
+            scraperUpdates++
+          }
+        }
+      }
     })
     const state = new Hub({
       id: 'state',
@@ -17,22 +25,26 @@ function hubDataSetAndRemove (amount, timeout) {
       port: 6001
     })
     state.subscribe({ val: true })
+
     var app = createAppHub()
 
     const interval = setInterval(() => {
-      clearedAmount++
-      if (clearedAmount > amount) {
+      if (clearedAmount === amount) {
         clearInterval(interval)
-        t.equal(app.loldata && app.loldata.compute(), amount, `set of data and remove of app hub should be executed ${amount} times`)
+        t.equal(scraper.loldata && scraper.loldata.compute(), amount, 'the scraper should have the right data')
+        t.equal(scraperUpdates, amount, `data on the scraper should be set ${amount} times`)
+        t.equal(state.loldata && state.loldata.compute(), amount, 'state should have received the value from the scraper')
+        t.equal(app.loldata && app.loldata.compute(), amount, `after resetting the app ${amount} times, it should receive the value from the scraper`)
         scraper.remove()
         state.remove()
         app.remove()
         t.end()
       } else {
-        scraper.set({loldata: clearedAmount})
+        scraper.set({loldata: clearedAmount + 1})
         app.remove()
         app = createAppHub()
       }
+      clearedAmount++
     }, timeout)
   }, {timeout: (amount + 2) * timeout})
 }
