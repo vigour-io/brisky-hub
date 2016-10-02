@@ -121,7 +121,14 @@ test('subscribe - switch', { timeout: 1e3 }, (t) => {
     port: 6000,
     field: '$root.a',
     a: { title: 'it\'s a' },
-    b: { title: 'it\'s b' }
+    b: {
+      title: 'it\'s b',
+      c: { d: 'hello' }
+    },
+    items: [
+      { title: '#1', description: 'its #1' },
+      { title: '#2', description: 'its #2' }
+    ]
   })
   const client = new Hub({
     id: 1,
@@ -134,6 +141,12 @@ test('subscribe - switch', { timeout: 1e3 }, (t) => {
     url: 'ws://localhost:6000'
   })
   const subs = {
+    items: {
+      $any: {
+        title: { val: true }
+      }
+    },
+    // b: { val: 1 },
     field: {
       val: 1, // this should not be nessecary -- add val: 1 or somethign when switch or listen to switch
       $switch: {
@@ -142,16 +155,43 @@ test('subscribe - switch', { timeout: 1e3 }, (t) => {
         exec (state) {
           return state.key
         },
-        a: { val: 1, $remove: true, title: { val: true } },
-        b: { val: 1, $remove: true, title: { val: true } }
+        a: {
+          val: 1,
+          $remove: true,
+          title: { val: true }
+        },
+        b: {
+          val: 1,
+          $remove: true,
+          title: { val: true },
+          c: { d: { val: true } },
+          $root: {
+            items: {
+              $any: {
+                title: { val: true },
+                description: { val: true }
+              }
+            }
+          }
+        }
       }
     }
   }
-  client.subscribe(subs)
-  client2.subscribe(subs)
+
+  const clientUpdates = []
+  client.subscribe(subs, state => {
+    if (state) { clientUpdates.push(state.path()) }
+  })
+
+  const client2Updates = []
+  client2.subscribe(subs, state => {
+    if (state) { client2Updates.push(state.path()) }
+  })
+
   client.get('field', {}).once((val, stamp) => vstamp.done(stamp, () => {
     t.same(client.field.val, client.a, 'client receives reference on "field"')
     t.same(client.a.title.val, 'it\'s a', 'client receives "a.title"')
+    console.log(' \nSWITCH')
     client.set({ field: '$root.b' })
     Promise.all([
       client2.get('b.title', {}).is('it\'s b'),
@@ -163,6 +203,22 @@ test('subscribe - switch', { timeout: 1e3 }, (t) => {
       t.ok(true, 'client received "b.title"')
       t.ok(true, 'client2 received "field"')
       t.ok(true, 'client received "field"')
+
+      client2Updates.forEach(val => {
+        var found
+        clientUpdates.forEach(val2 => {
+          if (val2.join('.') === val.join('.')) {
+            found = true
+          }
+        })
+        if (!found) {
+          t.fail(`cant find "${val.join('.')}" in client 1 updates`)
+        }
+      })
+
+      // console.log(client2Updates, 'vs', clientUpdates)
+      // t.same(client2Updates, clientUpdates, 'received same updates')
+
       client.remove()
       client2.remove()
       server.remove()
