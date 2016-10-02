@@ -71,7 +71,6 @@ test('subscribe - exec function gaurds', (t) => {
   })
 })
 
-
 test('subscribe - client', { timeout: 1e3 }, (t) => {
   const server = new Hub({
     id: 'server',
@@ -85,9 +84,19 @@ test('subscribe - client', { timeout: 1e3 }, (t) => {
   })
   client.subscribe({
     client: {
-      platform: { val: true },
-      ip: { val: true },
-      device: { val: true }
+      ip: { val: true }
+    },
+    bla: {
+      $root: {
+        client: {
+          platform: { val: true }
+        }
+      }
+    },
+    gurk: {
+      $parent: {
+        client: { device: { val: true } }
+      }
     }
   })
   client.get('client.origin.platform', {}).once((val, stamp) => {
