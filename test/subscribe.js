@@ -71,9 +71,42 @@ test('subscribe - exec function gaurds', (t) => {
   })
 })
 
+
+test('subscribe - client', { timeout: 1e3 }, (t) => {
+  const server = new Hub({
+    id: 'server',
+    port: 6000,
+    field: '$root.a'
+  })
+  const client = new Hub({
+    id: 1,
+    context: false,
+    url: 'ws://localhost:6000'
+  })
+  client.subscribe({
+    client: {
+      platform: { val: true },
+      ip: { val: true },
+      device: { val: true }
+    }
+  })
+  client.get('client.origin.platform', {}).once((val, stamp) => {
+    vstamp.done(stamp, () => {
+      t.same(client.client.origin().serialize(), {
+        id: 1,
+        platform: 'node.js',
+        ip: '::ffff:127.0.0.1',
+        device: 'server'
+      }, 'receive subscription')
+      client.remove()
+      server.remove()
+      t.end()
+    })
+  })
+})
+
 test('subscribe - switch', { timeout: 1e3 }, (t) => {
   // make this failing
-
   const server = new Hub({
     id: 'server',
     port: 6000,
@@ -81,19 +114,16 @@ test('subscribe - switch', { timeout: 1e3 }, (t) => {
     a: { title: 'it\'s a' },
     b: { title: 'it\'s b' }
   })
-
   const client = new Hub({
     id: 1,
     context: false,
     url: 'ws://localhost:6000'
   })
-
   const client2 = new Hub({
     id: 2,
     context: false,
     url: 'ws://localhost:6000'
   })
-
   const subs = {
     field: {
       val: 1, // this should not be nessecary -- add val: 1 or somethign when switch or listen to switch
@@ -108,10 +138,8 @@ test('subscribe - switch', { timeout: 1e3 }, (t) => {
       }
     }
   }
-
   client.subscribe(subs)
   client2.subscribe(subs)
-
   client.get('field', {}).once((val, stamp) => vstamp.done(stamp, () => {
     t.same(client.field.val, client.a, 'client receives reference on "field"')
     t.same(client.a.title.val, 'it\'s a', 'client receives "a.title"')
