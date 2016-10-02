@@ -72,7 +72,6 @@ test('subscribe - exec function gaurds', (t) => {
 })
 
 test('subscribe - switch', { timeout: 1e3 }, (t) => {
-
   // make this failing
 
   const server = new Hub({
