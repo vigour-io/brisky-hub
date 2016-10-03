@@ -180,6 +180,7 @@ test('subscribe - switch', { timeout: 1e3 }, (t) => {
 
   const clientUpdates = []
   client.subscribe(subs, state => {
+    // console.log('hello', state.path())
     if (state) { clientUpdates.push(state.path()) }
   })
 
@@ -204,25 +205,23 @@ test('subscribe - switch', { timeout: 1e3 }, (t) => {
       t.ok(true, 'client2 received "field"')
       t.ok(true, 'client received "field"')
 
-      client2Updates.forEach(val => {
+      console.log('hello?', clientUpdates)
+
+      client2Updates.forEach(val2 => {
         var found
-        clientUpdates.forEach(val2 => {
-          if (val2.join('.') === val.join('.')) {
+        clientUpdates.forEach(val => {
+          if (val.join('.') === val2.join('.')) {
             found = true
           }
         })
         if (!found) {
-          t.fail(`cant find "${val.join('.')}" in client 1 updates`)
+          t.fail(`cant find "${val2.join('.')}" in client 1 updates`)
         }
       })
-
-      // console.log(client2Updates, 'vs', clientUpdates)
-      // t.same(client2Updates, clientUpdates, 'received same updates')
-
       client.remove()
       client2.remove()
       server.remove()
       t.end()
-    })
+    }).catch(err => console.log(err))
   }))
 })
