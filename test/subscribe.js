@@ -71,48 +71,48 @@ test('subscribe - exec function gaurds', (t) => {
   })
 })
 
-test('subscribe - client', { timeout: 1e3 }, (t) => {
-  const server = new Hub({
-    id: 'server',
-    port: 6000,
-    field: '$root.a'
-  })
-  const client = new Hub({
-    id: 1,
-    context: false,
-    url: 'ws://localhost:6000'
-  })
-  client.subscribe({
-    client: {
-      ip: { val: true }
-    },
-    bla: {
-      $root: {
-        client: {
-          platform: { val: true }
-        }
-      }
-    },
-    gurk: {
-      $parent: {
-        client: { device: { val: true } }
-      }
-    }
-  })
-  client.get('client.origin.platform', {}).once((val, stamp) => {
-    vstamp.done(stamp, () => {
-      t.same(client.client.origin().serialize(), {
-        id: 1,
-        platform: 'node.js',
-        ip: '::ffff:127.0.0.1',
-        device: 'server'
-      }, 'receive subscription')
-      client.remove()
-      server.remove()
-      t.end()
-    })
-  })
-})
+// test('subscribe - client', { timeout: 1e3 }, (t) => {
+//   const server = new Hub({
+//     id: 'server',
+//     port: 6000,
+//     field: '$root.a'
+//   })
+//   const client = new Hub({
+//     id: 1,
+//     context: false,
+//     url: 'ws://localhost:6000'
+//   })
+//   client.subscribe({
+//     client: {
+//       ip: { val: true }
+//     },
+//     bla: {
+//       $root: {
+//         client: {
+//           platform: { val: true }
+//         }
+//       }
+//     },
+//     gurk: {
+//       $parent: {
+//         client: { device: { val: true } }
+//       }
+//     }
+//   })
+//   client.get('client.origin.platform', {}).once((val, stamp) => {
+//     vstamp.done(stamp, () => {
+//       t.same(client.client.origin().serialize(), {
+//         id: 1,
+//         platform: 'node.js',
+//         ip: '::ffff:127.0.0.1',
+//         device: 'server'
+//       }, 'receive subscription')
+//       client.remove()
+//       server.remove()
+//       t.end()
+//     })
+//   })
+// })
 
 test('subscribe - switch', { timeout: 1e3 }, (t) => {
   // make this failing
@@ -146,7 +146,6 @@ test('subscribe - switch', { timeout: 1e3 }, (t) => {
         title: { val: true }
       }
     },
-    // b: { val: 1 },
     field: {
       val: 1, // this should not be nessecary -- add val: 1 or somethign when switch or listen to switch
       $switch: {
@@ -166,6 +165,7 @@ test('subscribe - switch', { timeout: 1e3 }, (t) => {
           title: { val: true },
           c: { d: { val: true } },
           $root: {
+            bla: { val: true },
             items: {
               $any: {
                 title: { val: true },
@@ -180,7 +180,6 @@ test('subscribe - switch', { timeout: 1e3 }, (t) => {
 
   const clientUpdates = []
   client.subscribe(subs, state => {
-    // console.log('hello', state.path())
     if (state) { clientUpdates.push(state.path()) }
   })
 
@@ -192,7 +191,6 @@ test('subscribe - switch', { timeout: 1e3 }, (t) => {
   client.get('field', {}).once((val, stamp) => vstamp.done(stamp, () => {
     t.same(client.field.val, client.a, 'client receives reference on "field"')
     t.same(client.a.title.val, 'it\'s a', 'client receives "a.title"')
-    console.log(' \nSWITCH')
     client.set({ field: '$root.b' })
     Promise.all([
       client2.get('b.title', {}).is('it\'s b'),
@@ -200,13 +198,10 @@ test('subscribe - switch', { timeout: 1e3 }, (t) => {
       client2.get('field', {}).is(client2.b),
       client.get('field', {}).is(client.b)
     ]).then(() => {
-      t.ok(true, 'client2 received "b.title"')
-      t.ok(true, 'client received "b.title"')
-      t.ok(true, 'client2 received "field"')
-      t.ok(true, 'client received "field"')
-
-      console.log('hello?', clientUpdates)
-
+      t.pass('client2 received "b.title"')
+      t.pass('client received "b.title"')
+      t.pass('client2 received "field"')
+      t.pass('client received "field"')
       client2Updates.forEach(val2 => {
         var found
         clientUpdates.forEach(val => {
@@ -215,7 +210,9 @@ test('subscribe - switch', { timeout: 1e3 }, (t) => {
           }
         })
         if (!found) {
-          t.fail(`cant find "${val2.join('.')}" in client 1 updates`)
+          t.fail(`cant find "${val2.join('.')}" in client updates`)
+        } else {
+          t.pass(`client received update "${val2.join('.')}"`)
         }
       })
       client.remove()
