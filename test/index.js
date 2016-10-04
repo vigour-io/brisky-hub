@@ -5,5 +5,5 @@
 // require('./sync')
 // require('./references')
 // require('./subscribe')
-require('./tree')
 // require('./reconnect')
+require('./tree')
