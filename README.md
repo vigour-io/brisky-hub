@@ -14,6 +14,3 @@ var hub = new Hub({
   port: 80 // some port
 })
 ```
-
-temp solution for now add this
-` "now-build": "cp uws_musl_hack/uws_linux* ./node_modules/uws"` to your pkg.json
