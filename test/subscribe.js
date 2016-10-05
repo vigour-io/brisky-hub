@@ -3,7 +3,7 @@ const test = require('tape')
 const Hub = require('../')
 const vstamp = require('vigour-stamp')
 
-test('subscribe - exec function gaurds', (t) => {
+test('subscribe - exec function guards', (t) => {
   const server = new Hub({ port: 6000 })
 
   const client = new Hub({
