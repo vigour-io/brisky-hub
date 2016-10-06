@@ -5,4 +5,5 @@ require('./context') // not finished!
 require('./sync')
 require('./references')
 require('./subscribe')
+require('./state')
 // require('./reconnect')
