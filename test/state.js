@@ -9,7 +9,12 @@ test('hub client and server listeners', function (t) {
       val: 1,
       on: {
         data () {
-          t.equals(this.compute(), 2, 'server is updated')
+          if (this.compute() === 2) {
+            t.equals(this.compute(), 2, 'server is updated')
+            t.end()
+            client.remove()
+            server.remove()
+          }
         }
       }
     },
@@ -29,7 +34,6 @@ test('hub client and server listeners', function (t) {
   })
 
   client.get('field', {}).is(1, () => {
-    client.field.set(2) // <=== this doesnt work
-    // process.nextTick(() => client.field.set(2)) // <=== this works
+    client.field.set(2)
   })
 })
