@@ -8,12 +8,10 @@ test('hub client and server listeners', function (t) {
     field: {
       val: 1,
       on: {
-        data () {
+        data (data, stamp) {
           if (this.compute() === 2) {
-            t.equals(this.compute(), 2, 'server is updated')
-            t.end()
-            client.remove()
-            server.remove()
+            t.pass('server is updated')
+            this.set(3, stamp)
           }
         }
       }
@@ -33,7 +31,14 @@ test('hub client and server listeners', function (t) {
     }
   })
 
-  client.get('field', {}).is(1, () => {
-    client.field.set(2)
+  client.get('field', {}).is(1, (data, stamp) => {
+    client.field.set(2, stamp)
+  })
+
+  client.get('field', {}).is(3, () => {
+    t.pass('client is updated')
+    t.end()
+    client.remove()
+    server.remove()
   })
 })
