@@ -2,42 +2,34 @@
 const test = require('tape')
 const Hub = require('../')
 
-test('subscribe - $any - references - $test', { timeout: 1000 }, function (t) {
-  var done
-  const subs = {
-    letters: {
-      $any: {
-        $test: {
-          exec: (state) => true,
-          $pass: {
-            val: true
-          }
-        }
-      }
-    }
-  }
-
+test('hub client and server listeners', function (t) {
   const server = new Hub({
     id: 'server',
-    context: false,
-    port: 6000,
-    letters: [ '$root.az.0', '$root.az.1', '$root.az.2' ],
-    az: [ 'a', 'b', 'c' ]
+    field: {
+      val: 1,
+      on: {
+        data () {
+          t.equals(this.compute(), 2, 'server is updated')
+        }
+      }
+    },
+    port: 6000
   })
 
   const client = new Hub({
     id: 1,
-    url: 'ws://localhost:6000',
-    context: false
+    context: false,
+    url: 'ws://localhost:6000'
   })
 
-  client.subscribe(subs, () => {
-    if (!done && client.letters) {
-      if (!client.letters.each((prop, i) => prop.val !== client.az[i])) {
-        t.pass('letters reference az\'s')
-        t.end()
-        done = true
-      }
+  client.subscribe({
+    field: {
+      val: true
     }
+  })
+
+  client.get('field', {}).is(1, () => {
+    client.field.set(2) // <=== this doesnt work
+    // process.nextTick(() => client.field.set(2)) // <=== this works
   })
 })
