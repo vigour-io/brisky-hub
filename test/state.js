@@ -9,6 +9,7 @@ test('hub client and server listeners', function (t) {
       val: 1,
       on: {
         data (data, stamp) {
+          console.llg('fire flame')
           if (this.compute() === 2) {
             t.pass('server is updated')
             this.set(3, stamp)
@@ -26,9 +27,7 @@ test('hub client and server listeners', function (t) {
   })
 
   client.subscribe({
-    field: {
-      val: true
-    }
+    field: { val: true }
   })
 
   client.get('field', {}).is(1, (data, stamp) => {
