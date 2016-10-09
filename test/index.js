@@ -1,8 +1,13 @@
 'use strict'
 require('./queue')
-require('./clients')
 require('./context') // not finished!
 require('./sync')
 require('./references')
 require('./subscribe')
-require('./reconnect')
+// require('./state')
+
+// require('./clients')  // this breaks stuff
+require('./client')
+// require('./reconnect')
+
+require('./clients')  // this breaks stuff

@@ -81,6 +81,6 @@ test('clients', { timeout: 2e3 }, (t) => {
     server.remove()
     hybrid.remove()
     client.remove()
-    t.end()
+    setTimeout(t.end, 100)
   }
 })
