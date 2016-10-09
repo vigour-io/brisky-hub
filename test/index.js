@@ -9,3 +9,5 @@ require('./subscribe')
 // require('./clients')  // this breaks stuff
 require('./client')
 // require('./reconnect')
+
+require('./clients')  // this breaks stuff
