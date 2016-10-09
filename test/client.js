@@ -62,4 +62,14 @@ test('client - subscription', (t) => {
   })
 
   client.set({ receiver: client.client.origin() })
+
+  Promise.all([
+    client.get('content.title', {}).is('content'),
+    client2.get('nothing.title', {}).is('nothing')
+  ]).then(() => {
+    client.remove()
+    client2.remove()
+    server.remove()
+    t.end()
+  })
 })
