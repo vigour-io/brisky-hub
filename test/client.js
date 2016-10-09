@@ -6,8 +6,9 @@ test('client - subscription', (t) => {
   const server = new Hub({
     port: 6000,
     id: 'server',
-    content: { title: 'hello' },
-    nothing: { title: 'bye' }
+    content: { title: 'content' },
+    nothing: { title: 'nothing' },
+    x: { title: 'x' }
   })
 
   const client = new Hub({
@@ -26,8 +27,8 @@ test('client - subscription', (t) => {
     receiver: {
       $switch: {
         exec (state) {
-          if (state) {
-            console.log(state.root.client.origin(), state.root.id)
+          if (state && state.root.client) {
+            console.log('HERE', state.root.id, state.root.client.id, state.root.client.origin() === state.origin() ? 'receiver' : 'sender')
             return state.root.client.origin() === state.origin() ? 'receiver' : 'sender'
           }
         },
@@ -56,14 +57,10 @@ test('client - subscription', (t) => {
   client.subscribe(subs, (state) => {
     console.log('yo', state)
   })
+
   client2.subscribe(subs, (state) => {
     console.log('2 - yo', state)
   })
 
-  client.set({
-    // receiver: '$root.x'
-    receiver: client.client.origin()
-  })
-
-  // also do in test
+  client.set({ receiver: client.client.origin() })
 })
