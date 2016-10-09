@@ -28,7 +28,6 @@ test('client - subscription', (t) => {
       $switch: {
         exec (state) {
           if (state && state.root.client) {
-            console.log('HERE', state.root.id, state.root.client.id, state.root.client.origin() === state.origin() ? 'receiver' : 'sender')
             return state.root.client.origin() === state.origin() ? 'receiver' : 'sender'
           }
         },
@@ -54,20 +53,13 @@ test('client - subscription', (t) => {
     }
   }
 
-  var results = {
-    client: [],
-    client2: []
-  }
-
   client.subscribe(subs, (state) => {
-    results.client.push(state.path())
+    t.same(state.path(), [ 'content', 'title' ])
   })
 
   client2.subscribe(subs, (state) => {
-    results.client2.push(state.path())
+    t.same(state.path(), [ 'nothing', 'title' ])
   })
 
   client.set({ receiver: client.client.origin() })
-
-
 })
