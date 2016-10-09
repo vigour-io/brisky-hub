@@ -54,13 +54,20 @@ test('client - subscription', (t) => {
     }
   }
 
+  var results = {
+    client: [],
+    client2: []
+  }
+
   client.subscribe(subs, (state) => {
-    console.log('yo', state)
+    results.client.push(state.path())
   })
 
   client2.subscribe(subs, (state) => {
-    console.log('2 - yo', state)
+    results.client2.push(state.path())
   })
 
   client.set({ receiver: client.client.origin() })
+
+
 })
