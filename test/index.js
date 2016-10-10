@@ -7,7 +7,7 @@ require('./subscribe')
 // require('./state')
 
 // require('./clients')  // this breaks stuff
-require('./client')
+// require('./client')
 // require('./reconnect')
 
-require('./clients')  // this breaks stuff
+// require('./clients')  // this breaks stuff

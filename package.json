@@ -10,7 +10,7 @@
     "hub-server": "bin/server.js"
   },
   "scripts": {
-    "test": "(ducktape; node test) | tap-difflet && standard",
+    "test": "(ducktape; node test) | tap-difflet && standard lib",
     "dev": "nodemon test | tap-difflet",
     "install": "(test -d ../uws && cd ../uws && rm uws_*.node && npm install) || (test -d node_modules/uws && cd node_modules/uws && rm uws_*.node && npm install)",
     "start": "node bin/server",
