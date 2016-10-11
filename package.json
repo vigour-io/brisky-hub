@@ -12,7 +12,7 @@
   "scripts": {
     "test": "(ducktape; node test) | tap-difflet && standard",
     "dev": "nodemon test | tap-difflet",
-    "now-build": "(test -d ../uws && cd ../uws && rm uws_*.node && npm install) || (test -d node_modules/uws && cd node_modules/uws && rm uws_*.node && npm install)",
+    "now-install": "(test -d ../uws && cd ../uws && rm uws_*.node && npm install) || (test -d node_modules/uws && cd node_modules/uws && rm uws_*.node && npm install)",
     "start": "node bin/server",
     "dev-perf": "nodemon --prof test/performance/index.js | tap-difflet",
     "profile": "node --prof-process $(ls isolate-*) > processed.txt",
