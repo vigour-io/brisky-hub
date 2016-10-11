@@ -109,8 +109,11 @@ test('queue', function (t) {
       const result = vstamp.create(parsed.type, 1, parsed.val)
       t.equal(context.special.a.stamp, result, 'server recieved correct stamp on a')
       t.equal(client2.special.a.stamp, result, 'client2 recieved correct stamp on a')
+      console.log('remose serfer!')
       server.remove()
+      console.log('remose client2')
       client2.remove()
+      console.log('remose client1')
       client1.remove()
       t.end()
     }).catch((err) => {
