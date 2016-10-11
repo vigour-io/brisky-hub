@@ -26,7 +26,7 @@ Date.prototype.getTime = function badGetTime () {
   return realStamp + offsets[clockLabel]
 }
 
-const client = new Hub({
+const hub = new Hub({
   id,
   label: {
     sync: false,
@@ -35,14 +35,14 @@ const client = new Hub({
   context: false,
   url: 'ws://no-connect'
 })
-client.subscribe({ testProperty: { val: true }, testObj: { val: true } })
+hub.subscribe({ testProperty: { val: true }, testObj: { val: true } })
 
 process.on('message', msg => {
   // console.log('SPAWNED GOT MESSAGE', msg.label, msg.data)
   const label = msg.label
   const data = msg.data
   if (label === 'set') {
-    client.set(data)
+    hub.set(data)
     report()
   } else if (label === 'report') {
     report()
@@ -56,6 +56,10 @@ process.send('ready')
 function report () {
   process.send({
     label: 'report',
-    data: client.serialize()
+    data: hub.serialize()
   })
 }
+
+// hub.connected.on('data', (val) => {
+//   console.log('========= spawned hub connected', val)
+// })

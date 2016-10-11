@@ -11,9 +11,12 @@ const chalk = require('chalk')
 const serverPort = 60060
 const hubs = []
 
-// const r = require('repl')
-// const repl = r.start({ prompt: '> ', useGlobal: true }).context
-// repl.hubs = hubs
+var repl
+if (process.env.repl) {
+  const r = require('repl')
+  repl = r.start({ prompt: '> ', useGlobal: true }).context
+  repl.hubs = hubs
+}
 
 const smallPause = () => new Promise(resolve => {
   setTimeout(resolve, smallbuffer)
@@ -59,10 +62,6 @@ test('offline sets - good clocks', { timeout }, function (t) {
 
   makeClients(3).then(([ client1, client2, client3 ]) => {
     /* made the clients and did timed sets */
-    // repl.client1 = client1
-    // repl.client2 = client2
-    // repl.client3 = client3
-    // repl.server = server
     client1.set({
       url: `ws://localhost:${serverPort}`
     })
@@ -97,12 +96,7 @@ test('offline sets - good clocks', { timeout }, function (t) {
   }).then(() => t.end())
 })
 
-test('reset', t => {
-  cleanup()
-  setTimeout(() => {
-    t.end()
-  })
-})
+test('reset', reset)
 
 test('offline sets - bad clocks', { timeout }, function (t) {
   /*
@@ -117,10 +111,6 @@ test('offline sets - bad clocks', { timeout }, function (t) {
   const server = makeServer()
 
   makeClients(3, [ 'ahead', '', 'behind' ], true).then(([ client1, client2, client3 ]) => {
-    // repl.client1 = client1
-    // repl.client2 = client2
-    // repl.client3 = client3
-    // repl.server = server
     /* have client1 (ahead) do set (1) while offline */
     client1.send({
       label: 'set',
@@ -177,7 +167,7 @@ test('offline sets - bad clocks', { timeout }, function (t) {
         }
       })
     })).then(smallPause).then(() => {
-      console.log(chalk.black.bgCyan('\n+++++++++++++++ connect client1\n'))
+      // console.log(chalk.black.bgCyan('\n+++++++++++++++ connect client1\n'))
       client1.send({
         label: 'set',
         data: {
@@ -188,7 +178,7 @@ test('offline sets - bad clocks', { timeout }, function (t) {
     }).then(smallPause).then(
       () => testState(states.A, [server, client1], t)
     ).then(() => {
-      console.log(chalk.black.bgCyan('\n+++++++++++++++ connect client3\n'))
+      // console.log(chalk.black.bgCyan('\n+++++++++++++++ connect client3\n'))
       client3.send({
         label: 'set',
         data: {
@@ -199,13 +189,13 @@ test('offline sets - bad clocks', { timeout }, function (t) {
     }).then(smallPause).then(
       () => testState(states.B, [server, client1, client3], t)
     ).then(() => {
-      console.log(chalk.black.bgCyan('\n+++++++++++++++ connect client2\n'))
+      // console.log(chalk.black.bgCyan('\n+++++++++++++++ connect client2\n'))
       client2.set({
         url: `ws://localhost:${serverPort}`
       })
       return server.clients.is(() => server.clients.keys().length === 3)
     }).then(smallPause).then(
-      () => testState(states.C, [server, client1, client2], t)
+      () => testState(states.C, [server, client1, client2, client3], t)
     )
   }).catch(err => {
     if (err.stack) {
@@ -214,12 +204,7 @@ test('offline sets - bad clocks', { timeout }, function (t) {
   }).then(() => t.end())
 })
 
-test('reset', t => {
-  cleanup()
-  setTimeout(() => {
-    t.end()
-  })
-})
+test('reset', reset)
 
 function testState (val, hubs, t) {
   const tests = []
@@ -264,6 +249,9 @@ function makeServer () {
     clients: { sort: 'key' }
   })
   hubs.push(server)
+  if (repl) {
+    repl.server = server
+  }
   return server
 }
 
@@ -279,18 +267,19 @@ function makeClients (n, mods, noset) {
 }
 
 function makeClient (n, mod, noset) {
+  const id = `client${n + 1}`
   return new Promise((resolve) => {
     if (mod) {
       const clientProcess = fork(`${__dirname}/bad-clock-client`, [mod, n])
       hubs.push(clientProcess)
+      if (repl) { repl[id] = clientProcess }
       clientProcess.on('message', (label, data) => {
         if (label === 'ready') {
           resolve(clientProcess)
         }
       })
     } else {
-      let id = `client${n + 1}`
-      let client = new Hub({
+      const client = new Hub({
         id,
         label: {
           sync: false,
@@ -300,6 +289,7 @@ function makeClient (n, mod, noset) {
         url: 'ws://no-connect'
       })
       hubs.push(client)
+      if (repl) { repl[id] = client }
       client.subscribe({ testProperty: { val: true }, testObj: { val: true } })
       if (noset) {
         resolve(client)
@@ -335,6 +325,13 @@ function softEqual (a, b) {
     }
     return true
   }
+}
+
+function reset (t) {
+  cleanup()
+  setTimeout(() => {
+    t.end()
+  }, smallbuffer)
 }
 
 function cleanup () {

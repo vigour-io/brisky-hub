@@ -11,3 +11,4 @@ require('./client')
 // require('./reconnect')
 
 require('./clients')  // this breaks stuff
+require('./conflict-resolution')
