@@ -5,9 +5,7 @@ const Hub = require('../../')
 const fork = require('child_process').fork
 const bigbuffer = 100
 const smallbuffer = 25
-const bail = true
 const timeout = 3e3
-const chalk = require('chalk')
 const serverPort = 60060
 const hubs = []
 
@@ -213,13 +211,13 @@ function testState (val, hubs, t) {
       serialized => {
         let hubOk = softEqual(serialized, val)
         if (!hubOk) {
-          console.log(chalk.red('\n>>>>>>>', serialized.label, 'has bad data'))
+          console.log('\n>>>>>>>', serialized.label, 'has bad data')
           console.log('testing\n', JSON.stringify(val, false, 2))
           console.log('serialized\n', JSON.stringify(serialized, false, 2))
           console.log('\n')
         }
         t.ok(hubOk, `${serialized.label} has correct data`)
-        if (!hubOk && bail) {
+        if (!hubOk) {
           throw new Error('failed test')
         }
       }
