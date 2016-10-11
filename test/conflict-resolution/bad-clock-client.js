@@ -21,7 +21,7 @@ Date.now = function badNow () {
   return realStamp + offsets[clockLabel]
 }
 
-Date.prototype.getTime = function badGetTime () {
+Date.prototype.getTime = function badGetTime () { // eslint-disable-line
   const realStamp = _realGetTime.call(this)
   return realStamp + offsets[clockLabel]
 }

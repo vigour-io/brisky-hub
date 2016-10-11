@@ -10,14 +10,14 @@
     "hub-server": "bin/server.js"
   },
   "scripts": {
-    "test": "(ducktape; node test) | tap-difflet && standard lib",
+    "test": "(ducktape; node test) | tap-difflet && standard",
     "dev": "nodemon test | tap-difflet",
     "now-install": "(test -d ../uws && cd ../uws && rm uws_*.node && npm install) || (test -d node_modules/uws && cd node_modules/uws && rm uws_*.node && npm install)",
     "start": "node bin/server",
     "dev-perf": "nodemon --prof test/performance/index.js | tap-difflet",
     "profile": "node --prof-process $(ls isolate-*) > processed.txt",
     "cover": "istanbul cover --report none --print detail test/index.js",
-    "travis": "npm run cover -s && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0) && standard lib"
+    "travis": "npm run cover -s && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0) && standard"
   },
   "repository": {
     "type": "git",
