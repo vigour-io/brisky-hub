@@ -1,10 +1,12 @@
 'use strict'
 const test = require('tape')
 const Hub = require('../')
-
+// Error.stackTraceLimit = Infinity
+const bufferTime = 100
 test('reconnect state - without data sets', (t) => {
   const scraper = new Hub({
-    id: 'scraper',
+    context: false,
+    id: 'scraper_' + String(Math.random()).slice(2),
     port: 6000,
     loldata: true
   })
@@ -12,25 +14,26 @@ test('reconnect state - without data sets', (t) => {
   t.ok(scraper.loldata.compute(), 'scraper data should be set')
   setTimeout(() => {
     t.ok(state.loldata && state.loldata.compute(), 'state data should be set (before reconnect)')
-  }, 500)
+  }, bufferTime)
   setTimeout(() => {
-    state.remove()
-  }, 1000)
+    removeHub(state)
+  }, bufferTime * 2)
   setTimeout(() => {
     state = createStateHub()
-  }, 1100)
+  }, bufferTime * 3)
   setTimeout(() => {
     t.ok(state.loldata && state.loldata.compute(), 'state data should be set (after reconnect)')
-    scraper.remove()
-    state.remove()
+    removeHub(scraper)
+    removeHub(state)
     t.end()
-  }, 1500)
+  }, bufferTime * 4)
 })
 
 test('reconnect state - with data sets', (t) => {
   var updates = 0
   const scraper = new Hub({
-    id: 'scraper',
+    context: false,
+    id: 'scraper_' + String(Math.random()).slice(2),
     port: 6000,
     loldata: {
       on: {
@@ -45,21 +48,21 @@ test('reconnect state - with data sets', (t) => {
   t.equal(scraper.loldata.compute(), 0, 'scraper data should be set')
   setTimeout(() => {
     t.equal(state.loldata && state.loldata.compute(), 0, 'state data should be set (before reconnect)')
-  }, 500)
+  }, bufferTime)
   setTimeout(() => {
     state.remove()
     scraper.set({loldata: updates + 1})
-  }, 1000)
+  }, bufferTime * 2)
   setTimeout(() => {
     state = createStateHub()
     scraper.set({loldata: updates + 1})
-  }, 1100)
+  }, bufferTime * 3)
   setTimeout(() => {
     t.equal(state.loldata && state.loldata.compute(), updates, 'state data should be set (after reconnect)')
     scraper.remove()
     state.remove()
     t.end()
-  }, 1500)
+  }, bufferTime * 4)
 })
 
 reconnectApp(1)
@@ -70,7 +73,8 @@ reconnectApp(5)
 
 function createStateHub () {
   const state = new Hub({
-    id: 'state',
+    context: false,
+    id: 'state_' + String(Math.random()).slice(2),
     url: 'ws://localhost:6000',
     port: 6001
   })
@@ -80,7 +84,8 @@ function createStateHub () {
 
 function createAppHub () {
   const app = new Hub({
-    id: 'app',
+    context: false,
+    id: 'app_' + String(Math.random()).slice(2),
     url: 'ws://localhost:6001'
   })
   app.subscribe({ val: true })
@@ -93,15 +98,8 @@ function reconnectApp (amount, timeout) {
   var scraperUpdates = 0
   test(`reconnect app (scraper, state, app) - ${amount} times - with sets`, (t) => {
     const scraper = new Hub({
-      id: 'scraper',
-      port: 6000,
-      loldata: {
-        on: {
-          data (val) {
-            scraperUpdates++
-          }
-        }
-      }
+      context: false,
+    
     })
     const state = createStateHub()
 
@@ -114,16 +112,26 @@ function reconnectApp (amount, timeout) {
         t.equal(scraperUpdates, amount, `data on the scraper should be set ${amount} times`)
         t.equal(state.loldata && state.loldata.compute(), amount, 'state should have received the value from the scraper')
         t.equal(app.loldata && app.loldata.compute(), amount, `after reconnecting the app ${amount} times, it should receive the value from the scraper`)
-        scraper.remove()
-        state.remove()
-        app.remove()
+        console.log('app.loldata', app.loldata && app.loldata.compute())
+        removeHub(scraper)
+        removeHub(state)
+        removeHub(app)
         t.end()
       } else {
         scraper.set({loldata: clearedAmount + 1})
-        app.remove()
+        removeHub(app)
         app = createAppHub()
       }
       clearedAmount++
     }, timeout)
   }, {timeout: (amount + 2) * timeout})
+}
+
+function removeHub (hub) {
+  try {
+    hub.remove()
+  } catch (err) {
+    console.log('REMOVE CRASHED :(')
+    hub.downstream && hub.downstream.close()
+  }
 }
