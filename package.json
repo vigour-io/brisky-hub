@@ -50,7 +50,7 @@
     "vigour-state": "^4.8.0",
     "vigour-util": "^3.3.0",
     "monotonic-timestamp": "^0.0.9",
-    "uws": "0.10.9"
+    "uws": "0.8.0"
   },
   "browserify": {
     "transform": [
