@@ -12,7 +12,6 @@
   "scripts": {
     "test": "(ducktape; node test) | tap-difflet && standard lib",
     "dev": "nodemon test | tap-difflet",
-    "now-install": "(test -d ../uws && cd ../uws && rm uws_*.node && npm install) || (test -d node_modules/uws && cd node_modules/uws && rm uws_*.node && npm install)",
     "start": "node bin/server",
     "dev-perf": "nodemon --prof test/performance/index.js | tap-difflet",
     "profile": "node --prof-process $(ls isolate-*) > processed.txt",
@@ -51,7 +50,7 @@
     "vigour-state": "^4.8.0",
     "vigour-util": "^3.3.0",
     "monotonic-timestamp": "^0.0.9",
-    "uws": "0.8.0"
+    "uws": "0.10.9"
   },
   "browserify": {
     "transform": [
