@@ -1,6 +1,6 @@
 {
   "name": "brisky-hub",
-  "version": "1.1.5",
+  "version": "1.1.7",
   "description": "Connected vigour-state, works as a server and a client",
   "engines": {
     "node": "^4.1.1"
@@ -12,7 +12,6 @@
   "scripts": {
     "test": "(ducktape; node test) | tap-difflet && standard lib",
     "dev": "nodemon test | tap-difflet",
-    "now-install": "(test -d ../uws && cd ../uws && rm uws_*.node && npm install) || (test -d node_modules/uws && cd node_modules/uws && rm uws_*.node && npm install)",
     "start": "node bin/server",
     "dev-perf": "nodemon --prof test/performance/index.js | tap-difflet",
     "profile": "node --prof-process $(ls isolate-*) > processed.txt",
