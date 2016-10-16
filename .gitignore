@@ -30,10 +30,5 @@ mocha.css
 test-runner.html
 .tern-project
 resultlog.txt
-<<<<<<< HEAD
-isolate-*
-=======
-
 isolate-*
 processed.txt
->>>>>>> 3a95ef094190f9075fa855173ab06c88413c7e1f
