@@ -1,4 +1,6 @@
 'use strict'
+
+require('./dataSize')
 require('./queue')
 require('./context') // not finished!
 require('./sync')
