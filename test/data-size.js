@@ -23,7 +23,7 @@ test('data size', { timeout: 500 }, t => {
     someData[`key-${d}-longer-string-${d}`] = { subKey: `val-${d}-longer-string-${d}` }
   }
 
-  console.log(JSON.stringify(someData).length)
+  console.log('Stringified', Math.round(JSON.stringify(someData).length / 1024), 'KiB')
   server.set({ someData })
 
   client.subscribe({ someData: { val: true } }, () => {
