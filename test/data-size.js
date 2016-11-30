@@ -28,7 +28,11 @@ test('data size', { timeout: 500 }, t => {
   console.log('Stringified', Math.round(JSON.stringify(someData).length / 1024), 'KiB')
   server.set({ someData })
 
-  client.subscribe({ someData: { val: true } }, () => {
+  client.subscribe({ someData: { val: true } }, val => {
+    if (!val.val) {
+      return
+    }
+
     t.ok(true, 'subscription fired')
     t.end()
   })
