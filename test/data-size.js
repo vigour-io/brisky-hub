@@ -3,13 +3,15 @@
 const test = require('tape')
 const Hub = require('../')
 
+var server, client
+
 test('data size', { timeout: 500 }, t => {
-  const server = new Hub({
+  server = new Hub({
     id: 'server',
     port: 6000
   })
 
-  const client = new Hub({
+  client = new Hub({
     id: 'client',
     url: 'ws://localhost:6000',
     context: false
@@ -29,7 +31,11 @@ test('data size', { timeout: 500 }, t => {
   client.subscribe({ someData: { val: true } }, () => {
     t.ok(true, 'subscription fired')
     t.end()
-    server.set(null)
-    client.set(null)
   })
+})
+
+test('reset', t => {
+  server.set(null)
+  client.set(null)
+  t.end()
 })
