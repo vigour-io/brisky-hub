@@ -5,7 +5,7 @@ const Hub = require('../')
 
 var server, client
 
-test('data size', { timeout: 500 }, t => {
+test('data size', { timeout: 1000 }, t => {
   server = new Hub({
     id: 'server',
     port: 6000
@@ -18,28 +18,30 @@ test('data size', { timeout: 500 }, t => {
   })
 
   var someData = {}
-  // make it 6 thousand and it works
-  let i = 7e3
+  const val = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.'
+  let i = 1e3
   while (i-- > 0) {
-    const d = 1e9 + Math.round(Math.random() * 1e9)
-    someData[`key-${d}-longer-string-${d}`] = { subKey: `val-${d}-longer-string-${d}` }
+    const d = 1e11 + Math.round(Math.random() * 1e11)
+    someData[`key-${d}-longer-string-${d}`] = {
+      keyOne: { subKeyOne: val, subKeyTwo: val, subKeyThree: val },
+      keyTwo: { subKeyOne: val, subKeyTwo: val, subKeyThree: val },
+      keyThree: { subKeyOne: val, subKeyTwo: val, subKeyThree: val },
+      keyFour: { subKeyOne: val, subKeyTwo: val, subKeyThree: val },
+      keyFive: { subKeyOne: val, subKeyTwo: val, subKeyThree: val }
+    }
   }
 
-  console.log('Stringified', Math.round(JSON.stringify(someData).length / 1024), 'KiB')
   server.set({ someData })
 
-  client.subscribe({ someData: { val: true } }, val => {
-    if (!val.val) {
-      return
-    }
-
+  client.subscribe({ someData: { val: true } }, () => {
     t.ok(true, 'subscription fired')
+    client.off('subscription', 'subId')
     t.end()
-  })
+  }, null, null, null, 'subId')
 })
 
 test('reset', t => {
-  server.set(null)
   client.set(null)
+  server.set(null)
   t.end()
 })
