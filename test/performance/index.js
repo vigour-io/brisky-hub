@@ -1,5 +1,8 @@
 'use strict'
 // const perf = require('vigour-performance')
+// @NOTE: removed vigour-performance dependency because of "engine" crash on yarn install
+// should possibly be replaced with brisky-performance?
+
 const Hub = require('../../lib')
 
 const server = new Hub({
