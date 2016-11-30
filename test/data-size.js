@@ -5,7 +5,7 @@ const Hub = require('../')
 
 var server, client
 
-test('data size', { timeout: 1000 }, t => {
+test('data size', { timeout: 2000 }, t => {
   server = new Hub({
     id: 'server',
     port: 6000
