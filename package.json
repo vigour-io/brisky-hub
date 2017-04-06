@@ -47,7 +47,7 @@
     "vigour-state": "^4.8.0",
     "vigour-util": "^3.3.0",
     "monotonic-timestamp": "^0.0.9",
-    "uws-old": "0.8.0"
+    "uws-old": "0.8.1"
   },
   "browserify": {
     "transform": [
