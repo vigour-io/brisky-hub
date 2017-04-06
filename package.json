@@ -1,6 +1,6 @@
 {
   "name": "brisky-hub",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "description": "Connected vigour-state, works as a server and a client",
   "main": "lib/index.js",
   "bin": {
